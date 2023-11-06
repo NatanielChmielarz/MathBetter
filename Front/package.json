@@ -18,13 +18,15 @@
     "rollup-plugin-livereload": "^2.0.0",
     "rollup-plugin-svelte": "^7.1.2",
     "svelte": "^3.55.0"
-    
   },
   "dependencies": {
     "aos": "^2.3.4",
+    "axios": "^1.6.0",
     "bootstrap": "^5.3.1",
     "bootstrap-icons": "^1.10.5",
+    "d3": "^7.8.5",
     "font-awesome": "^4.7.0",
+    "js-cookie": "^3.0.5",
     "mathjs": "^11.10.0",
     "sirv-cli": "^2.0.0",
     "svelte-spa-router": "^3.3.0"

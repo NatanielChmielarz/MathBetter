@@ -3,11 +3,7 @@
 var app = (function () {
     'use strict';
 
-<<<<<<< Updated upstream
-    function noop() { }
-=======
     function noop$1() { }
->>>>>>> Stashed changes
     function assign$1(tar, src) {
         // @ts-ignore
         for (const k in src)
@@ -47,7 +43,7 @@ var app = (function () {
     }
     function subscribe(store, ...callbacks) {
         if (store == null) {
-            return noop;
+            return noop$1;
         }
         const unsub = store.subscribe(...callbacks);
         return unsub.unsubscribe ? () => unsub.unsubscribe() : unsub;
@@ -101,13 +97,16 @@ var app = (function () {
     function null_to_empty(value) {
         return value == null ? '' : value;
     }
+    function action_destroyer(action_result) {
+        return action_result && is_function(action_result.destroy) ? action_result.destroy : noop$1;
+    }
 
     const globals = (typeof window !== 'undefined'
         ? window
         : typeof globalThis !== 'undefined'
             ? globalThis
             : global);
-    function append(target, node) {
+    function append$1(target, node) {
         target.appendChild(node);
     }
     function insert(target, node, anchor) {
@@ -116,6 +115,12 @@ var app = (function () {
     function detach(node) {
         if (node.parentNode) {
             node.parentNode.removeChild(node);
+        }
+    }
+    function destroy_each(iterations, detaching) {
+        for (let i = 0; i < iterations.length; i += 1) {
+            if (iterations[i])
+                iterations[i].d(detaching);
         }
     }
     function element(name) {
@@ -578,7 +583,7 @@ var app = (function () {
             ctx: [],
             // state
             props,
-            update: noop,
+            update: noop$1,
             not_equal,
             bound: blank_object(),
             // lifecycle
@@ -637,11 +642,11 @@ var app = (function () {
     class SvelteComponent {
         $destroy() {
             destroy_component(this, 1);
-            this.$destroy = noop;
+            this.$destroy = noop$1;
         }
         $on(type, callback) {
             if (!is_function(callback)) {
-                return noop;
+                return noop$1;
             }
             const callbacks = (this.$$.callbacks[type] || (this.$$.callbacks[type] = []));
             callbacks.push(callback);
@@ -665,7 +670,7 @@ var app = (function () {
     }
     function append_dev(target, node) {
         dispatch_dev('SvelteDOMInsert', { target, node });
-        append(target, node);
+        append$1(target, node);
     }
     function insert_dev(target, node, anchor) {
         dispatch_dev('SvelteDOMInsert', { target, node, anchor });
@@ -812,7 +817,7 @@ var app = (function () {
     //   for security reasons, so these functions are not exposed in the expression
     //   parser.
 
-    function isNumber(x) {
+    function isNumber$1(x) {
       return typeof x === 'number';
     }
     function isBigNumber(x) {
@@ -836,10 +841,10 @@ var app = (function () {
     function isUnit(x) {
       return x && x.constructor.prototype.isUnit === true || false;
     }
-    function isString(x) {
+    function isString$1(x) {
       return typeof x === 'string';
     }
-    var isArray = Array.isArray;
+    var isArray$1 = Array.isArray;
     function isMatrix(x) {
       return x && x.constructor.prototype.isMatrix === true || false;
     }
@@ -864,7 +869,7 @@ var app = (function () {
     function isIndex(x) {
       return x && x.constructor.prototype.isIndex === true || false;
     }
-    function isBoolean(x) {
+    function isBoolean$1(x) {
       return typeof x === 'boolean';
     }
     function isResultSet(x) {
@@ -873,22 +878,22 @@ var app = (function () {
     function isHelp(x) {
       return x && x.constructor.prototype.isHelp === true || false;
     }
-    function isFunction(x) {
+    function isFunction$1(x) {
       return typeof x === 'function';
     }
-    function isDate(x) {
+    function isDate$1(x) {
       return x instanceof Date;
     }
-    function isRegExp(x) {
+    function isRegExp$1(x) {
       return x instanceof RegExp;
     }
-    function isObject(x) {
+    function isObject$1(x) {
       return !!(x && typeof x === 'object' && x.constructor === Object && !isComplex(x) && !isFraction(x));
     }
     function isNull(x) {
       return x === null;
     }
-    function isUndefined(x) {
+    function isUndefined$1(x) {
       return x === undefined;
     }
     function isAccessorNode(x) {
@@ -1015,7 +1020,7 @@ var app = (function () {
     function mapObject(object, callback) {
       var clone = {};
       for (var key in object) {
-        if (hasOwnProperty(object, key)) {
+        if (hasOwnProperty$1(object, key)) {
           clone[key] = callback(object[key]);
         }
       }
@@ -1028,9 +1033,9 @@ var app = (function () {
      * @param {Object} b
      * @return {Object} a
      */
-    function extend(a, b) {
+    function extend$1(a, b) {
       for (var prop in b) {
-        if (hasOwnProperty(b, prop)) {
+        if (hasOwnProperty$1(b, prop)) {
           a[prop] = b[prop];
         }
       }
@@ -1117,7 +1122,7 @@ var app = (function () {
      * @param {Object} object
      * @param {string} property
      */
-    function hasOwnProperty(object, property) {
+    function hasOwnProperty$1(object, property) {
       return object && Object.hasOwnProperty.call(object, property);
     }
 
@@ -3569,9 +3574,9 @@ var app = (function () {
         }
 
         // determine precision from options
-        if (isNumber(options)) {
+        if (isNumber$1(options)) {
           precision = options;
-        } else if (isNumber(options.precision)) {
+        } else if (isNumber$1(options.precision)) {
           precision = options.precision;
         }
         if (options.wordSize) {
@@ -3661,7 +3666,7 @@ var app = (function () {
 
       // find nearest lower multiple of 3 for exponent
       var newExp = e % 3 === 0 ? e : e < 0 ? e - 3 - e % 3 : e - e % 3;
-      if (isNumber(precision)) {
+      if (isNumber$1(precision)) {
         // add zeroes to give correct sig figs
         while (precision > c.length || e - newExp + 1 > c.length) {
           c.push(0);
@@ -3688,7 +3693,7 @@ var app = (function () {
       // if all coefficient values are zero after the decimal point and precision is unset, don't add a decimal value.
       // otherwise concat with the rest of the coefficients
       var decimals = c.slice(decimalIdx).join('');
-      var decimalVal = isNumber(precision) && decimals.length || decimals.match(/[1-9]/) ? '.' + decimals : '';
+      var decimalVal = isNumber$1(precision) && decimals.length || decimals.match(/[1-9]/) ? '.' + decimals : '';
       var str = c.slice(0, decimalIdx).join('') + decimalVal + 'e' + (e >= 0 ? '+' : '') + newExp.toString();
       return rounded.sign + str;
     }
@@ -4235,7 +4240,7 @@ var app = (function () {
      * @param {string} text
      * @param {string} search
      */
-    function endsWith(text, search) {
+    function endsWith$1(text, search) {
       var start = text.length - search.length;
       var end = text.length;
       return text.substring(start, end) === search;
@@ -4308,7 +4313,7 @@ var app = (function () {
       if (Array.isArray(value)) {
         return formatArray(value, options);
       }
-      if (isString(value)) {
+      if (isString$1(value)) {
         return '"' + value + '"';
       }
       if (typeof value === 'function') {
@@ -4416,10 +4421,10 @@ var app = (function () {
      */
     function compareText$1(x, y) {
       // we don't want to convert numbers to string, only accept string input
-      if (!isString(x)) {
+      if (!isString$1(x)) {
         throw new TypeError('Unexpected type of argument in function compareText ' + '(expected: string or Array or Matrix, actual: ' + typeOf$1(x) + ', index: 0)');
       }
-      if (!isString(y)) {
+      if (!isString$1(y)) {
         throw new TypeError('Unexpected type of argument in function compareText ' + '(expected: string or Array or Matrix, actual: ' + typeOf$1(y) + ', index: 1)');
       }
       return x === y ? 0 : x > y ? 1 : -1;
@@ -4581,7 +4586,7 @@ var app = (function () {
      */
     function validateIndex(index, length) {
       if (index !== undefined) {
-        if (!isNumber(index) || !isInteger$1(index)) {
+        if (!isNumber$1(index) || !isInteger$1(index)) {
           throw new TypeError('Index must be an integer (value: ' + index + ')');
         }
         if (index < 0 || typeof length === 'number' && index >= length) {
@@ -4597,7 +4602,7 @@ var app = (function () {
     function isEmptyIndex(index) {
       for (var i = 0; i < index._dimensions.length; ++i) {
         var dimension = index._dimensions[i];
-        if (dimension._data && isArray(dimension._data)) {
+        if (dimension._data && isArray$1(dimension._data)) {
           if (dimension._size[0] === 0) {
             return true;
           }
@@ -4605,7 +4610,7 @@ var app = (function () {
           if (dimension.start === dimension.end) {
             return true;
           }
-        } else if (isString(dimension)) {
+        } else if (isString$1(dimension)) {
           if (dimension.length === 0) {
             return true;
           }
@@ -4635,13 +4640,13 @@ var app = (function () {
 
       // check whether size contains positive integers
       size.forEach(function (value) {
-        if (!isNumber(value) || !isInteger$1(value) || value < 0) {
+        if (!isNumber$1(value) || !isInteger$1(value) || value < 0) {
           throw new TypeError('Invalid size, must contain positive integers ' + '(size: ' + format$1(size) + ')');
         }
       });
 
       // convert number to an array
-      if (isNumber(array) || isBigNumber(array)) {
+      if (isNumber$1(array) || isBigNumber(array)) {
         array = [array];
       }
 
@@ -4950,7 +4955,7 @@ var app = (function () {
      * @param {Array} array
      * @param {function} callback
      */
-    function forEach$1(array, callback) {
+    function forEach$2(array, callback) {
       Array.prototype.forEach.call(array, callback);
     }
 
@@ -5300,7 +5305,7 @@ var app = (function () {
      */
     function getSafeProperty(object, prop) {
       // only allow getting safe properties of a plain object
-      if (isPlainObject(object) && isSafeProperty(object, prop)) {
+      if (isPlainObject$1(object) && isSafeProperty(object, prop)) {
         return object[prop];
       }
       if (typeof object[prop] === 'function' && isSafeMethod(object, prop)) {
@@ -5321,7 +5326,7 @@ var app = (function () {
     // TODO: merge this function into access.js?
     function setSafeProperty(object, prop, value) {
       // only allow setting safe properties of a plain object
-      if (isPlainObject(object) && isSafeProperty(object, prop)) {
+      if (isPlainObject$1(object) && isSafeProperty(object, prop)) {
         object[prop] = value;
         return value;
       }
@@ -5343,7 +5348,7 @@ var app = (function () {
       }
       // SAFE: whitelisted
       // e.g length
-      if (hasOwnProperty(safeNativeProperties, prop)) {
+      if (hasOwnProperty$1(safeNativeProperties, prop)) {
         return true;
       }
       // UNSAFE: inherited from Object prototype
@@ -5393,12 +5398,12 @@ var app = (function () {
       // UNSAFE: ghosted
       // e.g overridden toString
       // Note that IE10 doesn't support __proto__ and we can't do this check there.
-      if (hasOwnProperty(object, method) && Object.getPrototypeOf && method in Object.getPrototypeOf(object)) {
+      if (hasOwnProperty$1(object, method) && Object.getPrototypeOf && method in Object.getPrototypeOf(object)) {
         return false;
       }
       // SAFE: whitelisted
       // e.g toString
-      if (hasOwnProperty(safeNativeMethods, method)) {
+      if (hasOwnProperty$1(safeNativeMethods, method)) {
         return true;
       }
       // UNSAFE: inherited from Object prototype
@@ -5419,7 +5424,7 @@ var app = (function () {
       }
       return true;
     }
-    function isPlainObject(object) {
+    function isPlainObject$1(object) {
       return typeof object === 'object' && object && object.constructor === Object;
     }
     var safeNativeProperties = {
@@ -5481,7 +5486,7 @@ var app = (function () {
       if (isMap(mapOrObject)) {
         return mapOrObject;
       }
-      if (isObject(mapOrObject)) {
+      if (isObject$1(mapOrObject)) {
         return new ObjectWrappingMap(mapOrObject);
       }
       throw new Error('createMap can create maps from objects or Maps');
@@ -5541,7 +5546,7 @@ var app = (function () {
           for (var key of args.keys()) {
             map.set(key, args.get(key));
           }
-        } else if (isObject(args)) {
+        } else if (isObject$1(args)) {
           for (var _key2 of Object.keys(args)) {
             map.set(_key2, args[_key2]);
           }
@@ -5621,7 +5626,7 @@ var app = (function () {
       typed.clear();
       typed.addTypes([{
         name: 'number',
-        test: isNumber
+        test: isNumber$1
       }, {
         name: 'Complex',
         test: isComplex
@@ -5641,16 +5646,16 @@ var app = (function () {
       // what to differentiate over must (currently) be a variable.
       {
         name: 'identifier',
-        test: s => isString && /^(?:[A-Za-z\xAA\xB5\xBA\xC0-\xD6\xD8-\xF6\xF8-\u02C1\u02C6-\u02D1\u02E0-\u02E4\u02EC\u02EE\u0370-\u0374\u0376\u0377\u037A-\u037D\u037F\u0386\u0388-\u038A\u038C\u038E-\u03A1\u03A3-\u03F5\u03F7-\u0481\u048A-\u052F\u0531-\u0556\u0559\u0560-\u0588\u05D0-\u05EA\u05EF-\u05F2\u0620-\u064A\u066E\u066F\u0671-\u06D3\u06D5\u06E5\u06E6\u06EE\u06EF\u06FA-\u06FC\u06FF\u0710\u0712-\u072F\u074D-\u07A5\u07B1\u07CA-\u07EA\u07F4\u07F5\u07FA\u0800-\u0815\u081A\u0824\u0828\u0840-\u0858\u0860-\u086A\u0870-\u0887\u0889-\u088E\u08A0-\u08C9\u0904-\u0939\u093D\u0950\u0958-\u0961\u0971-\u0980\u0985-\u098C\u098F\u0990\u0993-\u09A8\u09AA-\u09B0\u09B2\u09B6-\u09B9\u09BD\u09CE\u09DC\u09DD\u09DF-\u09E1\u09F0\u09F1\u09FC\u0A05-\u0A0A\u0A0F\u0A10\u0A13-\u0A28\u0A2A-\u0A30\u0A32\u0A33\u0A35\u0A36\u0A38\u0A39\u0A59-\u0A5C\u0A5E\u0A72-\u0A74\u0A85-\u0A8D\u0A8F-\u0A91\u0A93-\u0AA8\u0AAA-\u0AB0\u0AB2\u0AB3\u0AB5-\u0AB9\u0ABD\u0AD0\u0AE0\u0AE1\u0AF9\u0B05-\u0B0C\u0B0F\u0B10\u0B13-\u0B28\u0B2A-\u0B30\u0B32\u0B33\u0B35-\u0B39\u0B3D\u0B5C\u0B5D\u0B5F-\u0B61\u0B71\u0B83\u0B85-\u0B8A\u0B8E-\u0B90\u0B92-\u0B95\u0B99\u0B9A\u0B9C\u0B9E\u0B9F\u0BA3\u0BA4\u0BA8-\u0BAA\u0BAE-\u0BB9\u0BD0\u0C05-\u0C0C\u0C0E-\u0C10\u0C12-\u0C28\u0C2A-\u0C39\u0C3D\u0C58-\u0C5A\u0C5D\u0C60\u0C61\u0C80\u0C85-\u0C8C\u0C8E-\u0C90\u0C92-\u0CA8\u0CAA-\u0CB3\u0CB5-\u0CB9\u0CBD\u0CDD\u0CDE\u0CE0\u0CE1\u0CF1\u0CF2\u0D04-\u0D0C\u0D0E-\u0D10\u0D12-\u0D3A\u0D3D\u0D4E\u0D54-\u0D56\u0D5F-\u0D61\u0D7A-\u0D7F\u0D85-\u0D96\u0D9A-\u0DB1\u0DB3-\u0DBB\u0DBD\u0DC0-\u0DC6\u0E01-\u0E30\u0E32\u0E33\u0E40-\u0E46\u0E81\u0E82\u0E84\u0E86-\u0E8A\u0E8C-\u0EA3\u0EA5\u0EA7-\u0EB0\u0EB2\u0EB3\u0EBD\u0EC0-\u0EC4\u0EC6\u0EDC-\u0EDF\u0F00\u0F40-\u0F47\u0F49-\u0F6C\u0F88-\u0F8C\u1000-\u102A\u103F\u1050-\u1055\u105A-\u105D\u1061\u1065\u1066\u106E-\u1070\u1075-\u1081\u108E\u10A0-\u10C5\u10C7\u10CD\u10D0-\u10FA\u10FC-\u1248\u124A-\u124D\u1250-\u1256\u1258\u125A-\u125D\u1260-\u1288\u128A-\u128D\u1290-\u12B0\u12B2-\u12B5\u12B8-\u12BE\u12C0\u12C2-\u12C5\u12C8-\u12D6\u12D8-\u1310\u1312-\u1315\u1318-\u135A\u1380-\u138F\u13A0-\u13F5\u13F8-\u13FD\u1401-\u166C\u166F-\u167F\u1681-\u169A\u16A0-\u16EA\u16F1-\u16F8\u1700-\u1711\u171F-\u1731\u1740-\u1751\u1760-\u176C\u176E-\u1770\u1780-\u17B3\u17D7\u17DC\u1820-\u1878\u1880-\u1884\u1887-\u18A8\u18AA\u18B0-\u18F5\u1900-\u191E\u1950-\u196D\u1970-\u1974\u1980-\u19AB\u19B0-\u19C9\u1A00-\u1A16\u1A20-\u1A54\u1AA7\u1B05-\u1B33\u1B45-\u1B4C\u1B83-\u1BA0\u1BAE\u1BAF\u1BBA-\u1BE5\u1C00-\u1C23\u1C4D-\u1C4F\u1C5A-\u1C7D\u1C80-\u1C88\u1C90-\u1CBA\u1CBD-\u1CBF\u1CE9-\u1CEC\u1CEE-\u1CF3\u1CF5\u1CF6\u1CFA\u1D00-\u1DBF\u1E00-\u1F15\u1F18-\u1F1D\u1F20-\u1F45\u1F48-\u1F4D\u1F50-\u1F57\u1F59\u1F5B\u1F5D\u1F5F-\u1F7D\u1F80-\u1FB4\u1FB6-\u1FBC\u1FBE\u1FC2-\u1FC4\u1FC6-\u1FCC\u1FD0-\u1FD3\u1FD6-\u1FDB\u1FE0-\u1FEC\u1FF2-\u1FF4\u1FF6-\u1FFC\u2071\u207F\u2090-\u209C\u2102\u2107\u210A-\u2113\u2115\u2119-\u211D\u2124\u2126\u2128\u212A-\u212D\u212F-\u2139\u213C-\u213F\u2145-\u2149\u214E\u2183\u2184\u2C00-\u2CE4\u2CEB-\u2CEE\u2CF2\u2CF3\u2D00-\u2D25\u2D27\u2D2D\u2D30-\u2D67\u2D6F\u2D80-\u2D96\u2DA0-\u2DA6\u2DA8-\u2DAE\u2DB0-\u2DB6\u2DB8-\u2DBE\u2DC0-\u2DC6\u2DC8-\u2DCE\u2DD0-\u2DD6\u2DD8-\u2DDE\u2E2F\u3005\u3006\u3031-\u3035\u303B\u303C\u3041-\u3096\u309D-\u309F\u30A1-\u30FA\u30FC-\u30FF\u3105-\u312F\u3131-\u318E\u31A0-\u31BF\u31F0-\u31FF\u3400-\u4DBF\u4E00-\uA48C\uA4D0-\uA4FD\uA500-\uA60C\uA610-\uA61F\uA62A\uA62B\uA640-\uA66E\uA67F-\uA69D\uA6A0-\uA6E5\uA717-\uA71F\uA722-\uA788\uA78B-\uA7CA\uA7D0\uA7D1\uA7D3\uA7D5-\uA7D9\uA7F2-\uA801\uA803-\uA805\uA807-\uA80A\uA80C-\uA822\uA840-\uA873\uA882-\uA8B3\uA8F2-\uA8F7\uA8FB\uA8FD\uA8FE\uA90A-\uA925\uA930-\uA946\uA960-\uA97C\uA984-\uA9B2\uA9CF\uA9E0-\uA9E4\uA9E6-\uA9EF\uA9FA-\uA9FE\uAA00-\uAA28\uAA40-\uAA42\uAA44-\uAA4B\uAA60-\uAA76\uAA7A\uAA7E-\uAAAF\uAAB1\uAAB5\uAAB6\uAAB9-\uAABD\uAAC0\uAAC2\uAADB-\uAADD\uAAE0-\uAAEA\uAAF2-\uAAF4\uAB01-\uAB06\uAB09-\uAB0E\uAB11-\uAB16\uAB20-\uAB26\uAB28-\uAB2E\uAB30-\uAB5A\uAB5C-\uAB69\uAB70-\uABE2\uAC00-\uD7A3\uD7B0-\uD7C6\uD7CB-\uD7FB\uF900-\uFA6D\uFA70-\uFAD9\uFB00-\uFB06\uFB13-\uFB17\uFB1D\uFB1F-\uFB28\uFB2A-\uFB36\uFB38-\uFB3C\uFB3E\uFB40\uFB41\uFB43\uFB44\uFB46-\uFBB1\uFBD3-\uFD3D\uFD50-\uFD8F\uFD92-\uFDC7\uFDF0-\uFDFB\uFE70-\uFE74\uFE76-\uFEFC\uFF21-\uFF3A\uFF41-\uFF5A\uFF66-\uFFBE\uFFC2-\uFFC7\uFFCA-\uFFCF\uFFD2-\uFFD7\uFFDA-\uFFDC]|\uD800[\uDC00-\uDC0B\uDC0D-\uDC26\uDC28-\uDC3A\uDC3C\uDC3D\uDC3F-\uDC4D\uDC50-\uDC5D\uDC80-\uDCFA\uDE80-\uDE9C\uDEA0-\uDED0\uDF00-\uDF1F\uDF2D-\uDF40\uDF42-\uDF49\uDF50-\uDF75\uDF80-\uDF9D\uDFA0-\uDFC3\uDFC8-\uDFCF]|\uD801[\uDC00-\uDC9D\uDCB0-\uDCD3\uDCD8-\uDCFB\uDD00-\uDD27\uDD30-\uDD63\uDD70-\uDD7A\uDD7C-\uDD8A\uDD8C-\uDD92\uDD94\uDD95\uDD97-\uDDA1\uDDA3-\uDDB1\uDDB3-\uDDB9\uDDBB\uDDBC\uDE00-\uDF36\uDF40-\uDF55\uDF60-\uDF67\uDF80-\uDF85\uDF87-\uDFB0\uDFB2-\uDFBA]|\uD802[\uDC00-\uDC05\uDC08\uDC0A-\uDC35\uDC37\uDC38\uDC3C\uDC3F-\uDC55\uDC60-\uDC76\uDC80-\uDC9E\uDCE0-\uDCF2\uDCF4\uDCF5\uDD00-\uDD15\uDD20-\uDD39\uDD80-\uDDB7\uDDBE\uDDBF\uDE00\uDE10-\uDE13\uDE15-\uDE17\uDE19-\uDE35\uDE60-\uDE7C\uDE80-\uDE9C\uDEC0-\uDEC7\uDEC9-\uDEE4\uDF00-\uDF35\uDF40-\uDF55\uDF60-\uDF72\uDF80-\uDF91]|\uD803[\uDC00-\uDC48\uDC80-\uDCB2\uDCC0-\uDCF2\uDD00-\uDD23\uDE80-\uDEA9\uDEB0\uDEB1\uDF00-\uDF1C\uDF27\uDF30-\uDF45\uDF70-\uDF81\uDFB0-\uDFC4\uDFE0-\uDFF6]|\uD804[\uDC03-\uDC37\uDC71\uDC72\uDC75\uDC83-\uDCAF\uDCD0-\uDCE8\uDD03-\uDD26\uDD44\uDD47\uDD50-\uDD72\uDD76\uDD83-\uDDB2\uDDC1-\uDDC4\uDDDA\uDDDC\uDE00-\uDE11\uDE13-\uDE2B\uDE3F\uDE40\uDE80-\uDE86\uDE88\uDE8A-\uDE8D\uDE8F-\uDE9D\uDE9F-\uDEA8\uDEB0-\uDEDE\uDF05-\uDF0C\uDF0F\uDF10\uDF13-\uDF28\uDF2A-\uDF30\uDF32\uDF33\uDF35-\uDF39\uDF3D\uDF50\uDF5D-\uDF61]|\uD805[\uDC00-\uDC34\uDC47-\uDC4A\uDC5F-\uDC61\uDC80-\uDCAF\uDCC4\uDCC5\uDCC7\uDD80-\uDDAE\uDDD8-\uDDDB\uDE00-\uDE2F\uDE44\uDE80-\uDEAA\uDEB8\uDF00-\uDF1A\uDF40-\uDF46]|\uD806[\uDC00-\uDC2B\uDCA0-\uDCDF\uDCFF-\uDD06\uDD09\uDD0C-\uDD13\uDD15\uDD16\uDD18-\uDD2F\uDD3F\uDD41\uDDA0-\uDDA7\uDDAA-\uDDD0\uDDE1\uDDE3\uDE00\uDE0B-\uDE32\uDE3A\uDE50\uDE5C-\uDE89\uDE9D\uDEB0-\uDEF8]|\uD807[\uDC00-\uDC08\uDC0A-\uDC2E\uDC40\uDC72-\uDC8F\uDD00-\uDD06\uDD08\uDD09\uDD0B-\uDD30\uDD46\uDD60-\uDD65\uDD67\uDD68\uDD6A-\uDD89\uDD98\uDEE0-\uDEF2\uDF02\uDF04-\uDF10\uDF12-\uDF33\uDFB0]|\uD808[\uDC00-\uDF99]|\uD809[\uDC80-\uDD43]|\uD80B[\uDF90-\uDFF0]|[\uD80C\uD81C-\uD820\uD822\uD840-\uD868\uD86A-\uD86C\uD86F-\uD872\uD874-\uD879\uD880-\uD883\uD885-\uD887][\uDC00-\uDFFF]|\uD80D[\uDC00-\uDC2F\uDC41-\uDC46]|\uD811[\uDC00-\uDE46]|\uD81A[\uDC00-\uDE38\uDE40-\uDE5E\uDE70-\uDEBE\uDED0-\uDEED\uDF00-\uDF2F\uDF40-\uDF43\uDF63-\uDF77\uDF7D-\uDF8F]|\uD81B[\uDE40-\uDE7F\uDF00-\uDF4A\uDF50\uDF93-\uDF9F\uDFE0\uDFE1\uDFE3]|\uD821[\uDC00-\uDFF7]|\uD823[\uDC00-\uDCD5\uDD00-\uDD08]|\uD82B[\uDFF0-\uDFF3\uDFF5-\uDFFB\uDFFD\uDFFE]|\uD82C[\uDC00-\uDD22\uDD32\uDD50-\uDD52\uDD55\uDD64-\uDD67\uDD70-\uDEFB]|\uD82F[\uDC00-\uDC6A\uDC70-\uDC7C\uDC80-\uDC88\uDC90-\uDC99]|\uD835[\uDC00-\uDC54\uDC56-\uDC9C\uDC9E\uDC9F\uDCA2\uDCA5\uDCA6\uDCA9-\uDCAC\uDCAE-\uDCB9\uDCBB\uDCBD-\uDCC3\uDCC5-\uDD05\uDD07-\uDD0A\uDD0D-\uDD14\uDD16-\uDD1C\uDD1E-\uDD39\uDD3B-\uDD3E\uDD40-\uDD44\uDD46\uDD4A-\uDD50\uDD52-\uDEA5\uDEA8-\uDEC0\uDEC2-\uDEDA\uDEDC-\uDEFA\uDEFC-\uDF14\uDF16-\uDF34\uDF36-\uDF4E\uDF50-\uDF6E\uDF70-\uDF88\uDF8A-\uDFA8\uDFAA-\uDFC2\uDFC4-\uDFCB]|\uD837[\uDF00-\uDF1E\uDF25-\uDF2A]|\uD838[\uDC30-\uDC6D\uDD00-\uDD2C\uDD37-\uDD3D\uDD4E\uDE90-\uDEAD\uDEC0-\uDEEB]|\uD839[\uDCD0-\uDCEB\uDFE0-\uDFE6\uDFE8-\uDFEB\uDFED\uDFEE\uDFF0-\uDFFE]|\uD83A[\uDC00-\uDCC4\uDD00-\uDD43\uDD4B]|\uD83B[\uDE00-\uDE03\uDE05-\uDE1F\uDE21\uDE22\uDE24\uDE27\uDE29-\uDE32\uDE34-\uDE37\uDE39\uDE3B\uDE42\uDE47\uDE49\uDE4B\uDE4D-\uDE4F\uDE51\uDE52\uDE54\uDE57\uDE59\uDE5B\uDE5D\uDE5F\uDE61\uDE62\uDE64\uDE67-\uDE6A\uDE6C-\uDE72\uDE74-\uDE77\uDE79-\uDE7C\uDE7E\uDE80-\uDE89\uDE8B-\uDE9B\uDEA1-\uDEA3\uDEA5-\uDEA9\uDEAB-\uDEBB]|\uD869[\uDC00-\uDEDF\uDF00-\uDFFF]|\uD86D[\uDC00-\uDF39\uDF40-\uDFFF]|\uD86E[\uDC00-\uDC1D\uDC20-\uDFFF]|\uD873[\uDC00-\uDEA1\uDEB0-\uDFFF]|\uD87A[\uDC00-\uDFE0]|\uD87E[\uDC00-\uDE1D]|\uD884[\uDC00-\uDF4A\uDF50-\uDFFF]|\uD888[\uDC00-\uDFAF])(?:[0-9A-Za-z\xAA\xB5\xBA\xC0-\xD6\xD8-\xF6\xF8-\u02C1\u02C6-\u02D1\u02E0-\u02E4\u02EC\u02EE\u0370-\u0374\u0376\u0377\u037A-\u037D\u037F\u0386\u0388-\u038A\u038C\u038E-\u03A1\u03A3-\u03F5\u03F7-\u0481\u048A-\u052F\u0531-\u0556\u0559\u0560-\u0588\u05D0-\u05EA\u05EF-\u05F2\u0620-\u064A\u066E\u066F\u0671-\u06D3\u06D5\u06E5\u06E6\u06EE\u06EF\u06FA-\u06FC\u06FF\u0710\u0712-\u072F\u074D-\u07A5\u07B1\u07CA-\u07EA\u07F4\u07F5\u07FA\u0800-\u0815\u081A\u0824\u0828\u0840-\u0858\u0860-\u086A\u0870-\u0887\u0889-\u088E\u08A0-\u08C9\u0904-\u0939\u093D\u0950\u0958-\u0961\u0971-\u0980\u0985-\u098C\u098F\u0990\u0993-\u09A8\u09AA-\u09B0\u09B2\u09B6-\u09B9\u09BD\u09CE\u09DC\u09DD\u09DF-\u09E1\u09F0\u09F1\u09FC\u0A05-\u0A0A\u0A0F\u0A10\u0A13-\u0A28\u0A2A-\u0A30\u0A32\u0A33\u0A35\u0A36\u0A38\u0A39\u0A59-\u0A5C\u0A5E\u0A72-\u0A74\u0A85-\u0A8D\u0A8F-\u0A91\u0A93-\u0AA8\u0AAA-\u0AB0\u0AB2\u0AB3\u0AB5-\u0AB9\u0ABD\u0AD0\u0AE0\u0AE1\u0AF9\u0B05-\u0B0C\u0B0F\u0B10\u0B13-\u0B28\u0B2A-\u0B30\u0B32\u0B33\u0B35-\u0B39\u0B3D\u0B5C\u0B5D\u0B5F-\u0B61\u0B71\u0B83\u0B85-\u0B8A\u0B8E-\u0B90\u0B92-\u0B95\u0B99\u0B9A\u0B9C\u0B9E\u0B9F\u0BA3\u0BA4\u0BA8-\u0BAA\u0BAE-\u0BB9\u0BD0\u0C05-\u0C0C\u0C0E-\u0C10\u0C12-\u0C28\u0C2A-\u0C39\u0C3D\u0C58-\u0C5A\u0C5D\u0C60\u0C61\u0C80\u0C85-\u0C8C\u0C8E-\u0C90\u0C92-\u0CA8\u0CAA-\u0CB3\u0CB5-\u0CB9\u0CBD\u0CDD\u0CDE\u0CE0\u0CE1\u0CF1\u0CF2\u0D04-\u0D0C\u0D0E-\u0D10\u0D12-\u0D3A\u0D3D\u0D4E\u0D54-\u0D56\u0D5F-\u0D61\u0D7A-\u0D7F\u0D85-\u0D96\u0D9A-\u0DB1\u0DB3-\u0DBB\u0DBD\u0DC0-\u0DC6\u0E01-\u0E30\u0E32\u0E33\u0E40-\u0E46\u0E81\u0E82\u0E84\u0E86-\u0E8A\u0E8C-\u0EA3\u0EA5\u0EA7-\u0EB0\u0EB2\u0EB3\u0EBD\u0EC0-\u0EC4\u0EC6\u0EDC-\u0EDF\u0F00\u0F40-\u0F47\u0F49-\u0F6C\u0F88-\u0F8C\u1000-\u102A\u103F\u1050-\u1055\u105A-\u105D\u1061\u1065\u1066\u106E-\u1070\u1075-\u1081\u108E\u10A0-\u10C5\u10C7\u10CD\u10D0-\u10FA\u10FC-\u1248\u124A-\u124D\u1250-\u1256\u1258\u125A-\u125D\u1260-\u1288\u128A-\u128D\u1290-\u12B0\u12B2-\u12B5\u12B8-\u12BE\u12C0\u12C2-\u12C5\u12C8-\u12D6\u12D8-\u1310\u1312-\u1315\u1318-\u135A\u1380-\u138F\u13A0-\u13F5\u13F8-\u13FD\u1401-\u166C\u166F-\u167F\u1681-\u169A\u16A0-\u16EA\u16F1-\u16F8\u1700-\u1711\u171F-\u1731\u1740-\u1751\u1760-\u176C\u176E-\u1770\u1780-\u17B3\u17D7\u17DC\u1820-\u1878\u1880-\u1884\u1887-\u18A8\u18AA\u18B0-\u18F5\u1900-\u191E\u1950-\u196D\u1970-\u1974\u1980-\u19AB\u19B0-\u19C9\u1A00-\u1A16\u1A20-\u1A54\u1AA7\u1B05-\u1B33\u1B45-\u1B4C\u1B83-\u1BA0\u1BAE\u1BAF\u1BBA-\u1BE5\u1C00-\u1C23\u1C4D-\u1C4F\u1C5A-\u1C7D\u1C80-\u1C88\u1C90-\u1CBA\u1CBD-\u1CBF\u1CE9-\u1CEC\u1CEE-\u1CF3\u1CF5\u1CF6\u1CFA\u1D00-\u1DBF\u1E00-\u1F15\u1F18-\u1F1D\u1F20-\u1F45\u1F48-\u1F4D\u1F50-\u1F57\u1F59\u1F5B\u1F5D\u1F5F-\u1F7D\u1F80-\u1FB4\u1FB6-\u1FBC\u1FBE\u1FC2-\u1FC4\u1FC6-\u1FCC\u1FD0-\u1FD3\u1FD6-\u1FDB\u1FE0-\u1FEC\u1FF2-\u1FF4\u1FF6-\u1FFC\u2071\u207F\u2090-\u209C\u2102\u2107\u210A-\u2113\u2115\u2119-\u211D\u2124\u2126\u2128\u212A-\u212D\u212F-\u2139\u213C-\u213F\u2145-\u2149\u214E\u2183\u2184\u2C00-\u2CE4\u2CEB-\u2CEE\u2CF2\u2CF3\u2D00-\u2D25\u2D27\u2D2D\u2D30-\u2D67\u2D6F\u2D80-\u2D96\u2DA0-\u2DA6\u2DA8-\u2DAE\u2DB0-\u2DB6\u2DB8-\u2DBE\u2DC0-\u2DC6\u2DC8-\u2DCE\u2DD0-\u2DD6\u2DD8-\u2DDE\u2E2F\u3005\u3006\u3031-\u3035\u303B\u303C\u3041-\u3096\u309D-\u309F\u30A1-\u30FA\u30FC-\u30FF\u3105-\u312F\u3131-\u318E\u31A0-\u31BF\u31F0-\u31FF\u3400-\u4DBF\u4E00-\uA48C\uA4D0-\uA4FD\uA500-\uA60C\uA610-\uA61F\uA62A\uA62B\uA640-\uA66E\uA67F-\uA69D\uA6A0-\uA6E5\uA717-\uA71F\uA722-\uA788\uA78B-\uA7CA\uA7D0\uA7D1\uA7D3\uA7D5-\uA7D9\uA7F2-\uA801\uA803-\uA805\uA807-\uA80A\uA80C-\uA822\uA840-\uA873\uA882-\uA8B3\uA8F2-\uA8F7\uA8FB\uA8FD\uA8FE\uA90A-\uA925\uA930-\uA946\uA960-\uA97C\uA984-\uA9B2\uA9CF\uA9E0-\uA9E4\uA9E6-\uA9EF\uA9FA-\uA9FE\uAA00-\uAA28\uAA40-\uAA42\uAA44-\uAA4B\uAA60-\uAA76\uAA7A\uAA7E-\uAAAF\uAAB1\uAAB5\uAAB6\uAAB9-\uAABD\uAAC0\uAAC2\uAADB-\uAADD\uAAE0-\uAAEA\uAAF2-\uAAF4\uAB01-\uAB06\uAB09-\uAB0E\uAB11-\uAB16\uAB20-\uAB26\uAB28-\uAB2E\uAB30-\uAB5A\uAB5C-\uAB69\uAB70-\uABE2\uAC00-\uD7A3\uD7B0-\uD7C6\uD7CB-\uD7FB\uF900-\uFA6D\uFA70-\uFAD9\uFB00-\uFB06\uFB13-\uFB17\uFB1D\uFB1F-\uFB28\uFB2A-\uFB36\uFB38-\uFB3C\uFB3E\uFB40\uFB41\uFB43\uFB44\uFB46-\uFBB1\uFBD3-\uFD3D\uFD50-\uFD8F\uFD92-\uFDC7\uFDF0-\uFDFB\uFE70-\uFE74\uFE76-\uFEFC\uFF21-\uFF3A\uFF41-\uFF5A\uFF66-\uFFBE\uFFC2-\uFFC7\uFFCA-\uFFCF\uFFD2-\uFFD7\uFFDA-\uFFDC]|\uD800[\uDC00-\uDC0B\uDC0D-\uDC26\uDC28-\uDC3A\uDC3C\uDC3D\uDC3F-\uDC4D\uDC50-\uDC5D\uDC80-\uDCFA\uDE80-\uDE9C\uDEA0-\uDED0\uDF00-\uDF1F\uDF2D-\uDF40\uDF42-\uDF49\uDF50-\uDF75\uDF80-\uDF9D\uDFA0-\uDFC3\uDFC8-\uDFCF]|\uD801[\uDC00-\uDC9D\uDCB0-\uDCD3\uDCD8-\uDCFB\uDD00-\uDD27\uDD30-\uDD63\uDD70-\uDD7A\uDD7C-\uDD8A\uDD8C-\uDD92\uDD94\uDD95\uDD97-\uDDA1\uDDA3-\uDDB1\uDDB3-\uDDB9\uDDBB\uDDBC\uDE00-\uDF36\uDF40-\uDF55\uDF60-\uDF67\uDF80-\uDF85\uDF87-\uDFB0\uDFB2-\uDFBA]|\uD802[\uDC00-\uDC05\uDC08\uDC0A-\uDC35\uDC37\uDC38\uDC3C\uDC3F-\uDC55\uDC60-\uDC76\uDC80-\uDC9E\uDCE0-\uDCF2\uDCF4\uDCF5\uDD00-\uDD15\uDD20-\uDD39\uDD80-\uDDB7\uDDBE\uDDBF\uDE00\uDE10-\uDE13\uDE15-\uDE17\uDE19-\uDE35\uDE60-\uDE7C\uDE80-\uDE9C\uDEC0-\uDEC7\uDEC9-\uDEE4\uDF00-\uDF35\uDF40-\uDF55\uDF60-\uDF72\uDF80-\uDF91]|\uD803[\uDC00-\uDC48\uDC80-\uDCB2\uDCC0-\uDCF2\uDD00-\uDD23\uDE80-\uDEA9\uDEB0\uDEB1\uDF00-\uDF1C\uDF27\uDF30-\uDF45\uDF70-\uDF81\uDFB0-\uDFC4\uDFE0-\uDFF6]|\uD804[\uDC03-\uDC37\uDC71\uDC72\uDC75\uDC83-\uDCAF\uDCD0-\uDCE8\uDD03-\uDD26\uDD44\uDD47\uDD50-\uDD72\uDD76\uDD83-\uDDB2\uDDC1-\uDDC4\uDDDA\uDDDC\uDE00-\uDE11\uDE13-\uDE2B\uDE3F\uDE40\uDE80-\uDE86\uDE88\uDE8A-\uDE8D\uDE8F-\uDE9D\uDE9F-\uDEA8\uDEB0-\uDEDE\uDF05-\uDF0C\uDF0F\uDF10\uDF13-\uDF28\uDF2A-\uDF30\uDF32\uDF33\uDF35-\uDF39\uDF3D\uDF50\uDF5D-\uDF61]|\uD805[\uDC00-\uDC34\uDC47-\uDC4A\uDC5F-\uDC61\uDC80-\uDCAF\uDCC4\uDCC5\uDCC7\uDD80-\uDDAE\uDDD8-\uDDDB\uDE00-\uDE2F\uDE44\uDE80-\uDEAA\uDEB8\uDF00-\uDF1A\uDF40-\uDF46]|\uD806[\uDC00-\uDC2B\uDCA0-\uDCDF\uDCFF-\uDD06\uDD09\uDD0C-\uDD13\uDD15\uDD16\uDD18-\uDD2F\uDD3F\uDD41\uDDA0-\uDDA7\uDDAA-\uDDD0\uDDE1\uDDE3\uDE00\uDE0B-\uDE32\uDE3A\uDE50\uDE5C-\uDE89\uDE9D\uDEB0-\uDEF8]|\uD807[\uDC00-\uDC08\uDC0A-\uDC2E\uDC40\uDC72-\uDC8F\uDD00-\uDD06\uDD08\uDD09\uDD0B-\uDD30\uDD46\uDD60-\uDD65\uDD67\uDD68\uDD6A-\uDD89\uDD98\uDEE0-\uDEF2\uDF02\uDF04-\uDF10\uDF12-\uDF33\uDFB0]|\uD808[\uDC00-\uDF99]|\uD809[\uDC80-\uDD43]|\uD80B[\uDF90-\uDFF0]|[\uD80C\uD81C-\uD820\uD822\uD840-\uD868\uD86A-\uD86C\uD86F-\uD872\uD874-\uD879\uD880-\uD883\uD885-\uD887][\uDC00-\uDFFF]|\uD80D[\uDC00-\uDC2F\uDC41-\uDC46]|\uD811[\uDC00-\uDE46]|\uD81A[\uDC00-\uDE38\uDE40-\uDE5E\uDE70-\uDEBE\uDED0-\uDEED\uDF00-\uDF2F\uDF40-\uDF43\uDF63-\uDF77\uDF7D-\uDF8F]|\uD81B[\uDE40-\uDE7F\uDF00-\uDF4A\uDF50\uDF93-\uDF9F\uDFE0\uDFE1\uDFE3]|\uD821[\uDC00-\uDFF7]|\uD823[\uDC00-\uDCD5\uDD00-\uDD08]|\uD82B[\uDFF0-\uDFF3\uDFF5-\uDFFB\uDFFD\uDFFE]|\uD82C[\uDC00-\uDD22\uDD32\uDD50-\uDD52\uDD55\uDD64-\uDD67\uDD70-\uDEFB]|\uD82F[\uDC00-\uDC6A\uDC70-\uDC7C\uDC80-\uDC88\uDC90-\uDC99]|\uD835[\uDC00-\uDC54\uDC56-\uDC9C\uDC9E\uDC9F\uDCA2\uDCA5\uDCA6\uDCA9-\uDCAC\uDCAE-\uDCB9\uDCBB\uDCBD-\uDCC3\uDCC5-\uDD05\uDD07-\uDD0A\uDD0D-\uDD14\uDD16-\uDD1C\uDD1E-\uDD39\uDD3B-\uDD3E\uDD40-\uDD44\uDD46\uDD4A-\uDD50\uDD52-\uDEA5\uDEA8-\uDEC0\uDEC2-\uDEDA\uDEDC-\uDEFA\uDEFC-\uDF14\uDF16-\uDF34\uDF36-\uDF4E\uDF50-\uDF6E\uDF70-\uDF88\uDF8A-\uDFA8\uDFAA-\uDFC2\uDFC4-\uDFCB]|\uD837[\uDF00-\uDF1E\uDF25-\uDF2A]|\uD838[\uDC30-\uDC6D\uDD00-\uDD2C\uDD37-\uDD3D\uDD4E\uDE90-\uDEAD\uDEC0-\uDEEB]|\uD839[\uDCD0-\uDCEB\uDFE0-\uDFE6\uDFE8-\uDFEB\uDFED\uDFEE\uDFF0-\uDFFE]|\uD83A[\uDC00-\uDCC4\uDD00-\uDD43\uDD4B]|\uD83B[\uDE00-\uDE03\uDE05-\uDE1F\uDE21\uDE22\uDE24\uDE27\uDE29-\uDE32\uDE34-\uDE37\uDE39\uDE3B\uDE42\uDE47\uDE49\uDE4B\uDE4D-\uDE4F\uDE51\uDE52\uDE54\uDE57\uDE59\uDE5B\uDE5D\uDE5F\uDE61\uDE62\uDE64\uDE67-\uDE6A\uDE6C-\uDE72\uDE74-\uDE77\uDE79-\uDE7C\uDE7E\uDE80-\uDE89\uDE8B-\uDE9B\uDEA1-\uDEA3\uDEA5-\uDEA9\uDEAB-\uDEBB]|\uD869[\uDC00-\uDEDF\uDF00-\uDFFF]|\uD86D[\uDC00-\uDF39\uDF40-\uDFFF]|\uD86E[\uDC00-\uDC1D\uDC20-\uDFFF]|\uD873[\uDC00-\uDEA1\uDEB0-\uDFFF]|\uD87A[\uDC00-\uDFE0]|\uD87E[\uDC00-\uDE1D]|\uD884[\uDC00-\uDF4A\uDF50-\uDFFF]|\uD888[\uDC00-\uDFAF])*$/.test(s)
+        test: s => isString$1 && /^(?:[A-Za-z\xAA\xB5\xBA\xC0-\xD6\xD8-\xF6\xF8-\u02C1\u02C6-\u02D1\u02E0-\u02E4\u02EC\u02EE\u0370-\u0374\u0376\u0377\u037A-\u037D\u037F\u0386\u0388-\u038A\u038C\u038E-\u03A1\u03A3-\u03F5\u03F7-\u0481\u048A-\u052F\u0531-\u0556\u0559\u0560-\u0588\u05D0-\u05EA\u05EF-\u05F2\u0620-\u064A\u066E\u066F\u0671-\u06D3\u06D5\u06E5\u06E6\u06EE\u06EF\u06FA-\u06FC\u06FF\u0710\u0712-\u072F\u074D-\u07A5\u07B1\u07CA-\u07EA\u07F4\u07F5\u07FA\u0800-\u0815\u081A\u0824\u0828\u0840-\u0858\u0860-\u086A\u0870-\u0887\u0889-\u088E\u08A0-\u08C9\u0904-\u0939\u093D\u0950\u0958-\u0961\u0971-\u0980\u0985-\u098C\u098F\u0990\u0993-\u09A8\u09AA-\u09B0\u09B2\u09B6-\u09B9\u09BD\u09CE\u09DC\u09DD\u09DF-\u09E1\u09F0\u09F1\u09FC\u0A05-\u0A0A\u0A0F\u0A10\u0A13-\u0A28\u0A2A-\u0A30\u0A32\u0A33\u0A35\u0A36\u0A38\u0A39\u0A59-\u0A5C\u0A5E\u0A72-\u0A74\u0A85-\u0A8D\u0A8F-\u0A91\u0A93-\u0AA8\u0AAA-\u0AB0\u0AB2\u0AB3\u0AB5-\u0AB9\u0ABD\u0AD0\u0AE0\u0AE1\u0AF9\u0B05-\u0B0C\u0B0F\u0B10\u0B13-\u0B28\u0B2A-\u0B30\u0B32\u0B33\u0B35-\u0B39\u0B3D\u0B5C\u0B5D\u0B5F-\u0B61\u0B71\u0B83\u0B85-\u0B8A\u0B8E-\u0B90\u0B92-\u0B95\u0B99\u0B9A\u0B9C\u0B9E\u0B9F\u0BA3\u0BA4\u0BA8-\u0BAA\u0BAE-\u0BB9\u0BD0\u0C05-\u0C0C\u0C0E-\u0C10\u0C12-\u0C28\u0C2A-\u0C39\u0C3D\u0C58-\u0C5A\u0C5D\u0C60\u0C61\u0C80\u0C85-\u0C8C\u0C8E-\u0C90\u0C92-\u0CA8\u0CAA-\u0CB3\u0CB5-\u0CB9\u0CBD\u0CDD\u0CDE\u0CE0\u0CE1\u0CF1\u0CF2\u0D04-\u0D0C\u0D0E-\u0D10\u0D12-\u0D3A\u0D3D\u0D4E\u0D54-\u0D56\u0D5F-\u0D61\u0D7A-\u0D7F\u0D85-\u0D96\u0D9A-\u0DB1\u0DB3-\u0DBB\u0DBD\u0DC0-\u0DC6\u0E01-\u0E30\u0E32\u0E33\u0E40-\u0E46\u0E81\u0E82\u0E84\u0E86-\u0E8A\u0E8C-\u0EA3\u0EA5\u0EA7-\u0EB0\u0EB2\u0EB3\u0EBD\u0EC0-\u0EC4\u0EC6\u0EDC-\u0EDF\u0F00\u0F40-\u0F47\u0F49-\u0F6C\u0F88-\u0F8C\u1000-\u102A\u103F\u1050-\u1055\u105A-\u105D\u1061\u1065\u1066\u106E-\u1070\u1075-\u1081\u108E\u10A0-\u10C5\u10C7\u10CD\u10D0-\u10FA\u10FC-\u1248\u124A-\u124D\u1250-\u1256\u1258\u125A-\u125D\u1260-\u1288\u128A-\u128D\u1290-\u12B0\u12B2-\u12B5\u12B8-\u12BE\u12C0\u12C2-\u12C5\u12C8-\u12D6\u12D8-\u1310\u1312-\u1315\u1318-\u135A\u1380-\u138F\u13A0-\u13F5\u13F8-\u13FD\u1401-\u166C\u166F-\u167F\u1681-\u169A\u16A0-\u16EA\u16F1-\u16F8\u1700-\u1711\u171F-\u1731\u1740-\u1751\u1760-\u176C\u176E-\u1770\u1780-\u17B3\u17D7\u17DC\u1820-\u1878\u1880-\u1884\u1887-\u18A8\u18AA\u18B0-\u18F5\u1900-\u191E\u1950-\u196D\u1970-\u1974\u1980-\u19AB\u19B0-\u19C9\u1A00-\u1A16\u1A20-\u1A54\u1AA7\u1B05-\u1B33\u1B45-\u1B4C\u1B83-\u1BA0\u1BAE\u1BAF\u1BBA-\u1BE5\u1C00-\u1C23\u1C4D-\u1C4F\u1C5A-\u1C7D\u1C80-\u1C88\u1C90-\u1CBA\u1CBD-\u1CBF\u1CE9-\u1CEC\u1CEE-\u1CF3\u1CF5\u1CF6\u1CFA\u1D00-\u1DBF\u1E00-\u1F15\u1F18-\u1F1D\u1F20-\u1F45\u1F48-\u1F4D\u1F50-\u1F57\u1F59\u1F5B\u1F5D\u1F5F-\u1F7D\u1F80-\u1FB4\u1FB6-\u1FBC\u1FBE\u1FC2-\u1FC4\u1FC6-\u1FCC\u1FD0-\u1FD3\u1FD6-\u1FDB\u1FE0-\u1FEC\u1FF2-\u1FF4\u1FF6-\u1FFC\u2071\u207F\u2090-\u209C\u2102\u2107\u210A-\u2113\u2115\u2119-\u211D\u2124\u2126\u2128\u212A-\u212D\u212F-\u2139\u213C-\u213F\u2145-\u2149\u214E\u2183\u2184\u2C00-\u2CE4\u2CEB-\u2CEE\u2CF2\u2CF3\u2D00-\u2D25\u2D27\u2D2D\u2D30-\u2D67\u2D6F\u2D80-\u2D96\u2DA0-\u2DA6\u2DA8-\u2DAE\u2DB0-\u2DB6\u2DB8-\u2DBE\u2DC0-\u2DC6\u2DC8-\u2DCE\u2DD0-\u2DD6\u2DD8-\u2DDE\u2E2F\u3005\u3006\u3031-\u3035\u303B\u303C\u3041-\u3096\u309D-\u309F\u30A1-\u30FA\u30FC-\u30FF\u3105-\u312F\u3131-\u318E\u31A0-\u31BF\u31F0-\u31FF\u3400-\u4DBF\u4E00-\uA48C\uA4D0-\uA4FD\uA500-\uA60C\uA610-\uA61F\uA62A\uA62B\uA640-\uA66E\uA67F-\uA69D\uA6A0-\uA6E5\uA717-\uA71F\uA722-\uA788\uA78B-\uA7CA\uA7D0\uA7D1\uA7D3\uA7D5-\uA7D9\uA7F2-\uA801\uA803-\uA805\uA807-\uA80A\uA80C-\uA822\uA840-\uA873\uA882-\uA8B3\uA8F2-\uA8F7\uA8FB\uA8FD\uA8FE\uA90A-\uA925\uA930-\uA946\uA960-\uA97C\uA984-\uA9B2\uA9CF\uA9E0-\uA9E4\uA9E6-\uA9EF\uA9FA-\uA9FE\uAA00-\uAA28\uAA40-\uAA42\uAA44-\uAA4B\uAA60-\uAA76\uAA7A\uAA7E-\uAAAF\uAAB1\uAAB5\uAAB6\uAAB9-\uAABD\uAAC0\uAAC2\uAADB-\uAADD\uAAE0-\uAAEA\uAAF2-\uAAF4\uAB01-\uAB06\uAB09-\uAB0E\uAB11-\uAB16\uAB20-\uAB26\uAB28-\uAB2E\uAB30-\uAB5A\uAB5C-\uAB69\uAB70-\uABE2\uAC00-\uD7A3\uD7B0-\uD7C6\uD7CB-\uD7FB\uF900-\uFA6D\uFA70-\uFAD9\uFB00-\uFB06\uFB13-\uFB17\uFB1D\uFB1F-\uFB28\uFB2A-\uFB36\uFB38-\uFB3C\uFB3E\uFB40\uFB41\uFB43\uFB44\uFB46-\uFBB1\uFBD3-\uFD3D\uFD50-\uFD8F\uFD92-\uFDC7\uFDF0-\uFDFB\uFE70-\uFE74\uFE76-\uFEFC\uFF21-\uFF3A\uFF41-\uFF5A\uFF66-\uFFBE\uFFC2-\uFFC7\uFFCA-\uFFCF\uFFD2-\uFFD7\uFFDA-\uFFDC]|\uD800[\uDC00-\uDC0B\uDC0D-\uDC26\uDC28-\uDC3A\uDC3C\uDC3D\uDC3F-\uDC4D\uDC50-\uDC5D\uDC80-\uDCFA\uDE80-\uDE9C\uDEA0-\uDED0\uDF00-\uDF1F\uDF2D-\uDF40\uDF42-\uDF49\uDF50-\uDF75\uDF80-\uDF9D\uDFA0-\uDFC3\uDFC8-\uDFCF]|\uD801[\uDC00-\uDC9D\uDCB0-\uDCD3\uDCD8-\uDCFB\uDD00-\uDD27\uDD30-\uDD63\uDD70-\uDD7A\uDD7C-\uDD8A\uDD8C-\uDD92\uDD94\uDD95\uDD97-\uDDA1\uDDA3-\uDDB1\uDDB3-\uDDB9\uDDBB\uDDBC\uDE00-\uDF36\uDF40-\uDF55\uDF60-\uDF67\uDF80-\uDF85\uDF87-\uDFB0\uDFB2-\uDFBA]|\uD802[\uDC00-\uDC05\uDC08\uDC0A-\uDC35\uDC37\uDC38\uDC3C\uDC3F-\uDC55\uDC60-\uDC76\uDC80-\uDC9E\uDCE0-\uDCF2\uDCF4\uDCF5\uDD00-\uDD15\uDD20-\uDD39\uDD80-\uDDB7\uDDBE\uDDBF\uDE00\uDE10-\uDE13\uDE15-\uDE17\uDE19-\uDE35\uDE60-\uDE7C\uDE80-\uDE9C\uDEC0-\uDEC7\uDEC9-\uDEE4\uDF00-\uDF35\uDF40-\uDF55\uDF60-\uDF72\uDF80-\uDF91]|\uD803[\uDC00-\uDC48\uDC80-\uDCB2\uDCC0-\uDCF2\uDD00-\uDD23\uDE80-\uDEA9\uDEB0\uDEB1\uDF00-\uDF1C\uDF27\uDF30-\uDF45\uDF70-\uDF81\uDFB0-\uDFC4\uDFE0-\uDFF6]|\uD804[\uDC03-\uDC37\uDC71\uDC72\uDC75\uDC83-\uDCAF\uDCD0-\uDCE8\uDD03-\uDD26\uDD44\uDD47\uDD50-\uDD72\uDD76\uDD83-\uDDB2\uDDC1-\uDDC4\uDDDA\uDDDC\uDE00-\uDE11\uDE13-\uDE2B\uDE3F\uDE40\uDE80-\uDE86\uDE88\uDE8A-\uDE8D\uDE8F-\uDE9D\uDE9F-\uDEA8\uDEB0-\uDEDE\uDF05-\uDF0C\uDF0F\uDF10\uDF13-\uDF28\uDF2A-\uDF30\uDF32\uDF33\uDF35-\uDF39\uDF3D\uDF50\uDF5D-\uDF61]|\uD805[\uDC00-\uDC34\uDC47-\uDC4A\uDC5F-\uDC61\uDC80-\uDCAF\uDCC4\uDCC5\uDCC7\uDD80-\uDDAE\uDDD8-\uDDDB\uDE00-\uDE2F\uDE44\uDE80-\uDEAA\uDEB8\uDF00-\uDF1A\uDF40-\uDF46]|\uD806[\uDC00-\uDC2B\uDCA0-\uDCDF\uDCFF-\uDD06\uDD09\uDD0C-\uDD13\uDD15\uDD16\uDD18-\uDD2F\uDD3F\uDD41\uDDA0-\uDDA7\uDDAA-\uDDD0\uDDE1\uDDE3\uDE00\uDE0B-\uDE32\uDE3A\uDE50\uDE5C-\uDE89\uDE9D\uDEB0-\uDEF8]|\uD807[\uDC00-\uDC08\uDC0A-\uDC2E\uDC40\uDC72-\uDC8F\uDD00-\uDD06\uDD08\uDD09\uDD0B-\uDD30\uDD46\uDD60-\uDD65\uDD67\uDD68\uDD6A-\uDD89\uDD98\uDEE0-\uDEF2\uDF02\uDF04-\uDF10\uDF12-\uDF33\uDFB0]|\uD808[\uDC00-\uDF99]|\uD809[\uDC80-\uDD43]|\uD80B[\uDF90-\uDFF0]|[\uD80C\uD81C-\uD820\uD822\uD840-\uD868\uD86A-\uD86C\uD86F-\uD872\uD874-\uD879\uD880-\uD883\uD885-\uD887][\uDC00-\uDFFF]|\uD80D[\uDC00-\uDC2F\uDC41-\uDC46]|\uD811[\uDC00-\uDE46]|\uD81A[\uDC00-\uDE38\uDE40-\uDE5E\uDE70-\uDEBE\uDED0-\uDEED\uDF00-\uDF2F\uDF40-\uDF43\uDF63-\uDF77\uDF7D-\uDF8F]|\uD81B[\uDE40-\uDE7F\uDF00-\uDF4A\uDF50\uDF93-\uDF9F\uDFE0\uDFE1\uDFE3]|\uD821[\uDC00-\uDFF7]|\uD823[\uDC00-\uDCD5\uDD00-\uDD08]|\uD82B[\uDFF0-\uDFF3\uDFF5-\uDFFB\uDFFD\uDFFE]|\uD82C[\uDC00-\uDD22\uDD32\uDD50-\uDD52\uDD55\uDD64-\uDD67\uDD70-\uDEFB]|\uD82F[\uDC00-\uDC6A\uDC70-\uDC7C\uDC80-\uDC88\uDC90-\uDC99]|\uD835[\uDC00-\uDC54\uDC56-\uDC9C\uDC9E\uDC9F\uDCA2\uDCA5\uDCA6\uDCA9-\uDCAC\uDCAE-\uDCB9\uDCBB\uDCBD-\uDCC3\uDCC5-\uDD05\uDD07-\uDD0A\uDD0D-\uDD14\uDD16-\uDD1C\uDD1E-\uDD39\uDD3B-\uDD3E\uDD40-\uDD44\uDD46\uDD4A-\uDD50\uDD52-\uDEA5\uDEA8-\uDEC0\uDEC2-\uDEDA\uDEDC-\uDEFA\uDEFC-\uDF14\uDF16-\uDF34\uDF36-\uDF4E\uDF50-\uDF6E\uDF70-\uDF88\uDF8A-\uDFA8\uDFAA-\uDFC2\uDFC4-\uDFCB]|\uD837[\uDF00-\uDF1E\uDF25-\uDF2A]|\uD838[\uDC30-\uDC6D\uDD00-\uDD2C\uDD37-\uDD3D\uDD4E\uDE90-\uDEAD\uDEC0-\uDEEB]|\uD839[\uDCD0-\uDCEB\uDFE0-\uDFE6\uDFE8-\uDFEB\uDFED\uDFEE\uDFF0-\uDFFE]|\uD83A[\uDC00-\uDCC4\uDD00-\uDD43\uDD4B]|\uD83B[\uDE00-\uDE03\uDE05-\uDE1F\uDE21\uDE22\uDE24\uDE27\uDE29-\uDE32\uDE34-\uDE37\uDE39\uDE3B\uDE42\uDE47\uDE49\uDE4B\uDE4D-\uDE4F\uDE51\uDE52\uDE54\uDE57\uDE59\uDE5B\uDE5D\uDE5F\uDE61\uDE62\uDE64\uDE67-\uDE6A\uDE6C-\uDE72\uDE74-\uDE77\uDE79-\uDE7C\uDE7E\uDE80-\uDE89\uDE8B-\uDE9B\uDEA1-\uDEA3\uDEA5-\uDEA9\uDEAB-\uDEBB]|\uD869[\uDC00-\uDEDF\uDF00-\uDFFF]|\uD86D[\uDC00-\uDF39\uDF40-\uDFFF]|\uD86E[\uDC00-\uDC1D\uDC20-\uDFFF]|\uD873[\uDC00-\uDEA1\uDEB0-\uDFFF]|\uD87A[\uDC00-\uDFE0]|\uD87E[\uDC00-\uDE1D]|\uD884[\uDC00-\uDF4A\uDF50-\uDFFF]|\uD888[\uDC00-\uDFAF])(?:[0-9A-Za-z\xAA\xB5\xBA\xC0-\xD6\xD8-\xF6\xF8-\u02C1\u02C6-\u02D1\u02E0-\u02E4\u02EC\u02EE\u0370-\u0374\u0376\u0377\u037A-\u037D\u037F\u0386\u0388-\u038A\u038C\u038E-\u03A1\u03A3-\u03F5\u03F7-\u0481\u048A-\u052F\u0531-\u0556\u0559\u0560-\u0588\u05D0-\u05EA\u05EF-\u05F2\u0620-\u064A\u066E\u066F\u0671-\u06D3\u06D5\u06E5\u06E6\u06EE\u06EF\u06FA-\u06FC\u06FF\u0710\u0712-\u072F\u074D-\u07A5\u07B1\u07CA-\u07EA\u07F4\u07F5\u07FA\u0800-\u0815\u081A\u0824\u0828\u0840-\u0858\u0860-\u086A\u0870-\u0887\u0889-\u088E\u08A0-\u08C9\u0904-\u0939\u093D\u0950\u0958-\u0961\u0971-\u0980\u0985-\u098C\u098F\u0990\u0993-\u09A8\u09AA-\u09B0\u09B2\u09B6-\u09B9\u09BD\u09CE\u09DC\u09DD\u09DF-\u09E1\u09F0\u09F1\u09FC\u0A05-\u0A0A\u0A0F\u0A10\u0A13-\u0A28\u0A2A-\u0A30\u0A32\u0A33\u0A35\u0A36\u0A38\u0A39\u0A59-\u0A5C\u0A5E\u0A72-\u0A74\u0A85-\u0A8D\u0A8F-\u0A91\u0A93-\u0AA8\u0AAA-\u0AB0\u0AB2\u0AB3\u0AB5-\u0AB9\u0ABD\u0AD0\u0AE0\u0AE1\u0AF9\u0B05-\u0B0C\u0B0F\u0B10\u0B13-\u0B28\u0B2A-\u0B30\u0B32\u0B33\u0B35-\u0B39\u0B3D\u0B5C\u0B5D\u0B5F-\u0B61\u0B71\u0B83\u0B85-\u0B8A\u0B8E-\u0B90\u0B92-\u0B95\u0B99\u0B9A\u0B9C\u0B9E\u0B9F\u0BA3\u0BA4\u0BA8-\u0BAA\u0BAE-\u0BB9\u0BD0\u0C05-\u0C0C\u0C0E-\u0C10\u0C12-\u0C28\u0C2A-\u0C39\u0C3D\u0C58-\u0C5A\u0C5D\u0C60\u0C61\u0C80\u0C85-\u0C8C\u0C8E-\u0C90\u0C92-\u0CA8\u0CAA-\u0CB3\u0CB5-\u0CB9\u0CBD\u0CDD\u0CDE\u0CE0\u0CE1\u0CF1\u0CF2\u0D04-\u0D0C\u0D0E-\u0D10\u0D12-\u0D3A\u0D3D\u0D4E\u0D54-\u0D56\u0D5F-\u0D61\u0D7A-\u0D7F\u0D85-\u0D96\u0D9A-\u0DB1\u0DB3-\u0DBB\u0DBD\u0DC0-\u0DC6\u0E01-\u0E30\u0E32\u0E33\u0E40-\u0E46\u0E81\u0E82\u0E84\u0E86-\u0E8A\u0E8C-\u0EA3\u0EA5\u0EA7-\u0EB0\u0EB2\u0EB3\u0EBD\u0EC0-\u0EC4\u0EC6\u0EDC-\u0EDF\u0F00\u0F40-\u0F47\u0F49-\u0F6C\u0F88-\u0F8C\u1000-\u102A\u103F\u1050-\u1055\u105A-\u105D\u1061\u1065\u1066\u106E-\u1070\u1075-\u1081\u108E\u10A0-\u10C5\u10C7\u10CD\u10D0-\u10FA\u10FC-\u1248\u124A-\u124D\u1250-\u1256\u1258\u125A-\u125D\u1260-\u1288\u128A-\u128D\u1290-\u12B0\u12B2-\u12B5\u12B8-\u12BE\u12C0\u12C2-\u12C5\u12C8-\u12D6\u12D8-\u1310\u1312-\u1315\u1318-\u135A\u1380-\u138F\u13A0-\u13F5\u13F8-\u13FD\u1401-\u166C\u166F-\u167F\u1681-\u169A\u16A0-\u16EA\u16F1-\u16F8\u1700-\u1711\u171F-\u1731\u1740-\u1751\u1760-\u176C\u176E-\u1770\u1780-\u17B3\u17D7\u17DC\u1820-\u1878\u1880-\u1884\u1887-\u18A8\u18AA\u18B0-\u18F5\u1900-\u191E\u1950-\u196D\u1970-\u1974\u1980-\u19AB\u19B0-\u19C9\u1A00-\u1A16\u1A20-\u1A54\u1AA7\u1B05-\u1B33\u1B45-\u1B4C\u1B83-\u1BA0\u1BAE\u1BAF\u1BBA-\u1BE5\u1C00-\u1C23\u1C4D-\u1C4F\u1C5A-\u1C7D\u1C80-\u1C88\u1C90-\u1CBA\u1CBD-\u1CBF\u1CE9-\u1CEC\u1CEE-\u1CF3\u1CF5\u1CF6\u1CFA\u1D00-\u1DBF\u1E00-\u1F15\u1F18-\u1F1D\u1F20-\u1F45\u1F48-\u1F4D\u1F50-\u1F57\u1F59\u1F5B\u1F5D\u1F5F-\u1F7D\u1F80-\u1FB4\u1FB6-\u1FBC\u1FBE\u1FC2-\u1FC4\u1FC6-\u1FCC\u1FD0-\u1FD3\u1FD6-\u1FDB\u1FE0-\u1FEC\u1FF2-\u1FF4\u1FF6-\u1FFC\u2071\u207F\u2090-\u209C\u2102\u2107\u210A-\u2113\u2115\u2119-\u211D\u2124\u2126\u2128\u212A-\u212D\u212F-\u2139\u213C-\u213F\u2145-\u2149\u214E\u2183\u2184\u2C00-\u2CE4\u2CEB-\u2CEE\u2CF2\u2CF3\u2D00-\u2D25\u2D27\u2D2D\u2D30-\u2D67\u2D6F\u2D80-\u2D96\u2DA0-\u2DA6\u2DA8-\u2DAE\u2DB0-\u2DB6\u2DB8-\u2DBE\u2DC0-\u2DC6\u2DC8-\u2DCE\u2DD0-\u2DD6\u2DD8-\u2DDE\u2E2F\u3005\u3006\u3031-\u3035\u303B\u303C\u3041-\u3096\u309D-\u309F\u30A1-\u30FA\u30FC-\u30FF\u3105-\u312F\u3131-\u318E\u31A0-\u31BF\u31F0-\u31FF\u3400-\u4DBF\u4E00-\uA48C\uA4D0-\uA4FD\uA500-\uA60C\uA610-\uA61F\uA62A\uA62B\uA640-\uA66E\uA67F-\uA69D\uA6A0-\uA6E5\uA717-\uA71F\uA722-\uA788\uA78B-\uA7CA\uA7D0\uA7D1\uA7D3\uA7D5-\uA7D9\uA7F2-\uA801\uA803-\uA805\uA807-\uA80A\uA80C-\uA822\uA840-\uA873\uA882-\uA8B3\uA8F2-\uA8F7\uA8FB\uA8FD\uA8FE\uA90A-\uA925\uA930-\uA946\uA960-\uA97C\uA984-\uA9B2\uA9CF\uA9E0-\uA9E4\uA9E6-\uA9EF\uA9FA-\uA9FE\uAA00-\uAA28\uAA40-\uAA42\uAA44-\uAA4B\uAA60-\uAA76\uAA7A\uAA7E-\uAAAF\uAAB1\uAAB5\uAAB6\uAAB9-\uAABD\uAAC0\uAAC2\uAADB-\uAADD\uAAE0-\uAAEA\uAAF2-\uAAF4\uAB01-\uAB06\uAB09-\uAB0E\uAB11-\uAB16\uAB20-\uAB26\uAB28-\uAB2E\uAB30-\uAB5A\uAB5C-\uAB69\uAB70-\uABE2\uAC00-\uD7A3\uD7B0-\uD7C6\uD7CB-\uD7FB\uF900-\uFA6D\uFA70-\uFAD9\uFB00-\uFB06\uFB13-\uFB17\uFB1D\uFB1F-\uFB28\uFB2A-\uFB36\uFB38-\uFB3C\uFB3E\uFB40\uFB41\uFB43\uFB44\uFB46-\uFBB1\uFBD3-\uFD3D\uFD50-\uFD8F\uFD92-\uFDC7\uFDF0-\uFDFB\uFE70-\uFE74\uFE76-\uFEFC\uFF21-\uFF3A\uFF41-\uFF5A\uFF66-\uFFBE\uFFC2-\uFFC7\uFFCA-\uFFCF\uFFD2-\uFFD7\uFFDA-\uFFDC]|\uD800[\uDC00-\uDC0B\uDC0D-\uDC26\uDC28-\uDC3A\uDC3C\uDC3D\uDC3F-\uDC4D\uDC50-\uDC5D\uDC80-\uDCFA\uDE80-\uDE9C\uDEA0-\uDED0\uDF00-\uDF1F\uDF2D-\uDF40\uDF42-\uDF49\uDF50-\uDF75\uDF80-\uDF9D\uDFA0-\uDFC3\uDFC8-\uDFCF]|\uD801[\uDC00-\uDC9D\uDCB0-\uDCD3\uDCD8-\uDCFB\uDD00-\uDD27\uDD30-\uDD63\uDD70-\uDD7A\uDD7C-\uDD8A\uDD8C-\uDD92\uDD94\uDD95\uDD97-\uDDA1\uDDA3-\uDDB1\uDDB3-\uDDB9\uDDBB\uDDBC\uDE00-\uDF36\uDF40-\uDF55\uDF60-\uDF67\uDF80-\uDF85\uDF87-\uDFB0\uDFB2-\uDFBA]|\uD802[\uDC00-\uDC05\uDC08\uDC0A-\uDC35\uDC37\uDC38\uDC3C\uDC3F-\uDC55\uDC60-\uDC76\uDC80-\uDC9E\uDCE0-\uDCF2\uDCF4\uDCF5\uDD00-\uDD15\uDD20-\uDD39\uDD80-\uDDB7\uDDBE\uDDBF\uDE00\uDE10-\uDE13\uDE15-\uDE17\uDE19-\uDE35\uDE60-\uDE7C\uDE80-\uDE9C\uDEC0-\uDEC7\uDEC9-\uDEE4\uDF00-\uDF35\uDF40-\uDF55\uDF60-\uDF72\uDF80-\uDF91]|\uD803[\uDC00-\uDC48\uDC80-\uDCB2\uDCC0-\uDCF2\uDD00-\uDD23\uDE80-\uDEA9\uDEB0\uDEB1\uDF00-\uDF1C\uDF27\uDF30-\uDF45\uDF70-\uDF81\uDFB0-\uDFC4\uDFE0-\uDFF6]|\uD804[\uDC03-\uDC37\uDC71\uDC72\uDC75\uDC83-\uDCAF\uDCD0-\uDCE8\uDD03-\uDD26\uDD44\uDD47\uDD50-\uDD72\uDD76\uDD83-\uDDB2\uDDC1-\uDDC4\uDDDA\uDDDC\uDE00-\uDE11\uDE13-\uDE2B\uDE3F\uDE40\uDE80-\uDE86\uDE88\uDE8A-\uDE8D\uDE8F-\uDE9D\uDE9F-\uDEA8\uDEB0-\uDEDE\uDF05-\uDF0C\uDF0F\uDF10\uDF13-\uDF28\uDF2A-\uDF30\uDF32\uDF33\uDF35-\uDF39\uDF3D\uDF50\uDF5D-\uDF61]|\uD805[\uDC00-\uDC34\uDC47-\uDC4A\uDC5F-\uDC61\uDC80-\uDCAF\uDCC4\uDCC5\uDCC7\uDD80-\uDDAE\uDDD8-\uDDDB\uDE00-\uDE2F\uDE44\uDE80-\uDEAA\uDEB8\uDF00-\uDF1A\uDF40-\uDF46]|\uD806[\uDC00-\uDC2B\uDCA0-\uDCDF\uDCFF-\uDD06\uDD09\uDD0C-\uDD13\uDD15\uDD16\uDD18-\uDD2F\uDD3F\uDD41\uDDA0-\uDDA7\uDDAA-\uDDD0\uDDE1\uDDE3\uDE00\uDE0B-\uDE32\uDE3A\uDE50\uDE5C-\uDE89\uDE9D\uDEB0-\uDEF8]|\uD807[\uDC00-\uDC08\uDC0A-\uDC2E\uDC40\uDC72-\uDC8F\uDD00-\uDD06\uDD08\uDD09\uDD0B-\uDD30\uDD46\uDD60-\uDD65\uDD67\uDD68\uDD6A-\uDD89\uDD98\uDEE0-\uDEF2\uDF02\uDF04-\uDF10\uDF12-\uDF33\uDFB0]|\uD808[\uDC00-\uDF99]|\uD809[\uDC80-\uDD43]|\uD80B[\uDF90-\uDFF0]|[\uD80C\uD81C-\uD820\uD822\uD840-\uD868\uD86A-\uD86C\uD86F-\uD872\uD874-\uD879\uD880-\uD883\uD885-\uD887][\uDC00-\uDFFF]|\uD80D[\uDC00-\uDC2F\uDC41-\uDC46]|\uD811[\uDC00-\uDE46]|\uD81A[\uDC00-\uDE38\uDE40-\uDE5E\uDE70-\uDEBE\uDED0-\uDEED\uDF00-\uDF2F\uDF40-\uDF43\uDF63-\uDF77\uDF7D-\uDF8F]|\uD81B[\uDE40-\uDE7F\uDF00-\uDF4A\uDF50\uDF93-\uDF9F\uDFE0\uDFE1\uDFE3]|\uD821[\uDC00-\uDFF7]|\uD823[\uDC00-\uDCD5\uDD00-\uDD08]|\uD82B[\uDFF0-\uDFF3\uDFF5-\uDFFB\uDFFD\uDFFE]|\uD82C[\uDC00-\uDD22\uDD32\uDD50-\uDD52\uDD55\uDD64-\uDD67\uDD70-\uDEFB]|\uD82F[\uDC00-\uDC6A\uDC70-\uDC7C\uDC80-\uDC88\uDC90-\uDC99]|\uD835[\uDC00-\uDC54\uDC56-\uDC9C\uDC9E\uDC9F\uDCA2\uDCA5\uDCA6\uDCA9-\uDCAC\uDCAE-\uDCB9\uDCBB\uDCBD-\uDCC3\uDCC5-\uDD05\uDD07-\uDD0A\uDD0D-\uDD14\uDD16-\uDD1C\uDD1E-\uDD39\uDD3B-\uDD3E\uDD40-\uDD44\uDD46\uDD4A-\uDD50\uDD52-\uDEA5\uDEA8-\uDEC0\uDEC2-\uDEDA\uDEDC-\uDEFA\uDEFC-\uDF14\uDF16-\uDF34\uDF36-\uDF4E\uDF50-\uDF6E\uDF70-\uDF88\uDF8A-\uDFA8\uDFAA-\uDFC2\uDFC4-\uDFCB]|\uD837[\uDF00-\uDF1E\uDF25-\uDF2A]|\uD838[\uDC30-\uDC6D\uDD00-\uDD2C\uDD37-\uDD3D\uDD4E\uDE90-\uDEAD\uDEC0-\uDEEB]|\uD839[\uDCD0-\uDCEB\uDFE0-\uDFE6\uDFE8-\uDFEB\uDFED\uDFEE\uDFF0-\uDFFE]|\uD83A[\uDC00-\uDCC4\uDD00-\uDD43\uDD4B]|\uD83B[\uDE00-\uDE03\uDE05-\uDE1F\uDE21\uDE22\uDE24\uDE27\uDE29-\uDE32\uDE34-\uDE37\uDE39\uDE3B\uDE42\uDE47\uDE49\uDE4B\uDE4D-\uDE4F\uDE51\uDE52\uDE54\uDE57\uDE59\uDE5B\uDE5D\uDE5F\uDE61\uDE62\uDE64\uDE67-\uDE6A\uDE6C-\uDE72\uDE74-\uDE77\uDE79-\uDE7C\uDE7E\uDE80-\uDE89\uDE8B-\uDE9B\uDEA1-\uDEA3\uDEA5-\uDEA9\uDEAB-\uDEBB]|\uD869[\uDC00-\uDEDF\uDF00-\uDFFF]|\uD86D[\uDC00-\uDF39\uDF40-\uDFFF]|\uD86E[\uDC00-\uDC1D\uDC20-\uDFFF]|\uD873[\uDC00-\uDEA1\uDEB0-\uDFFF]|\uD87A[\uDC00-\uDFE0]|\uD87E[\uDC00-\uDE1D]|\uD884[\uDC00-\uDF4A\uDF50-\uDFFF]|\uD888[\uDC00-\uDFAF])*$/.test(s)
       }, {
         name: 'string',
-        test: isString
+        test: isString$1
       }, {
         name: 'Chain',
         test: isChain
       }, {
         name: 'Array',
-        test: isArray
+        test: isArray$1
       }, {
         name: 'Matrix',
         test: isMatrix
@@ -5668,7 +5673,7 @@ var app = (function () {
         test: isIndex
       }, {
         name: 'boolean',
-        test: isBoolean
+        test: isBoolean$1
       }, {
         name: 'ResultSet',
         test: isResultSet
@@ -5677,19 +5682,19 @@ var app = (function () {
         test: isHelp
       }, {
         name: 'function',
-        test: isFunction
+        test: isFunction$1
       }, {
         name: 'Date',
-        test: isDate
+        test: isDate$1
       }, {
         name: 'RegExp',
-        test: isRegExp
+        test: isRegExp$1
       }, {
         name: 'null',
         test: isNull
       }, {
         name: 'undefined',
-        test: isUndefined
+        test: isUndefined$1
       }, {
         name: 'AccessorNode',
         test: isAccessorNode
@@ -5743,7 +5748,7 @@ var app = (function () {
         test: isMap
       }, {
         name: 'Object',
-        test: isObject
+        test: isObject$1
       } // order 'Object' last, it matches on other classes too
       ]);
 
@@ -10007,7 +10012,7 @@ var app = (function () {
      * x {number|string|Decimal}
      *
      */
-    function abs$1(x) {
+    function abs$2(x) {
       return new this(x).abs();
     }
 
@@ -10018,7 +10023,7 @@ var app = (function () {
      * x {number|string|Decimal}
      *
      */
-    function acos$1(x) {
+    function acos$2(x) {
       return new this(x).acos();
     }
 
@@ -10055,7 +10060,7 @@ var app = (function () {
      * x {number|string|Decimal}
      *
      */
-    function asin$1(x) {
+    function asin$2(x) {
       return new this(x).asin();
     }
 
@@ -10121,7 +10126,7 @@ var app = (function () {
      * atan2(y, NaN) = NaN
      *
      */
-    function atan2$1(y, x) {
+    function atan2$2(y, x) {
       y = new this(y);
       x = new this(x);
       var r,
@@ -10270,7 +10275,7 @@ var app = (function () {
      * x {number|string|Decimal} A value in radians.
      *
      */
-    function cos$1(x) {
+    function cos$2(x) {
       return new this(x).cos();
     }
 
@@ -10423,19 +10428,19 @@ var app = (function () {
       Decimal.clone = clone$1;
       Decimal.isDecimal = isDecimalInstance;
 
-      Decimal.abs = abs$1;
-      Decimal.acos = acos$1;
+      Decimal.abs = abs$2;
+      Decimal.acos = acos$2;
       Decimal.acosh = acosh$1;        // ES6
       Decimal.add = add$1;
-      Decimal.asin = asin$1;
+      Decimal.asin = asin$2;
       Decimal.asinh = asinh$1;        // ES6
       Decimal.atan = atan$1;
       Decimal.atanh = atanh$1;        // ES6
-      Decimal.atan2 = atan2$1;
+      Decimal.atan2 = atan2$2;
       Decimal.cbrt = cbrt$1;          // ES6
       Decimal.ceil = ceil$1;
       Decimal.clamp = clamp;
-      Decimal.cos = cos$1;
+      Decimal.cos = cos$2;
       Decimal.cosh = cosh$1;          // ES6
       Decimal.div = div;
       Decimal.exp = exp$1;
@@ -10445,17 +10450,17 @@ var app = (function () {
       Decimal.log = log$1;
       Decimal.log10 = log10$1;        // ES6
       Decimal.log2 = log2$1;          // ES6
-      Decimal.max = max$1;
-      Decimal.min = min$1;
+      Decimal.max = max$2;
+      Decimal.min = min$2;
       Decimal.mod = mod$1;
       Decimal.mul = mul;
       Decimal.pow = pow$1;
       Decimal.random = random$1;
       Decimal.round = round$1;
       Decimal.sign = sign$1;          // ES6
-      Decimal.sin = sin$1;
+      Decimal.sin = sin$2;
       Decimal.sinh = sinh$1;          // ES6
-      Decimal.sqrt = sqrt$1;
+      Decimal.sqrt = sqrt$2;
       Decimal.sub = sub;
       Decimal.sum = sum$1;
       Decimal.tan = tan$1;
@@ -10613,7 +10618,7 @@ var app = (function () {
      * arguments {number|string|Decimal}
      *
      */
-    function max$1() {
+    function max$2() {
       return maxOrMin(this, arguments, 'lt');
     }
 
@@ -10624,7 +10629,7 @@ var app = (function () {
      * arguments {number|string|Decimal}
      *
      */
-    function min$1() {
+    function min$2() {
       return maxOrMin(this, arguments, 'gt');
     }
 
@@ -10810,7 +10815,7 @@ var app = (function () {
      * x {number|string|Decimal} A value in radians.
      *
      */
-    function sin$1(x) {
+    function sin$2(x) {
       return new this(x).sin();
     }
 
@@ -10834,7 +10839,7 @@ var app = (function () {
      * x {number|string|Decimal}
      *
      */
-    function sqrt$1(x) {
+    function sqrt$2(x) {
       return new this(x).sqrt();
     }
 
@@ -12443,7 +12448,7 @@ var app = (function () {
         var strIm = format$3(this.im, options);
 
         // round either re or im when smaller than the configured precision
-        var precision = isNumber(options) ? options : options ? options.precision : null;
+        var precision = isNumber$1(options) ? options : options ? options.precision : null;
         if (precision !== null) {
           var epsilon = Math.pow(10, -precision);
           if (Math.abs(re / im) < epsilon) {
@@ -12510,12 +12515,12 @@ var app = (function () {
             {
               var r = arguments[0];
               var phi = arguments[1];
-              if (isNumber(r)) {
+              if (isNumber$1(r)) {
                 if (isUnit(phi) && phi.hasBase('ANGLE')) {
                   // convert unit to a number in radians
                   phi = phi.toNumber('rad');
                 }
-                if (isNumber(phi)) {
+                if (isNumber$1(phi)) {
                   return new Complex$1({
                     r,
                     phi
@@ -14178,7 +14183,7 @@ var app = (function () {
         if (!(this instanceof DenseMatrix)) {
           throw new SyntaxError('Constructor must be called with the new operator');
         }
-        if (datatype && !isString(datatype)) {
+        if (datatype && !isString$1(datatype)) {
           throw new Error('Invalid datatype: ' + datatype);
         }
         if (isMatrix(data)) {
@@ -14194,14 +14199,14 @@ var app = (function () {
             this._size = data.size();
             this._datatype = datatype || data._datatype;
           }
-        } else if (data && isArray(data.data) && isArray(data.size)) {
+        } else if (data && isArray$1(data.data) && isArray$1(data.size)) {
           // initialize fields from JSON representation
           this._data = data.data;
           this._size = data.size;
           // verify the dimensions of the array
           validate(this._data, this._size);
           this._datatype = datatype || data.datatype;
-        } else if (isArray(data)) {
+        } else if (isArray$1(data)) {
           // replace nested Matrices with Arrays
           this._data = preprocess(data);
           // get the dimensions of the array
@@ -14323,7 +14328,7 @@ var app = (function () {
        * @return {*} value
        */
       DenseMatrix.prototype.get = function (index) {
-        if (!isArray(index)) {
+        if (!isArray$1(index)) {
           throw new TypeError('Array expected');
         }
         if (index.length !== this._size.length) {
@@ -14354,7 +14359,7 @@ var app = (function () {
        * @return {DenseMatrix} self
        */
       DenseMatrix.prototype.set = function (index, value, defaultValue) {
-        if (!isArray(index)) {
+        if (!isArray$1(index)) {
           throw new TypeError('Array expected');
         }
         if (index.length < this._size.length) {
@@ -14599,7 +14604,7 @@ var app = (function () {
           // first value in matrix
           var v = matrix._data;
           // go deep
-          while (isArray(v)) {
+          while (isArray$1(v)) {
             v = v[0];
           }
           return v;
@@ -14705,7 +14710,7 @@ var app = (function () {
         var me = this;
         var args = maxArgumentCount(callback);
         var recurse = function recurse(value, index) {
-          if (isArray(value)) {
+          if (isArray$1(value)) {
             return value.map(function (child, i) {
               return recurse(child, index.concat(i));
             });
@@ -14740,7 +14745,7 @@ var app = (function () {
         // matrix instance
         var me = this;
         var recurse = function recurse(value, index) {
-          if (isArray(value)) {
+          if (isArray$1(value)) {
             value.forEach(function (child, i) {
               recurse(child, index.concat(i));
             });
@@ -14757,7 +14762,7 @@ var app = (function () {
        */
       DenseMatrix.prototype[Symbol.iterator] = function* () {
         var recurse = function* recurse(value, index) {
-          if (isArray(value)) {
+          if (isArray$1(value)) {
             for (var i = 0; i < value.length; i++) {
               yield* recurse(value[i], index.concat(i));
             }
@@ -14880,7 +14885,7 @@ var app = (function () {
             k = k.toNumber();
           }
           // is must be an integer
-          if (!isNumber(k) || !isInteger$1(k)) {
+          if (!isNumber$1(k) || !isInteger$1(k)) {
             throw new TypeError('The parameter k must be an integer number');
           }
         } else {
@@ -14926,7 +14931,7 @@ var app = (function () {
        * @returns {DenseMatrix}
        */
       DenseMatrix.diagonal = function (size, value, k, defaultValue) {
-        if (!isArray(size)) {
+        if (!isArray$1(size)) {
           throw new TypeError('Array expected, size parameter');
         }
         if (size.length !== 2) {
@@ -14941,7 +14946,7 @@ var app = (function () {
             s = s.toNumber();
           }
           // validate arguments
-          if (!isNumber(s) || !isInteger$1(s) || s < 1) {
+          if (!isNumber$1(s) || !isInteger$1(s) || s < 1) {
             throw new Error('Size values must be positive integers');
           }
           return s;
@@ -14954,7 +14959,7 @@ var app = (function () {
             k = k.toNumber();
           }
           // is must be an integer
-          if (!isNumber(k) || !isInteger$1(k)) {
+          if (!isNumber$1(k) || !isInteger$1(k)) {
             throw new TypeError('The parameter k must be an integer number');
           }
         } else {
@@ -14975,7 +14980,7 @@ var app = (function () {
         var _value;
 
         // check value
-        if (isArray(value)) {
+        if (isArray$1(value)) {
           // validate array
           if (value.length !== n) {
             // number of values in array must be n
@@ -15057,7 +15062,7 @@ var app = (function () {
        */
       DenseMatrix.prototype.swapRows = function (i, j) {
         // check index
-        if (!isNumber(i) || !isInteger$1(i) || !isNumber(j) || !isInteger$1(j)) {
+        if (!isNumber$1(i) || !isInteger$1(i) || !isNumber$1(j) || !isInteger$1(j)) {
           throw new Error('Row index must be positive integers');
         }
         // check dimensions
@@ -15099,7 +15104,7 @@ var app = (function () {
         if (isMatrix(data)) {
           return preprocess(data.valueOf());
         }
-        if (isArray(data)) {
+        if (isArray$1(data)) {
           return data.map(preprocess);
         }
         return data;
@@ -15715,8 +15720,8 @@ var app = (function () {
     }
     combinationsNumber.signature = 'number, number';
 
-    var pi$1 = Math.PI;
-    var tau$1 = 2 * Math.PI;
+    var pi$3 = Math.PI;
+    var tau$3 = 2 * Math.PI;
     var e$1 = Math.E;
     var phi$1 = 1.6180339887498948; // eslint-disable-line no-loss-of-precision
 
@@ -16405,20 +16410,20 @@ var app = (function () {
         if (!(this instanceof SparseMatrix)) {
           throw new SyntaxError('Constructor must be called with the new operator');
         }
-        if (datatype && !isString(datatype)) {
+        if (datatype && !isString$1(datatype)) {
           throw new Error('Invalid datatype: ' + datatype);
         }
         if (isMatrix(data)) {
           // create from matrix
           _createFromMatrix(this, data, datatype);
-        } else if (data && isArray(data.index) && isArray(data.ptr) && isArray(data.size)) {
+        } else if (data && isArray$1(data.index) && isArray$1(data.ptr) && isArray$1(data.size)) {
           // initialize fields
           this._values = data.values;
           this._index = data.index;
           this._ptr = data.ptr;
           this._size = data.size;
           this._datatype = datatype || data.datatype;
-        } else if (isArray(data)) {
+        } else if (isArray$1(data)) {
           // create from array
           _createFromArray(this, data, datatype);
         } else if (data) {
@@ -16461,7 +16466,7 @@ var app = (function () {
         var eq = equalScalar;
         // zero value
         var zero = 0;
-        if (isString(datatype)) {
+        if (isString$1(datatype)) {
           // find signature that matches (datatype, datatype)
           eq = typed.find(equalScalar, [datatype, datatype]) || equalScalar;
           // convert 0 to the same datatype
@@ -16480,7 +16485,7 @@ var app = (function () {
               // current row
               var row = data[i];
               // check row is an array
-              if (isArray(row)) {
+              if (isArray$1(row)) {
                 // update columns if needed (only on first column)
                 if (j === 0 && columns < row.length) {
                   columns = row.length;
@@ -16810,7 +16815,7 @@ var app = (function () {
        * @return {*} value
        */
       SparseMatrix.prototype.get = function (index) {
-        if (!isArray(index)) {
+        if (!isArray$1(index)) {
           throw new TypeError('Array expected');
         }
         if (index.length !== this._size.length) {
@@ -16850,7 +16855,7 @@ var app = (function () {
        * @return {SparseMatrix} self
        */
       SparseMatrix.prototype.set = function (index, v, defaultValue) {
-        if (!isArray(index)) {
+        if (!isArray$1(index)) {
           throw new TypeError('Array expected');
         }
         if (index.length !== this._size.length) {
@@ -16874,7 +16879,7 @@ var app = (function () {
         var eq = equalScalar;
         // zero value
         var zero = 0;
-        if (isString(this._datatype)) {
+        if (isString$1(this._datatype)) {
           // find signature that matches (datatype, datatype)
           eq = typed.find(equalScalar, [this._datatype, this._datatype]) || equalScalar;
           // convert 0 to the same datatype
@@ -16980,7 +16985,7 @@ var app = (function () {
 
         // check sizes
         sizeArray.forEach(function (value) {
-          if (!isNumber(value) || !isInteger$1(value) || value < 0) {
+          if (!isNumber$1(value) || !isInteger$1(value) || value < 0) {
             throw new TypeError('Invalid size, must contain positive integers ' + '(size: ' + format$1(sizeArray) + ')');
           }
         });
@@ -16998,7 +17003,7 @@ var app = (function () {
         var eq = equalScalar;
         // zero value
         var zero = 0;
-        if (isString(matrix._datatype)) {
+        if (isString$1(matrix._datatype)) {
           // find signature that matches (datatype, datatype)
           eq = typed.find(equalScalar, [matrix._datatype, matrix._datatype]) || equalScalar;
           // convert 0 to the same datatype
@@ -17124,7 +17129,7 @@ var app = (function () {
        */
       SparseMatrix.prototype.reshape = function (sizes, copy) {
         // validate arguments
-        if (!isArray(sizes)) {
+        if (!isArray$1(sizes)) {
           throw new TypeError('Array expected');
         }
         if (sizes.length !== 2) {
@@ -17133,7 +17138,7 @@ var app = (function () {
 
         // check sizes
         sizes.forEach(function (value) {
-          if (!isNumber(value) || !isInteger$1(value) || value <= -2 || value === 0) {
+          if (!isNumber$1(value) || !isInteger$1(value) || value <= -2 || value === 0) {
             throw new TypeError('Invalid size, must contain positive integers or -1 ' + '(size: ' + format$1(sizes) + ')');
           }
         });
@@ -17279,7 +17284,7 @@ var app = (function () {
         var eq = equalScalar;
         // zero value
         var zero = 0;
-        if (isString(matrix._datatype)) {
+        if (isString$1(matrix._datatype)) {
           // find signature that matches (datatype, datatype)
           eq = typed.find(equalScalar, [matrix._datatype, matrix._datatype]) || equalScalar;
           // convert 0 to the same datatype
@@ -17542,7 +17547,7 @@ var app = (function () {
             k = k.toNumber();
           }
           // is must be an integer
-          if (!isNumber(k) || !isInteger$1(k)) {
+          if (!isNumber$1(k) || !isInteger$1(k)) {
             throw new TypeError('The parameter k must be an integer number');
           }
         } else {
@@ -17621,7 +17626,7 @@ var app = (function () {
        * @returns {SparseMatrix}
        */
       SparseMatrix.diagonal = function (size, value, k, defaultValue, datatype) {
-        if (!isArray(size)) {
+        if (!isArray$1(size)) {
           throw new TypeError('Array expected, size parameter');
         }
         if (size.length !== 2) {
@@ -17636,7 +17641,7 @@ var app = (function () {
             s = s.toNumber();
           }
           // validate arguments
-          if (!isNumber(s) || !isInteger$1(s) || s < 1) {
+          if (!isNumber$1(s) || !isInteger$1(s) || s < 1) {
             throw new Error('Size values must be positive integers');
           }
           return s;
@@ -17649,7 +17654,7 @@ var app = (function () {
             k = k.toNumber();
           }
           // is must be an integer
-          if (!isNumber(k) || !isInteger$1(k)) {
+          if (!isNumber$1(k) || !isInteger$1(k)) {
             throw new TypeError('The parameter k must be an integer number');
           }
         } else {
@@ -17661,7 +17666,7 @@ var app = (function () {
         var eq = equalScalar;
         // zero value
         var zero = 0;
-        if (isString(datatype)) {
+        if (isString$1(datatype)) {
           // find signature that matches (datatype, datatype)
           eq = typed.find(equalScalar, [datatype, datatype]) || equalScalar;
           // convert 0 to the same datatype
@@ -17681,7 +17686,7 @@ var app = (function () {
         var _value;
 
         // check value
-        if (isArray(value)) {
+        if (isArray$1(value)) {
           // validate array
           if (value.length !== n) {
             // number of values in array must be n
@@ -17759,7 +17764,7 @@ var app = (function () {
        */
       SparseMatrix.prototype.swapRows = function (i, j) {
         // check index
-        if (!isNumber(i) || !isInteger$1(i) || !isNumber(j) || !isInteger$1(j)) {
+        if (!isNumber$1(i) || !isInteger$1(i) || !isNumber$1(j) || !isInteger$1(j)) {
           throw new Error('Row index must be positive integers');
         }
         // check dimensions
@@ -20730,7 +20735,7 @@ var app = (function () {
         }
         // Also pull in the scalar signatures if the operator is a typed function
         if (elop && elop.signatures) {
-          extend(matrixSignatures, elop.signatures);
+          extend$1(matrixSignatures, elop.signatures);
         }
         return matrixSignatures;
       };
@@ -24631,7 +24636,7 @@ var app = (function () {
             if (isMatrix(arg)) {
               asMatrix = true;
             }
-            if (isNumber(arg) || isBigNumber(arg)) {
+            if (isNumber$1(arg) || isBigNumber(arg)) {
               if (i !== len - 1) {
                 throw new Error('Dimension must be specified as last argument');
               }
@@ -25213,7 +25218,7 @@ var app = (function () {
     function _forEach(array, callback) {
       var recurse = function recurse(value, index) {
         if (Array.isArray(value)) {
-          forEach$1(value, function (child, i) {
+          forEach$2(value, function (child, i) {
             // we create a copy of the index array and append the new index value
             recurse(child, index.concat(i));
           });
@@ -27620,7 +27625,7 @@ var app = (function () {
       }
       function isNumOrBig(x) {
         // checks if it's a number or bignumber
-        return isBigNumber(x) || isNumber(x);
+        return isBigNumber(x) || isNumber$1(x);
       }
       function _matrixSolveODE(f, T, y0, options) {
         // receives matrices and returns matrices
@@ -28484,7 +28489,7 @@ var app = (function () {
           value = k ? value[k] : value + '.';
         }
         if (value !== undefined) {
-          if (!isString(value)) {
+          if (!isString$1(value)) {
             return format$1(value, options);
           } else {
             return value;
@@ -29588,7 +29593,7 @@ var app = (function () {
           }
           throw new RangeError('Dimension mismatch. The right side has to be either 1- or 2-dimensional vector.');
         }
-        if (isArray(b)) {
+        if (isArray$1(b)) {
           var bsize = arraySize(b);
           if (bsize.length === 1) {
             if (bsize[0] !== rows) {
@@ -32532,10 +32537,10 @@ var app = (function () {
         if (!(this instanceof ImmutableDenseMatrix)) {
           throw new SyntaxError('Constructor must be called with the new operator');
         }
-        if (datatype && !isString(datatype)) {
+        if (datatype && !isString$1(datatype)) {
           throw new Error('Invalid datatype: ' + datatype);
         }
-        if (isMatrix(data) || isArray(data)) {
+        if (isMatrix(data) || isArray$1(data)) {
           // use DenseMatrix implementation
           var matrix = new DenseMatrix(data, datatype);
           // internal structures
@@ -32544,7 +32549,7 @@ var app = (function () {
           this._datatype = matrix._datatype;
           this._min = null;
           this._max = null;
-        } else if (data && isArray(data.data) && isArray(data.size)) {
+        } else if (data && isArray$1(data.data) && isArray$1(data.size)) {
           // initialize fields from JSON representation
           this._data = data.data;
           this._size = data.size;
@@ -32778,7 +32783,7 @@ var app = (function () {
         this._isScalar = true;
         for (var i = 0, ii = arguments.length; i < ii; i++) {
           var arg = arguments[i];
-          var argIsArray = isArray(arg);
+          var argIsArray = isArray$1(arg);
           var argIsMatrix = isMatrix(arg);
           var sourceSize = null;
           if (isRange(arg)) {
@@ -33986,7 +33991,7 @@ var app = (function () {
         for (var i = 0; i < this.units.length; i++) {
           unit.units[i] = {};
           for (var p in this.units[i]) {
-            if (hasOwnProperty(this.units[i], p)) {
+            if (hasOwnProperty$1(this.units[i], p)) {
               unit.units[i][p] = this.units[i][p];
             }
           }
@@ -34073,7 +34078,7 @@ var app = (function () {
        */
       var _findUnit = memoize(str => {
         // First, match units names exactly. For example, a user could define 'mm' as 10^-4 m, which is silly, but then we would want 'mm' to match the user-defined unit.
-        if (hasOwnProperty(UNITS, str)) {
+        if (hasOwnProperty$1(UNITS, str)) {
           var unit = UNITS[str];
           var prefix = unit.prefixes[''];
           return {
@@ -34082,12 +34087,12 @@ var app = (function () {
           };
         }
         for (var _name in UNITS) {
-          if (hasOwnProperty(UNITS, _name)) {
-            if (endsWith(str, _name)) {
+          if (hasOwnProperty$1(UNITS, _name)) {
+            if (endsWith$1(str, _name)) {
               var _unit = UNITS[_name];
               var prefixLen = str.length - _name.length;
               var prefixName = str.substring(0, prefixLen);
-              var _prefix = hasOwnProperty(_unit.prefixes, prefixName) ? _unit.prefixes[prefixName] : undefined;
+              var _prefix = hasOwnProperty$1(_unit.prefixes, prefixName) ? _unit.prefixes[prefixName] : undefined;
               if (_prefix !== undefined) {
                 // store unit, prefix, and value
                 return {
@@ -34452,7 +34457,7 @@ var app = (function () {
         // Search for a matching base
         var matchingBase;
         for (var key in currentUnitSystem) {
-          if (hasOwnProperty(currentUnitSystem, key)) {
+          if (hasOwnProperty$1(currentUnitSystem, key)) {
             if (ret.hasBase(BASE_UNITS[key])) {
               matchingBase = key;
               break;
@@ -34465,7 +34470,7 @@ var app = (function () {
           var matchingUnit;
           if (matchingBase) {
             // Does the unit system have a matching unit?
-            if (hasOwnProperty(currentUnitSystem, matchingBase)) {
+            if (hasOwnProperty$1(currentUnitSystem, matchingBase)) {
               matchingUnit = currentUnitSystem[matchingBase];
             }
           }
@@ -34483,7 +34488,7 @@ var app = (function () {
             for (var i = 0; i < BASE_DIMENSIONS.length; i++) {
               var baseDim = BASE_DIMENSIONS[i];
               if (Math.abs(ret.dimensions[i] || 0) > 1e-12) {
-                if (hasOwnProperty(currentUnitSystem, baseDim)) {
+                if (hasOwnProperty$1(currentUnitSystem, baseDim)) {
                   proposedUnitList.push({
                     unit: currentUnitSystem[baseDim].unit,
                     prefix: currentUnitSystem[baseDim].prefix,
@@ -34518,7 +34523,7 @@ var app = (function () {
         for (var i = 0; i < BASE_DIMENSIONS.length; i++) {
           var baseDim = BASE_DIMENSIONS[i];
           if (Math.abs(ret.dimensions[i] || 0) > 1e-12) {
-            if (hasOwnProperty(UNIT_SYSTEMS.si, baseDim)) {
+            if (hasOwnProperty$1(UNIT_SYSTEMS.si, baseDim)) {
               proposedUnitList.push({
                 unit: UNIT_SYSTEMS.si[baseDim].unit,
                 prefix: UNIT_SYSTEMS.si[baseDim].prefix,
@@ -34613,7 +34618,7 @@ var app = (function () {
           isImaginary = Math.abs(simp.value.re) < 1e-14;
         }
         for (var i in simp.units) {
-          if (hasOwnProperty(simp.units, i)) {
+          if (hasOwnProperty$1(simp.units, i)) {
             if (simp.units[i].unit) {
               if (simp.units[i].unit.name === 'VA' && isImaginary) {
                 simp.units[i].unit = UNITS.VAR;
@@ -34682,7 +34687,7 @@ var app = (function () {
         bestDiff = Math.abs(bestDiff);
         var prefixes = this.units[0].unit.prefixes;
         for (var p in prefixes) {
-          if (hasOwnProperty(prefixes, p)) {
+          if (hasOwnProperty$1(prefixes, p)) {
             var prefix = prefixes[p];
             if (prefix.scientific) {
               var diff = Math.abs(Math.log(absValue / Math.pow(prefix.value * absUnitValue, power)) / Math.LN10 - 1.2);
@@ -35487,7 +35492,7 @@ var app = (function () {
         }
       };
       for (var key in BASE_UNITS) {
-        if (hasOwnProperty(BASE_UNITS, key)) {
+        if (hasOwnProperty$1(BASE_UNITS, key)) {
           BASE_UNITS[key].key = key;
         }
       }
@@ -37056,7 +37061,7 @@ var app = (function () {
        * @param {string} [name] The name of the unit system.
        */
       Unit.setUnitSystem = function (name) {
-        if (hasOwnProperty(UNIT_SYSTEMS, name)) {
+        if (hasOwnProperty$1(UNIT_SYSTEMS, name)) {
           currentUnitSystem = UNIT_SYSTEMS[name];
         } else {
           throw new Error('Unit system ' + name + ' does not exist. Choices are: ' + Object.keys(UNIT_SYSTEMS).join(', '));
@@ -37069,7 +37074,7 @@ var app = (function () {
        */
       Unit.getUnitSystem = function () {
         for (var _key in UNIT_SYSTEMS) {
-          if (hasOwnProperty(UNIT_SYSTEMS, _key)) {
+          if (hasOwnProperty$1(UNIT_SYSTEMS, _key)) {
             if (UNIT_SYSTEMS[_key] === currentUnitSystem) {
               return _key;
             }
@@ -37131,7 +37136,7 @@ var app = (function () {
 
       // Add dimensions to each built-in unit
       for (var _key2 in UNITS) {
-        if (hasOwnProperty(UNITS, _key2)) {
+        if (hasOwnProperty$1(UNITS, _key2)) {
           var unit = UNITS[_key2];
           unit.dimensions = unit.base.dimensions;
         }
@@ -37139,11 +37144,11 @@ var app = (function () {
 
       // Create aliases
       for (var _name2 in ALIASES) {
-        if (hasOwnProperty(ALIASES, _name2)) {
+        if (hasOwnProperty$1(ALIASES, _name2)) {
           var _unit2 = UNITS[ALIASES[_name2]];
           var alias = {};
           for (var _key3 in _unit2) {
-            if (hasOwnProperty(_unit2, _key3)) {
+            if (hasOwnProperty$1(_unit2, _key3)) {
               alias[_key3] = _unit2[_key3];
             }
           }
@@ -37198,7 +37203,7 @@ var app = (function () {
         // Remove all units and aliases we are overriding
         if (options && options.override) {
           for (var _key4 in obj) {
-            if (hasOwnProperty(obj, _key4)) {
+            if (hasOwnProperty$1(obj, _key4)) {
               Unit.deleteUnit(_key4);
             }
             if (obj[_key4].aliases) {
@@ -37212,7 +37217,7 @@ var app = (function () {
         // TODO: traverse multiple times until all units have been added
         var lastUnit;
         for (var _key5 in obj) {
-          if (hasOwnProperty(obj, _key5)) {
+          if (hasOwnProperty$1(obj, _key5)) {
             lastUnit = Unit.createUnitSingle(_key5, obj[_key5]);
           }
         }
@@ -37251,7 +37256,7 @@ var app = (function () {
         }
 
         // Check collisions with existing units
-        if (hasOwnProperty(UNITS, name)) {
+        if (hasOwnProperty$1(UNITS, name)) {
           throw new Error('Cannot create unit "' + name + '": a unit with that name already exists');
         }
 
@@ -37283,7 +37288,7 @@ var app = (function () {
         }
         if (aliases) {
           for (var i = 0; i < aliases.length; i++) {
-            if (hasOwnProperty(UNITS, aliases[i])) {
+            if (hasOwnProperty$1(UNITS, aliases[i])) {
               throw new Error('Cannot create alias "' + aliases[i] + '": a unit with that name already exists');
             }
           }
@@ -37321,7 +37326,7 @@ var app = (function () {
 
           // Push 0 onto existing base units
           for (var b in BASE_UNITS) {
-            if (hasOwnProperty(BASE_UNITS, b)) {
+            if (hasOwnProperty$1(BASE_UNITS, b)) {
               BASE_UNITS[b].dimensions[BASE_DIMENSIONS.length - 1] = 0;
             }
           }
@@ -37360,7 +37365,7 @@ var app = (function () {
           // Create a new base if no matching base exists
           var anyMatch = false;
           for (var _i7 in BASE_UNITS) {
-            if (hasOwnProperty(BASE_UNITS, _i7)) {
+            if (hasOwnProperty$1(BASE_UNITS, _i7)) {
               var match = true;
               for (var j = 0; j < BASE_DIMENSIONS.length; j++) {
                 if (Math.abs((newUnit.dimensions[j] || 0) - (BASE_UNITS[_i7].dimensions[j] || 0)) > 1e-12) {
@@ -37395,7 +37400,7 @@ var app = (function () {
           var aliasName = aliases[_i8];
           var _alias = {};
           for (var _key6 in newUnit) {
-            if (hasOwnProperty(newUnit, _key6)) {
+            if (hasOwnProperty$1(newUnit, _key6)) {
               _alias[_key6] = newUnit[_key6];
             }
           }
@@ -40073,7 +40078,7 @@ var app = (function () {
           var ranges = args.map(function (arg) {
             if (isBigNumber(arg)) {
               return arg.toNumber(); // convert BigNumber to Number
-            } else if (isArray(arg) || isMatrix(arg)) {
+            } else if (isArray$1(arg) || isMatrix(arg)) {
               return arg.map(function (elem) {
                 // convert BigNumber to Number
                 return isBigNumber(elem) ? elem.toNumber() : elem;
@@ -41218,7 +41223,7 @@ var app = (function () {
         return null;
       }
       var property = properties[index][identifier];
-      if (hasOwnProperty(property, 'associativity')) {
+      if (hasOwnProperty$1(property, 'associativity')) {
         if (property.associativity === 'left') {
           return 'left';
         }
@@ -41254,7 +41259,7 @@ var app = (function () {
         return null;
       }
       var property = properties[index][identifierA];
-      if (hasOwnProperty(property, 'associativeWith') && property.associativeWith instanceof Array) {
+      if (hasOwnProperty$1(property, 'associativeWith') && property.associativeWith instanceof Array) {
         for (var i = 0; i < property.associativeWith.length; i++) {
           if (property.associativeWith[i] === identifierB) {
             return true;
@@ -41650,7 +41655,7 @@ var app = (function () {
           });
           return function evalBlockNodes(scope, args, context) {
             var results = [];
-            forEach$1(evalBlocks, function evalBlockNode(block) {
+            forEach$2(evalBlocks, function evalBlockNode(block) {
               var result = block.evaluate(scope, args, context);
               if (block.visible) {
                 results.push(result);
@@ -42544,12 +42549,12 @@ var app = (function () {
     function toSymbol(name, isUnit) {
       isUnit = typeof isUnit === 'undefined' ? false : isUnit;
       if (isUnit) {
-        if (hasOwnProperty(latexUnits, name)) {
+        if (hasOwnProperty$1(latexUnits, name)) {
           return latexUnits[name];
         }
         return '\\mathrm{' + escapeLatex(name) + '}';
       }
-      if (hasOwnProperty(latexSymbols, name)) {
+      if (hasOwnProperty$1(latexSymbols, name)) {
         return latexSymbols[name];
       }
       return escapeLatex(name);
@@ -42810,7 +42815,7 @@ var app = (function () {
          */
         _compile(math, argNames) {
           var childArgNames = Object.create(argNames);
-          forEach$1(this.params, function (param) {
+          forEach$2(this.params, function (param) {
             childArgNames[param] = true;
           });
 
@@ -43023,7 +43028,7 @@ var app = (function () {
               childArgNames.end = true;
               var _evalDimension = dimension._compile(math, childArgNames);
               return function evalDimension(scope, args, context) {
-                if (!isMatrix(context) && !isArray(context) && !isString(context)) {
+                if (!isMatrix(context) && !isArray$1(context) && !isString$1(context)) {
                   throw new TypeError('Cannot resolve "end": ' + 'context must be a Matrix, Array, or string but is ' + typeOf$1(context));
                 }
                 var s = size(context).valueOf();
@@ -43214,7 +43219,7 @@ var app = (function () {
         _compile(math, argNames) {
           var evalEntries = {};
           for (var key in this.properties) {
-            if (hasOwnProperty(this.properties, key)) {
+            if (hasOwnProperty$1(this.properties, key)) {
               // we stringify/parse the key here to resolve unicode characters,
               // so you cannot create a key like {"co\\u006Estructor": null}
               var stringifiedKey = stringify(key);
@@ -43226,7 +43231,7 @@ var app = (function () {
           return function evalObjectNode(scope, args, context) {
             var obj = {};
             for (var _key in evalEntries) {
-              if (hasOwnProperty(evalEntries, _key)) {
+              if (hasOwnProperty$1(evalEntries, _key)) {
                 obj[_key] = evalEntries[_key](scope, args, context);
               }
             }
@@ -43240,7 +43245,7 @@ var app = (function () {
          */
         forEach(callback) {
           for (var key in this.properties) {
-            if (hasOwnProperty(this.properties, key)) {
+            if (hasOwnProperty$1(this.properties, key)) {
               callback(this.properties[key], 'properties[' + stringify(key) + ']', this);
             }
           }
@@ -43255,7 +43260,7 @@ var app = (function () {
         map(callback) {
           var properties = {};
           for (var key in this.properties) {
-            if (hasOwnProperty(this.properties, key)) {
+            if (hasOwnProperty$1(this.properties, key)) {
               properties[key] = this._ifNode(callback(this.properties[key], 'properties[' + stringify(key) + ']', this));
             }
           }
@@ -43269,7 +43274,7 @@ var app = (function () {
         clone() {
           var properties = {};
           for (var key in this.properties) {
-            if (hasOwnProperty(this.properties, key)) {
+            if (hasOwnProperty$1(this.properties, key)) {
               properties[key] = this.properties[key];
             }
           }
@@ -43285,7 +43290,7 @@ var app = (function () {
         _toString(options) {
           var entries = [];
           for (var key in this.properties) {
-            if (hasOwnProperty(this.properties, key)) {
+            if (hasOwnProperty$1(this.properties, key)) {
               entries.push(stringify(key) + ': ' + this.properties[key].toString(options));
             }
           }
@@ -43323,11 +43328,7 @@ var app = (function () {
         toHTML(options) {
           var entries = [];
           for (var key in this.properties) {
-<<<<<<< Updated upstream
-            if (hasOwnProperty(this.properties, key)) {
-=======
             if (hasOwnProperty$1(this.properties, key)) {
->>>>>>> Stashed changes
               entries.push('<span class="math-symbol math-property">' + escape(key) + '</span>' + '<span class="math-operator math-assignment-operator ' + 'math-property-assignment-operator math-binary-operator">' + ':</span>' + this.properties[key].toHTML(options));
             }
           }
@@ -43342,7 +43343,7 @@ var app = (function () {
         _toTex(options) {
           var entries = [];
           for (var key in this.properties) {
-            if (hasOwnProperty(this.properties, key)) {
+            if (hasOwnProperty$1(this.properties, key)) {
               entries.push('\\mathbf{' + key + ':} & ' + this.properties[key].toTex(options) + '\\\\');
             }
           }
@@ -45083,7 +45084,7 @@ var app = (function () {
         toString(options) {
           var customString;
           var name = this.fn.toString(options);
-          if (options && typeof options.handler === 'object' && hasOwnProperty(options.handler, name)) {
+          if (options && typeof options.handler === 'object' && hasOwnProperty$1(options.handler, name)) {
             // callback is a map of callback functions
             customString = options.handler[name](this, options);
           }
@@ -45157,7 +45158,7 @@ var app = (function () {
          */
         toTex(options) {
           var customTex;
-          if (options && typeof options.handler === 'object' && hasOwnProperty(options.handler, this.name)) {
+          if (options && typeof options.handler === 'object' && hasOwnProperty$1(options.handler, this.name)) {
             // callback is a map of callback functions
             customTex = options.handler[this.name](this, options);
           }
@@ -45626,7 +45627,7 @@ var app = (function () {
             state.token += currentCharacter(state);
             next(state);
           }
-          if (hasOwnProperty(NAMED_DELIMITERS, state.token)) {
+          if (hasOwnProperty$1(NAMED_DELIMITERS, state.token)) {
             state.tokenType = TOKENTYPE.DELIMITER;
           } else {
             state.tokenType = TOKENTYPE.SYMBOL;
@@ -46035,7 +46036,7 @@ var app = (function () {
           '<=': 'smallerEq',
           '>=': 'largerEq'
         };
-        while (hasOwnProperty(operators, state.token)) {
+        while (hasOwnProperty$1(operators, state.token)) {
           // eslint-disable-line no-unmodified-loop-condition
           var cond = {
             name: state.token,
@@ -46067,7 +46068,7 @@ var app = (function () {
           '>>': 'rightArithShift',
           '>>>': 'rightLogShift'
         };
-        while (hasOwnProperty(operators, state.token)) {
+        while (hasOwnProperty$1(operators, state.token)) {
           name = state.token;
           fn = operators[name];
           getTokenSkipNewline(state);
@@ -46090,7 +46091,7 @@ var app = (function () {
           in: 'to' // alias of 'to'
         };
 
-        while (hasOwnProperty(operators, state.token)) {
+        while (hasOwnProperty$1(operators, state.token)) {
           name = state.token;
           fn = operators[name];
           getTokenSkipNewline(state);
@@ -46162,7 +46163,7 @@ var app = (function () {
           '+': 'add',
           '-': 'subtract'
         };
-        while (hasOwnProperty(operators, state.token)) {
+        while (hasOwnProperty$1(operators, state.token)) {
           name = state.token;
           fn = operators[name];
           getTokenSkipNewline(state);
@@ -46193,7 +46194,7 @@ var app = (function () {
           './': 'dotDivide'
         };
         while (true) {
-          if (hasOwnProperty(operators, state.token)) {
+          if (hasOwnProperty$1(operators, state.token)) {
             // explicit operators
             name = state.token;
             fn = operators[name];
@@ -46296,7 +46297,7 @@ var app = (function () {
           '%': 'mod',
           mod: 'mod'
         };
-        while (hasOwnProperty(operators, state.token)) {
+        while (hasOwnProperty$1(operators, state.token)) {
           name = state.token;
           fn = operators[name];
           getTokenSkipNewline(state);
@@ -46324,7 +46325,7 @@ var app = (function () {
           '~': 'bitNot',
           not: 'not'
         };
-        if (hasOwnProperty(operators, state.token)) {
+        if (hasOwnProperty$1(operators, state.token)) {
           fn = operators[state.token];
           name = state.token;
           getTokenSkipNewline(state);
@@ -46365,7 +46366,7 @@ var app = (function () {
           '!': 'factorial',
           '\'': 'ctranspose'
         };
-        while (hasOwnProperty(operators, state.token)) {
+        while (hasOwnProperty$1(operators, state.token)) {
           name = state.token;
           fn = operators[name];
           getToken(state);
@@ -46406,7 +46407,7 @@ var app = (function () {
        */
       function parseCustomNodes(state) {
         var params = [];
-        if (state.tokenType === TOKENTYPE.SYMBOL && hasOwnProperty(state.extraNodes, state.token)) {
+        if (state.tokenType === TOKENTYPE.SYMBOL && hasOwnProperty$1(state.extraNodes, state.token)) {
           var CustomNode = state.extraNodes[state.token];
           getToken(state);
 
@@ -46449,7 +46450,7 @@ var app = (function () {
         if (state.tokenType === TOKENTYPE.SYMBOL || state.tokenType === TOKENTYPE.DELIMITER && state.token in NAMED_DELIMITERS) {
           name = state.token;
           getToken(state);
-          if (hasOwnProperty(CONSTANTS, name)) {
+          if (hasOwnProperty$1(CONSTANTS, name)) {
             // true, false, null, ...
             node = new ConstantNode(CONSTANTS[name]);
           } else if (NUMERIC_CONSTANTS.indexOf(name) !== -1) {
@@ -49634,7 +49635,7 @@ var app = (function () {
         if (isMatrix(a)) {
           return a;
         }
-        if (isArray(a)) {
+        if (isArray$1(a)) {
           return matrix(a);
         }
         throw new TypeError('Invalid Matrix LU decomposition');
@@ -50070,7 +50071,7 @@ var app = (function () {
           createProxy(arg0, arg1);
         } else {
           var _loop = function _loop(_name) {
-            if (hasOwnProperty(arg0, _name) && excludedNames[_name] === undefined) {
+            if (hasOwnProperty$1(arg0, _name) && excludedNames[_name] === undefined) {
               createLazyProxy(_name, () => arg0[_name]);
             }
           };
@@ -52803,7 +52804,7 @@ var app = (function () {
           if (typeof search !== 'string') {
             for (prop in mathWithTransform) {
               // search in functions and constants
-              if (hasOwnProperty(mathWithTransform, prop) && search === mathWithTransform[prop]) {
+              if (hasOwnProperty$1(mathWithTransform, prop) && search === mathWithTransform[prop]) {
                 searchName = prop;
                 break;
               }
@@ -54575,7 +54576,7 @@ var app = (function () {
         for (var i = 0; i < N; i++) {
           for (var j = 0; j < N; j++) {
             var el = arr[i][j];
-            if (isNumber(el) || isFraction(el)) {
+            if (isNumber$1(el) || isFraction(el)) {
               hasNumber = true;
             } else if (isBigNumber(el)) {
               hasBig = true;
@@ -55156,7 +55157,7 @@ var app = (function () {
        * @param  {number | BigNumber | Fraction | Complex | Array | Matrix} y          Denominator
        * @return {number | BigNumber | Fraction | Complex | Unit | Array | Matrix}                      Quotient, `x / y`
        */
-      return typed('divide', extend({
+      return typed('divide', extend$1({
         // we extend the signatures of divideScalar with signatures dealing with matrices
 
         'Array | Matrix, Array | Matrix': function ArrayMatrixArrayMatrix(x, y) {
@@ -56372,7 +56373,7 @@ var app = (function () {
         }
         if (smallerEq(probOrN, 1)) {
           // quantileSeq([a, b, c, d, ...], prob[,sorted])
-          return isNumber(probOrN) ? _quantileSeq(dataArr, probOrN, sorted) : bignumber(_quantileSeq(dataArr, probOrN, sorted));
+          return isNumber$1(probOrN) ? _quantileSeq(dataArr, probOrN, sorted) : bignumber(_quantileSeq(dataArr, probOrN, sorted));
         }
         if (larger(probOrN, 1)) {
           // quantileSeq([a, b, c, d, ...], N[,sorted])
@@ -56391,7 +56392,7 @@ var app = (function () {
             var prob = divide(i + 1, nPlusOne);
             probArr.push(_quantileSeq(dataArr, prob, sorted));
           }
-          return isNumber(probOrN) ? probArr : bignumber(probArr);
+          return isNumber$1(probOrN) ? probArr : bignumber(probArr);
         }
       }
 
@@ -56431,11 +56432,11 @@ var app = (function () {
         if (len === 0) {
           throw new Error('Cannot calculate quantile of an empty sequence');
         }
-        var index = isNumber(prob) ? prob * (len - 1) : prob.times(len - 1);
-        var integerPart = isNumber(prob) ? Math.floor(index) : index.floor().toNumber();
-        var fracPart = isNumber(prob) ? index % 1 : index.minus(integerPart);
+        var index = isNumber$1(prob) ? prob * (len - 1) : prob.times(len - 1);
+        var integerPart = isNumber$1(prob) ? Math.floor(index) : index.floor().toNumber();
+        var fracPart = isNumber$1(prob) ? index % 1 : index.minus(integerPart);
         if (isInteger(index)) {
-          return sorted ? flat[index] : partitionSelect(flat, isNumber(prob) ? index : index.valueOf());
+          return sorted ? flat[index] : partitionSelect(flat, isNumber$1(prob) ? index : index.valueOf());
         }
         var left;
         var right;
@@ -58423,7 +58424,7 @@ var app = (function () {
             throw new Error('Weights must have the same length as possibles');
           }
           for (var i = 0, len = weights.length; i < len; i++) {
-            if (!isNumber(weights[i]) || weights[i] < 0) {
+            if (!isNumber$1(weights[i]) || weights[i] < 0) {
               throw new Error('Weights must be an array of positive numbers');
             }
             totalWeights += weights[i];
@@ -58656,7 +58657,7 @@ var app = (function () {
           } else if (larger(k, n)) {
             throw new TypeError('k must be less than or equal to n in function stirlingS2');
           }
-          var big = !(isNumber(n) && isNumber(k));
+          var big = !(isNumber$1(n) && isNumber$1(k));
           var cache = big ? bigCache : smallCache;
           var make = big ? bignumber : number;
           var nn = number(n);
@@ -58989,27 +58990,27 @@ var app = (function () {
         } else if (isParenthesisNode(nodeOrName)) {
           name = 'paren';
         }
-        if (hasOwnProperty(context, name)) {
+        if (hasOwnProperty$1(context, name)) {
           var properties = context[name];
-          if (hasOwnProperty(properties, property)) {
+          if (hasOwnProperty$1(properties, property)) {
             return properties[property];
           }
-          if (hasOwnProperty(defaultContext, name)) {
+          if (hasOwnProperty$1(defaultContext, name)) {
             return defaultContext[name][property];
           }
         }
-        if (hasOwnProperty(context, defaultName)) {
+        if (hasOwnProperty$1(context, defaultName)) {
           var _properties = context[defaultName];
-          if (hasOwnProperty(_properties, property)) {
+          if (hasOwnProperty$1(_properties, property)) {
             return _properties[property];
           }
           return defaultContext[defaultName][property];
         }
         /* name not found in context and context has no global default */
         /* So use default context. */
-        if (hasOwnProperty(defaultContext, name)) {
+        if (hasOwnProperty$1(defaultContext, name)) {
           var _properties2 = defaultContext[name];
-          if (hasOwnProperty(_properties2, property)) {
+          if (hasOwnProperty$1(_properties2, property)) {
             return _properties2[property];
           }
         }
@@ -59031,7 +59032,7 @@ var app = (function () {
       function mergeContext(primary, secondary) {
         var merged = _objectSpread({}, primary);
         for (var prop in secondary) {
-          if (hasOwnProperty(primary, prop)) {
+          if (hasOwnProperty$1(primary, prop)) {
             merged[prop] = _objectSpread(_objectSpread({}, secondary[prop]), primary[prop]);
           } else {
             merged[prop] = secondary[prop];
@@ -60038,7 +60039,7 @@ var app = (function () {
 
           // Replace placeholders with their respective nodes without traversing deeper into the replaced nodes
           res = res.transform(function (node) {
-            if (node.isSymbolNode && hasOwnProperty(matches.placeholders, node.name)) {
+            if (node.isSymbolNode && hasOwnProperty$1(matches.placeholders, node.name)) {
               return matches.placeholders[node.name].clone();
             } else {
               return node;
@@ -60108,9 +60109,9 @@ var app = (function () {
 
         // Placeholders with the same key must match exactly
         for (var key in match1.placeholders) {
-          if (hasOwnProperty(match1.placeholders, key)) {
+          if (hasOwnProperty$1(match1.placeholders, key)) {
             res.placeholders[key] = match1.placeholders[key];
-            if (hasOwnProperty(match2.placeholders, key)) {
+            if (hasOwnProperty$1(match2.placeholders, key)) {
               if (!_exactMatch(match1.placeholders[key], match2.placeholders[key])) {
                 return null;
               }
@@ -60118,7 +60119,7 @@ var app = (function () {
           }
         }
         for (var _key in match2.placeholders) {
-          if (hasOwnProperty(match2.placeholders, _key)) {
+          if (hasOwnProperty$1(match2.placeholders, _key)) {
             res.placeholders[_key] = match2.placeholders[_key];
           }
         }
@@ -62932,14 +62933,14 @@ var app = (function () {
         config,
         BigNumber
       } = _ref3;
-      return config.number === 'BigNumber' ? createBigNumberPi(BigNumber) : pi$1;
+      return config.number === 'BigNumber' ? createBigNumberPi(BigNumber) : pi$3;
     });
     var createTau = /* #__PURE__ */recreateFactory('tau', ['config', '?BigNumber'], _ref4 => {
       var {
         config,
         BigNumber
       } = _ref4;
-      return config.number === 'BigNumber' ? createBigNumberTau(BigNumber) : tau$1;
+      return config.number === 'BigNumber' ? createBigNumberTau(BigNumber) : tau$3;
     });
     var createE = /* #__PURE__ */recreateFactory('e', ['config', '?BigNumber'], _ref5 => {
       var {
@@ -63141,7 +63142,7 @@ var app = (function () {
         '...any': function any(args) {
           // change dim from one-based to zero-based
           var dim = args[1];
-          if (isNumber(dim)) {
+          if (isNumber$1(dim)) {
             args[1] = dim - 1;
           } else if (isBigNumber(dim)) {
             args[1] = dim.minus(1);
@@ -63187,7 +63188,7 @@ var app = (function () {
           // change last argument from zero-based to one-based
           var lastIndex = args.length - 1;
           var last = args[lastIndex];
-          if (isNumber(last)) {
+          if (isNumber$1(last)) {
             args[lastIndex] = last - 1;
           }
           try {
@@ -63327,7 +63328,7 @@ var app = (function () {
         'Array | Matrix, function': function ArrayMatrixFunction(array, callback) {
           var recurse = function recurse(value, index) {
             if (Array.isArray(value)) {
-              forEach$1(value, function (child, i) {
+              forEach$2(value, function (child, i) {
                 // we create a copy of the index array and append the new index value
                 recurse(child, index.concat(i + 1)); // one based index, hence i+1
               });
@@ -63371,13 +63372,13 @@ var app = (function () {
             arg = arg.map(function (v) {
               return v - 1;
             });
-          } else if (isArray(arg) || isMatrix(arg)) {
+          } else if (isArray$1(arg) || isMatrix(arg)) {
             if (getMatrixDataType(arg) !== 'boolean') {
               arg = arg.map(function (v) {
                 return v - 1;
               });
             }
-          } else if (isNumber(arg)) {
+          } else if (isNumber$1(arg)) {
             arg--;
           } else if (isBigNumber(arg)) {
             arg = arg.toNumber() - 1;
@@ -63468,7 +63469,7 @@ var app = (function () {
       if (args.length === 2 && isCollection(args[0])) {
         args = args.slice();
         var dim = args[1];
-        if (isNumber(dim)) {
+        if (isNumber$1(dim)) {
           args[1] = dim - 1;
         } else if (isBigNumber(dim)) {
           args[1] = dim.minus(1);
@@ -63665,7 +63666,7 @@ var app = (function () {
           // change last argument from zero-based to one-based
           var lastIndex = args.length - 1;
           var last = args[lastIndex];
-          if (isNumber(last)) {
+          if (isNumber$1(last)) {
             args[lastIndex] = last - 1;
           }
           try {
@@ -63740,7 +63741,7 @@ var app = (function () {
           // change last argument from one-based to zero-based
           var lastIndex = args.length - 1;
           var last = args[lastIndex];
-          if (isNumber(last)) {
+          if (isNumber$1(last)) {
             args[lastIndex] = last - 1;
           } else if (isBigNumber(last)) {
             args[lastIndex] = last.minus(1);
@@ -63949,7 +63950,7 @@ var app = (function () {
           // change last argument dim from one-based to zero-based
           if (args.length === 2 && isCollection(args[0])) {
             var dim = args[1];
-            if (isNumber(dim)) {
+            if (isNumber$1(dim)) {
               args[1] = dim - 1;
             } else if (isBigNumber(dim)) {
               args[1] = dim.minus(1);
@@ -64102,7 +64103,7 @@ var app = (function () {
       BigNumber,
       config: config$1
     });
-    var tau = /* #__PURE__ */createTau({
+    var tau$2 = /* #__PURE__ */createTau({
       BigNumber,
       config: config$1
     });
@@ -64119,7 +64120,7 @@ var app = (function () {
       BigNumber,
       config: config$1
     });
-    var pi = /* #__PURE__ */createPi({
+    var pi$2 = /* #__PURE__ */createPi({
       BigNumber,
       config: config$1
     });
@@ -64143,10 +64144,10 @@ var app = (function () {
       BigNumber,
       config: config$1
     });
-    var abs = /* #__PURE__ */createAbs({
+    var abs$1 = /* #__PURE__ */createAbs({
       typed
     });
-    var acos = /* #__PURE__ */createAcos({
+    var acos$1 = /* #__PURE__ */createAcos({
       Complex,
       config: config$1,
       typed
@@ -64207,7 +64208,7 @@ var app = (function () {
     var conj = /* #__PURE__ */createConj({
       typed
     });
-    var cos = /* #__PURE__ */createCos({
+    var cos$1 = /* #__PURE__ */createCos({
       typed
     });
     var cot = /* #__PURE__ */createCot({
@@ -64238,7 +64239,7 @@ var app = (function () {
     var filter = /* #__PURE__ */createFilter({
       typed
     });
-    var forEach = /* #__PURE__ */createForEach({
+    var forEach$1 = /* #__PURE__ */createForEach({
       typed
     });
     var format = /* #__PURE__ */createFormat({
@@ -64324,7 +64325,7 @@ var app = (function () {
       complex,
       typed
     });
-    var sin = /* #__PURE__ */createSin({
+    var sin$1 = /* #__PURE__ */createSin({
       typed
     });
     var SparseMatrix = /* #__PURE__ */createSparseMatrixClass({
@@ -64401,7 +64402,7 @@ var app = (function () {
       SparseMatrix,
       typed
     });
-    var sqrt = /* #__PURE__ */createSqrt({
+    var sqrt$1 = /* #__PURE__ */createSqrt({
       Complex,
       config: config$1,
       typed
@@ -64486,7 +64487,7 @@ var app = (function () {
       matrix,
       typed
     });
-    var asin = /* #__PURE__ */createAsin({
+    var asin$1 = /* #__PURE__ */createAsin({
       Complex,
       config: config$1,
       typed
@@ -64549,7 +64550,7 @@ var app = (function () {
       isNumeric,
       typed
     });
-    var identity = /* #__PURE__ */createIdentity({
+    var identity$1 = /* #__PURE__ */createIdentity({
       BigNumber,
       DenseMatrix,
       SparseMatrix,
@@ -64669,7 +64670,7 @@ var app = (function () {
       matrix,
       typed
     });
-    var atan2 = /* #__PURE__ */createAtan2({
+    var atan2$1 = /* #__PURE__ */createAtan2({
       BigNumber,
       DenseMatrix,
       concat,
@@ -64729,12 +64730,12 @@ var app = (function () {
       typed
     });
     var distance = /* #__PURE__ */createDistance({
-      abs,
+      abs: abs$1,
       addScalar,
       deepEqual,
       divideScalar,
       multiplyScalar,
-      sqrt,
+      sqrt: sqrt$1,
       subtract,
       typed
     });
@@ -64771,13 +64772,13 @@ var app = (function () {
       zeros
     });
     var hypot = /* #__PURE__ */createHypot({
-      abs,
+      abs: abs$1,
       addScalar,
       divideScalar,
       isPositive,
       multiplyScalar,
       smaller,
-      sqrt,
+      sqrt: sqrt$1,
       typed
     });
     var ImmutableDenseMatrix = /* #__PURE__ */createImmutableDenseMatrixClass({
@@ -64816,7 +64817,7 @@ var app = (function () {
       size,
       typed
     });
-    var min = /* #__PURE__ */createMin({
+    var min$1 = /* #__PURE__ */createMin({
       config: config$1,
       numeric,
       smaller,
@@ -64865,12 +64866,12 @@ var app = (function () {
       conj,
       divideScalar,
       equal,
-      identity,
+      identity: identity$1,
       isZero,
       matrix,
       multiplyScalar,
       sign,
-      sqrt,
+      sqrt: sqrt$1,
       subtract,
       typed,
       unaryMinus,
@@ -64886,7 +64887,7 @@ var app = (function () {
     });
     var slu = /* #__PURE__ */createSlu({
       SparseMatrix,
-      abs,
+      abs: abs$1,
       add,
       divideScalar,
       larger,
@@ -64998,8 +64999,8 @@ var app = (function () {
       Index,
       typed
     });
-    var intersect = /* #__PURE__ */createIntersect({
-      abs,
+    var intersect$1 = /* #__PURE__ */createIntersect({
+      abs: abs$1,
       add,
       addScalar,
       config: config$1,
@@ -65048,7 +65049,7 @@ var app = (function () {
       subtract,
       typed
     });
-    var max = /* #__PURE__ */createMax({
+    var max$1 = /* #__PURE__ */createMax({
       config: config$1,
       larger,
       numeric,
@@ -65158,11 +65159,11 @@ var app = (function () {
       typed
     });
     var inv = /* #__PURE__ */createInv({
-      abs,
+      abs: abs$1,
       addScalar,
       det,
       divideScalar,
-      identity,
+      identity: identity$1,
       matrix,
       multiply,
       typed,
@@ -65172,7 +65173,7 @@ var app = (function () {
       DenseMatrix,
       Spa,
       SparseMatrix,
-      abs,
+      abs: abs$1,
       addScalar,
       divideScalar,
       equalScalar,
@@ -65201,7 +65202,7 @@ var app = (function () {
       Complex,
       config: config$1,
       fraction,
-      identity,
+      identity: identity$1,
       inv,
       matrix,
       multiply,
@@ -65226,15 +65227,15 @@ var app = (function () {
       typed
     });
     var sqrtm = /* #__PURE__ */createSqrtm({
-      abs,
+      abs: abs$1,
       add,
-      identity,
+      identity: identity$1,
       inv,
       map,
-      max,
+      max: max$1,
       multiply,
       size,
-      sqrt,
+      sqrt: sqrt$1,
       subtract,
       typed
     });
@@ -65242,7 +65243,7 @@ var app = (function () {
       BigNumber,
       Complex,
       Fraction,
-      abs,
+      abs: abs$1,
       addScalar,
       config: config$1,
       divideScalar,
@@ -65315,9 +65316,9 @@ var app = (function () {
       config: config$1
     });
     var expm = /* #__PURE__ */createExpm({
-      abs,
+      abs: abs$1,
       add,
-      identity,
+      identity: identity$1,
       inv,
       multiply,
       typed
@@ -65339,7 +65340,7 @@ var app = (function () {
       matrix,
       multiplyScalar,
       pow,
-      tau,
+      tau: tau$2,
       typed
     });
     var gamma = /* #__PURE__ */createGamma({
@@ -65548,7 +65549,7 @@ var app = (function () {
       isZero,
       multiply,
       re,
-      sqrt,
+      sqrt: sqrt$1,
       subtract,
       typeOf,
       typed,
@@ -65559,7 +65560,7 @@ var app = (function () {
       typed
     });
     var solveODE = /* #__PURE__ */createSolveODE({
-      abs,
+      abs: abs$1,
       add,
       bignumber,
       divide,
@@ -65568,7 +65569,7 @@ var app = (function () {
       larger,
       map,
       matrix,
-      max,
+      max: max$1,
       multiply,
       smaller,
       subtract,
@@ -65602,7 +65603,7 @@ var app = (function () {
       typed
     });
     var eigs = /* #__PURE__ */createEigs({
-      abs,
+      abs: abs$1,
       add,
       addScalar,
       atan,
@@ -65610,7 +65611,7 @@ var app = (function () {
       column,
       complex,
       config: config$1,
-      cos,
+      cos: cos$1,
       diag,
       divideScalar,
       dot,
@@ -65626,9 +65627,9 @@ var app = (function () {
       number,
       qr,
       re,
-      sin,
+      sin: sin$1,
       smaller,
-      sqrt,
+      sqrt: sqrt$1,
       subtract,
       typed,
       usolve,
@@ -65701,7 +65702,7 @@ var app = (function () {
       mean,
       multiply,
       pow,
-      sqrt,
+      sqrt: sqrt$1,
       subtract,
       sum,
       typed
@@ -65715,7 +65716,7 @@ var app = (function () {
       typed
     });
     var mad = /* #__PURE__ */createMad({
-      abs,
+      abs: abs$1,
       map,
       median,
       subtract,
@@ -65723,7 +65724,7 @@ var app = (function () {
     });
     var std = /* #__PURE__ */createStd({
       map,
-      sqrt,
+      sqrt: sqrt$1,
       typed,
       variance
     });
@@ -65738,15 +65739,15 @@ var app = (function () {
       gamma,
       isNegative,
       multiply,
-      pi,
+      pi: pi$2,
       pow,
-      sin,
+      sin: sin$1,
       smallerEq,
       subtract,
       typed
     });
     var norm = /* #__PURE__ */createNorm({
-      abs,
+      abs: abs$1,
       add,
       conj,
       ctranspose,
@@ -65757,7 +65758,7 @@ var app = (function () {
       multiply,
       pow,
       smaller,
-      sqrt,
+      sqrt: sqrt$1,
       typed
     });
     var rotationMatrix = /* #__PURE__ */createRotationMatrix({
@@ -65766,11 +65767,11 @@ var app = (function () {
       SparseMatrix,
       addScalar,
       config: config$1,
-      cos,
+      cos: cos$1,
       matrix,
       multiplyScalar,
       norm,
-      sin,
+      sin: sin$1,
       typed,
       unaryMinus
     });
@@ -65791,7 +65792,7 @@ var app = (function () {
       config: config$1
     });
     var schur = /* #__PURE__ */createSchur({
-      identity,
+      identity: identity$1,
       matrix,
       multiply,
       norm,
@@ -65805,10 +65806,10 @@ var app = (function () {
       typed
     });
     var sylvester = /* #__PURE__ */createSylvester({
-      abs,
+      abs: abs$1,
       add,
       concat,
-      identity,
+      identity: identity$1,
       index,
       lusolve,
       matrix,
@@ -66082,22 +66083,22 @@ var app = (function () {
       phi,
       SQRT1_2,
       sackurTetrode,
-      tau,
+      tau: tau$2,
       true: _true,
       'E': e,
       version,
       efimovFactor,
       LN2,
-      pi,
+      pi: pi$2,
       replacer,
       reviver,
       SQRT2,
       typed,
       unaryPlus,
-      'PI': pi,
+      'PI': pi$2,
       weakMixingAngle,
-      abs,
-      acos,
+      abs: abs$1,
+      acos: acos$1,
       acot,
       acsc,
       addScalar,
@@ -66113,7 +66114,7 @@ var app = (function () {
       combinations,
       complex,
       conj,
-      cos,
+      cos: cos$1,
       cot,
       csc,
       cube,
@@ -66122,7 +66123,7 @@ var app = (function () {
       exp,
       expm1,
       filter,
-      forEach,
+      forEach: forEach$1,
       format,
       getMatrixDataType,
       hex,
@@ -66146,7 +66147,7 @@ var app = (function () {
       re,
       sec,
       sign,
-      sin,
+      sin: sin$1,
       splitUnit,
       square,
       string,
@@ -66167,7 +66168,7 @@ var app = (function () {
       sech,
       sinh,
       sparse,
-      sqrt,
+      sqrt: sqrt$1,
       tanh,
       unaryMinus,
       acoth,
@@ -66185,7 +66186,7 @@ var app = (function () {
       transpose,
       xgcd,
       zeros,
-      asin,
+      asin: asin$1,
       cbrt,
       concat,
       count,
@@ -66196,7 +66197,7 @@ var app = (function () {
       equal,
       flatten,
       hasNumericValue,
-      identity,
+      identity: identity$1,
       kron,
       largerEq,
       leftShift,
@@ -66213,7 +66214,7 @@ var app = (function () {
       usolve,
       xor,
       add,
-      atan2,
+      atan2: atan2$1,
       bitAnd,
       bitXor,
       catalan,
@@ -66232,7 +66233,7 @@ var app = (function () {
       log,
       lsolve,
       matrixFromRows,
-      min,
+      min: min$1,
       mod,
       multiply,
       nthRoots,
@@ -66255,12 +66256,12 @@ var app = (function () {
       dotMultiply,
       fix,
       index,
-      intersect,
+      intersect: intersect$1,
       invmod,
       lcm,
       log1p,
       lsolveAll,
-      max,
+      max: max$1,
       setCartesian,
       setDistinct,
       setIsSubset,
@@ -66495,7 +66496,7 @@ var app = (function () {
       }),
       std: createStdTransform({
         map,
-        sqrt,
+        sqrt: sqrt$1,
         typed,
         variance
       })
@@ -66540,7 +66541,7 @@ var app = (function () {
     const ExpandedOperators = ['!', '^2'];
     const SqrtOrBracket = ['sqrt(', '('];
 
-    async function hasMoreThanTwoDecimalPlaces(number) {
+    function hasMoreThanTwoDecimalPlaces(number) {
         return (
             Number.isFinite(number) &&
             number >= -5000 &&
@@ -66562,45 +66563,6 @@ var app = (function () {
         }
     }
 
-    // export async function generateExpression(Number_1, Number_2, Number_3, Range) {
-    //     const AllActions = [
-    //         `${Number_1}${randomElement(BasicOperators)}${Number_2}${randomElement(BasicOperators)}${Number_3}`,
-    //         `(${Number_1}${randomElement(BasicOperators)}${Number_2})${randomElement(BasicOperators)}${Number_3}`,
-    //         `${Number_1}${randomElement(BasicOperators)}(${Number_2}${randomElement(BasicOperators)}${Number_3})`,
-    //         `${Number_1}${randomElement(ExpandedOperators)}${randomElement(BasicOperators)}${Number_2}${randomElement(BasicOperators)}${Number_3}`,
-    //         `${Number_1}${randomElement(BasicOperators)}${Number_2}${randomElement(ExpandedOperators)}${randomElement(BasicOperators)}${Number_3}`,
-    //         `${Number_1}${randomElement(BasicOperators)}${Number_2}${randomElement(BasicOperators)}${Number_3}${randomElement(ExpandedOperators)}`,
-    //         `${randomElement(SqrtOrBracket)}${Number_1}${randomElement(BasicOperators)}${Number_2}${randomElement(BasicOperators)}${Number_3})${randomElement(ExpandedOperators)}`,
-    //         `${randomElement(SqrtOrBracket)}${Number_1}${randomElement(ExpandedOperators)}${randomElement(BasicOperators)}${Number_2})${randomElement(BasicOperators)}${Number_3}`,
-    //         `${randomElement(SqrtOrBracket)}${Number_1}${randomElement(BasicOperators)}${Number_2}${randomElement(ExpandedOperators)})${randomElement(BasicOperators)}${Number_3}`,
-    //         `${randomElement(SqrtOrBracket)}${Number_1}${randomElement(BasicOperators)}${Number_2})${randomElement(ExpandedOperators)}${randomElement(BasicOperators)}${Number_3}`,
-    //         `${randomElement(SqrtOrBracket)}${Number_1}${randomElement(BasicOperators)}${Number_2})${randomElement(BasicOperators)}${Number_3}${randomElement(ExpandedOperators)}`,
-    //         `${Number_1}${randomElement(ExpandedOperators)}${randomElement(BasicOperators)}${randomElement(SqrtOrBracket)}${Number_2}${randomElement(BasicOperators)}${Number_3})`,
-    //         `${Number_1}${randomElement(BasicOperators)}${randomElement(SqrtOrBracket)}${Number_2}${randomElement(ExpandedOperators)}${randomElement(BasicOperators)}${Number_3})`,
-    //         `${Number_1}${randomElement(BasicOperators)}${randomElement(SqrtOrBracket)}${Number_2}${randomElement(BasicOperators)}${Number_3}${randomElement(ExpandedOperators)}`,
-    //         `${Number_1}${randomElement(BasicOperators)}${randomElement(SqrtOrBracket)}${Number_2}${randomElement(BasicOperators)}${Number_3})${randomElement(ExpandedOperators)}`,
-    //     ];
-
-    //     let Value = NaN;
-    //     let MaxIterations = 0;
-    //     let TMP;
-
-    //     do {
-    //         let RandomAction = Math.floor(Math.random() * Range[0])+Range[1];
-    //         let action = AllActions[RandomAction];
-    //         Value = await evaluateAction(action);
-    //         TMP = action;
-
-    //         MaxIterations++;
-    //     } while (!hasMoreThanTwoDecimalPlaces(Value) && MaxIterations < 1000);
-
-    //     console.log("==============");
-    //     console.log(Number_1 + " " + Number_2 + " " + Number_3);
-    //     console.log("Wyrażenie " + TMP);
-    //     console.log("Wartość " + Value);
-
-    //     return Value;
-    // }
     async function generateExpression(Number_1, Number_2, Number_3, Range) {
         const AllActions = [
             `${Number_1}${randomElement(BasicOperators)}${Number_2}${randomElement(BasicOperators)}${Number_3}`,
@@ -66619,25 +66581,19 @@ var app = (function () {
             `${Number_1}${randomElement(BasicOperators)}${randomElement(SqrtOrBracket)}${Number_2}${randomElement(BasicOperators)}${Number_3}${randomElement(ExpandedOperators)}`,
             `${Number_1}${randomElement(BasicOperators)}${randomElement(SqrtOrBracket)}${Number_2}${randomElement(BasicOperators)}${Number_3})${randomElement(ExpandedOperators)}`,
         ];
-        const MaxIterations = 10000;  // Maksymalna liczba iteracji
-        
 
         let Value = NaN;
+        let MaxIterations = 0;
         let TMP;
 
-        for (let i = 0; i < MaxIterations; i++) {
-            const RandomAction = Math.floor(Math.random() * Range[0]) + Range[1];
-            const action = AllActions[RandomAction];
+        do {
+            let RandomAction = Math.floor(Math.random() * Range);
+            let action = AllActions[RandomAction];
             Value = await evaluateAction(action);
             TMP = action;
 
-            // Sprawdzamy, czy wynik spełnia wymagania
-            if (await hasMoreThanTwoDecimalPlaces(Value)) {
-                
-                    break;  // Znaleziono poprawny wynik, zakończ pętlę
-                }
-            
-        }
+            MaxIterations++;
+        } while (!hasMoreThanTwoDecimalPlaces(Value) && MaxIterations < 100);
 
         console.log("==============");
         console.log("Liczby z których trzeba ułozyć równanie:" + Number_1 + " , " + Number_2 + " , " + Number_3);
@@ -66647,36 +66603,6 @@ var app = (function () {
         return Value;
     }
 
-<<<<<<< Updated upstream
-    async function Generator(Liczba1, Liczba2, Liczba3, difficult) {
-      let Range = [];
-      if (difficult === "Łatwy") {
-          Range = [3, 0];
-      } else if (difficult === "Średni") {
-          Range = [15, 0];
-      } else {
-          Range = [12, 3];
-      }
-
-      // Losowa zamiana kolejności liczb
-      const numbers = [Liczba1, Liczba2, Liczba3];
-      shuffleArray(numbers);
-      
-      // Przekazujemy przetasowane liczby do generateExpression
-      return await generateExpression(numbers[0], numbers[1], numbers[2], Range);
-    }
-
-    // Funkcja do losowej zamiany kolejności elementów w tablicy
-    function shuffleArray(array) {
-      for (let i = array.length - 1; i > 0; i--) {
-          const j = Math.floor(Math.random() * (i + 1));
-          [array[i], array[j]] = [array[j], array[i]];
-      }
-    }
-
-
-    async function addResult(user_name, time, difficult_level) {
-=======
     function bind(fn, thisArg) {
       return function wrap() {
         return fn.apply(thisArg, arguments);
@@ -69925,7 +69851,6 @@ var app = (function () {
 
 
     async function addResult(User, time, difficult_level) {
->>>>>>> Stashed changes
       if(difficult_level==="Łatwy")
       {
         difficult_level="Easy";
@@ -69934,29 +69859,6 @@ var app = (function () {
         difficult_level="Medium";
       }
       else {difficult_level="Hard";}
-<<<<<<< Updated upstream
-      try {
-        const response = await fetch(
-          'http://127.0.0.1:8000/results/',
-          {
-            method: 'POST', // Metoda POST, aby utworzyć nowy wynik
-            mode: 'cors',
-            credentials: 'same-origin',
-            headers: {
-              'Content-Type': 'application/json', // Ustawienie nagłówka Content-Type
-            },
-            body: JSON.stringify({ user_name, time, difficult_level }), // Przekształcenie danych na format JSON i wysłanie ich w ciele żądania
-          }
-        );
-
-        if (response.ok) {
-          console.log('Dodano nowy wynik!');
-        } else {
-          console.error('Błąd podczas dodawania wyniku.');
-        }
-      } catch (error) {
-        console.error('Błąd podczas wysyłania danych:', error);
-=======
      const userData={
       "time": time,
         "difficult_level": difficult_level,
@@ -69968,21 +69870,14 @@ var app = (function () {
         console.log("dodano użytkownika");
       } catch (error) {
         throw error;
->>>>>>> Stashed changes
       }
     }
 
     /* src\Components\DefaultComponents\modal.svelte generated by Svelte v3.59.2 */
 
-<<<<<<< Updated upstream
-    const file$j = "src\\Components\\DefaultComponents\\modal.svelte";
-
-    function create_fragment$k(ctx) {
-=======
     const file$q = "src\\Components\\DefaultComponents\\modal.svelte";
 
     function create_fragment$t(ctx) {
->>>>>>> Stashed changes
     	let div1;
     	let div0;
     	let h2;
@@ -70015,17 +69910,6 @@ var app = (function () {
     			button = element("button");
     			t5 = text(/*ButtonText*/ ctx[3]);
     			attr_dev(h2, "class", "svelte-31eyxv");
-<<<<<<< Updated upstream
-    			add_location(h2, file$j, 8, 8, 186);
-    			attr_dev(p, "class", "svelte-31eyxv");
-    			add_location(p, file$j, 9, 8, 213);
-    			attr_dev(button, "class", "svelte-31eyxv");
-    			add_location(button, file$j, 11, 8, 258);
-    			attr_dev(div0, "class", "modal-content svelte-31eyxv");
-    			add_location(div0, file$j, 7, 4, 149);
-    			attr_dev(div1, "class", "modal svelte-31eyxv");
-    			add_location(div1, file$j, 6, 0, 124);
-=======
     			add_location(h2, file$q, 8, 8, 186);
     			attr_dev(p, "class", "svelte-31eyxv");
     			add_location(p, file$q, 9, 8, 213);
@@ -70035,7 +69919,6 @@ var app = (function () {
     			add_location(div0, file$q, 7, 4, 149);
     			attr_dev(div1, "class", "modal svelte-31eyxv");
     			add_location(div1, file$q, 6, 0, 124);
->>>>>>> Stashed changes
     		},
     		l: function claim(nodes) {
     			throw new Error("options.hydrate only works if the component was compiled with the `hydratable: true` option");
@@ -70116,11 +69999,7 @@ var app = (function () {
 
     	dispatch_dev("SvelteRegisterBlock", {
     		block,
-<<<<<<< Updated upstream
-    		id: create_fragment$k.name,
-=======
     		id: create_fragment$t.name,
->>>>>>> Stashed changes
     		type: "component",
     		source: "",
     		ctx
@@ -70129,11 +70008,7 @@ var app = (function () {
     	return block;
     }
 
-<<<<<<< Updated upstream
-    function instance$k($$self, $$props, $$invalidate) {
-=======
     function instance$t($$self, $$props, $$invalidate) {
->>>>>>> Stashed changes
     	let { $$slots: slots = {}, $$scope } = $$props;
     	validate_slots('Modal', slots, ['default']);
     	let { Header } = $$props;
@@ -70198,11 +70073,7 @@ var app = (function () {
     	constructor(options) {
     		super(options);
 
-<<<<<<< Updated upstream
-    		init(this, options, instance$k, create_fragment$k, safe_not_equal, {
-=======
     		init(this, options, instance$t, create_fragment$t, safe_not_equal, {
->>>>>>> Stashed changes
     			Header: 0,
     			paragraph: 1,
     			ButtonFunc: 2,
@@ -70213,11 +70084,7 @@ var app = (function () {
     			component: this,
     			tagName: "Modal",
     			options,
-<<<<<<< Updated upstream
-    			id: create_fragment$k.name
-=======
     			id: create_fragment$t.name
->>>>>>> Stashed changes
     		});
     	}
 
@@ -70256,22 +70123,6 @@ var app = (function () {
 
     /* src\Components\GameComponents\GameSection.svelte generated by Svelte v3.59.2 */
 
-<<<<<<< Updated upstream
-    const { console: console_1$4 } = globals;
-    const file$i = "src\\Components\\GameComponents\\GameSection.svelte";
-
-    // (278:12) {#if isDropdownOpen}
-    function create_if_block_3(ctx) {
-    	let ul;
-    	let li0;
-    	let button0;
-    	let t1;
-    	let li1;
-    	let button1;
-    	let t3;
-    	let li2;
-    	let button2;
-=======
     const { console: console_1$6 } = globals;
     const file$p = "src\\Components\\GameComponents\\GameSection.svelte";
 
@@ -70285,56 +70136,11 @@ var app = (function () {
     	: "Poddaj się") + "";
 
     	let t;
->>>>>>> Stashed changes
     	let mounted;
     	let dispose;
 
     	const block = {
     		c: function create() {
-<<<<<<< Updated upstream
-    			ul = element("ul");
-    			li0 = element("li");
-    			button0 = element("button");
-    			button0.textContent = "Łatwy";
-    			t1 = space();
-    			li1 = element("li");
-    			button1 = element("button");
-    			button1.textContent = "Średni";
-    			t3 = space();
-    			li2 = element("li");
-    			button2 = element("button");
-    			button2.textContent = "Trudny";
-    			attr_dev(button0, "class", "dropdown-item svelte-1j2p3dw");
-    			add_location(button0, file$i, 280, 18, 7393);
-    			add_location(li0, file$i, 279, 16, 7369);
-    			attr_dev(button1, "class", "dropdown-item svelte-1j2p3dw");
-    			add_location(button1, file$i, 283, 18, 7529);
-    			add_location(li1, file$i, 282, 16, 7505);
-    			attr_dev(button2, "class", "dropdown-item svelte-1j2p3dw");
-    			add_location(button2, file$i, 286, 18, 7668);
-    			add_location(li2, file$i, 285, 16, 7644);
-    			attr_dev(ul, "class", "dropdown-menu svelte-1j2p3dw");
-    			attr_dev(ul, "aria-labelledby", "dropdownMenuButton");
-    			add_location(ul, file$i, 278, 14, 7288);
-    		},
-    		m: function mount(target, anchor) {
-    			insert_dev(target, ul, anchor);
-    			append_dev(ul, li0);
-    			append_dev(li0, button0);
-    			append_dev(ul, t1);
-    			append_dev(ul, li1);
-    			append_dev(li1, button1);
-    			append_dev(ul, t3);
-    			append_dev(ul, li2);
-    			append_dev(li2, button2);
-
-    			if (!mounted) {
-    				dispose = [
-    					listen_dev(button0, "click", /*click_handler*/ ctx[32], false, false, false, false),
-    					listen_dev(button1, "click", /*click_handler_1*/ ctx[33], false, false, false, false),
-    					listen_dev(button2, "click", /*click_handler_2*/ ctx[34], false, false, false, false)
-    				];
-=======
     			div = element("div");
     			button = element("button");
     			t = text(t_value);
@@ -70364,18 +70170,10 @@ var app = (function () {
     					false,
     					false
     				);
->>>>>>> Stashed changes
 
     				mounted = true;
     			}
     		},
-<<<<<<< Updated upstream
-    		p: noop,
-    		d: function destroy(detaching) {
-    			if (detaching) detach_dev(ul);
-    			mounted = false;
-    			run_all(dispose);
-=======
     		p: function update(new_ctx, dirty) {
     			ctx = new_ctx;
 
@@ -70387,7 +70185,6 @@ var app = (function () {
     			if (detaching) detach_dev(div);
     			mounted = false;
     			dispose();
->>>>>>> Stashed changes
     		}
     	};
 
@@ -70395,22 +70192,14 @@ var app = (function () {
     		block,
     		id: create_if_block_3.name,
     		type: "if",
-<<<<<<< Updated upstream
-    		source: "(278:12) {#if isDropdownOpen}",
-=======
     		source: "(318:8) {#if token}",
->>>>>>> Stashed changes
     		ctx
     	});
 
     	return block;
     }
 
-<<<<<<< Updated upstream
-    // (364:8) {#if LevelDifficult === "Średni" || LevelDifficult === "Trudny"}
-=======
     // (388:8) {#if LevelDifficult === "Średni" || LevelDifficult === "Trudny"}
->>>>>>> Stashed changes
     function create_if_block_2(ctx) {
     	let button0;
     	let t0;
@@ -70436,20 +70225,6 @@ var app = (function () {
     			t3 = space();
     			button2 = element("button");
     			i1 = element("i");
-<<<<<<< Updated upstream
-    			add_location(sup, file$i, 366, 39, 10553);
-    			set_style(button0, "font-weight", "900");
-    			attr_dev(button0, "class", "svelte-1j2p3dw");
-    			add_location(button0, file$i, 364, 10, 10453);
-    			attr_dev(i0, "class", "fas fa-square-root-alt");
-    			add_location(i0, file$i, 369, 13, 10662);
-    			attr_dev(button1, "class", "svelte-1j2p3dw");
-    			add_location(button1, file$i, 368, 10, 10598);
-    			attr_dev(i1, "class", "fas fa-exclamation");
-    			add_location(i1, file$i, 372, 13, 10791);
-    			attr_dev(button2, "class", "svelte-1j2p3dw");
-    			add_location(button2, file$i, 371, 10, 10731);
-=======
     			add_location(sup, file$p, 390, 39, 11196);
     			set_style(button0, "font-weight", "900");
     			attr_dev(button0, "class", "svelte-1wpyyd2");
@@ -70462,7 +70237,6 @@ var app = (function () {
     			add_location(i1, file$p, 396, 13, 11434);
     			attr_dev(button2, "class", "svelte-1wpyyd2");
     			add_location(button2, file$p, 395, 10, 11374);
->>>>>>> Stashed changes
     		},
     		m: function mount(target, anchor) {
     			insert_dev(target, button0, anchor);
@@ -70477,25 +70251,15 @@ var app = (function () {
 
     			if (!mounted) {
     				dispose = [
-<<<<<<< Updated upstream
-    					listen_dev(button0, "click", /*click_handler_13*/ ctx[46], false, false, false, false),
-    					listen_dev(button1, "click", /*click_handler_14*/ ctx[47], false, false, false, false),
-    					listen_dev(button2, "click", /*click_handler_15*/ ctx[48], false, false, false, false)
-=======
     					listen_dev(button0, "click", /*click_handler_10*/ ctx[41], false, false, false, false),
     					listen_dev(button1, "click", /*click_handler_11*/ ctx[42], false, false, false, false),
     					listen_dev(button2, "click", /*click_handler_12*/ ctx[43], false, false, false, false)
->>>>>>> Stashed changes
     				];
 
     				mounted = true;
     			}
     		},
-<<<<<<< Updated upstream
-    		p: noop,
-=======
     		p: noop$1,
->>>>>>> Stashed changes
     		d: function destroy(detaching) {
     			if (detaching) detach_dev(button0);
     			if (detaching) detach_dev(t2);
@@ -70511,24 +70275,15 @@ var app = (function () {
     		block,
     		id: create_if_block_2.name,
     		type: "if",
-<<<<<<< Updated upstream
-    		source: "(364:8) {#if LevelDifficult === \\\"Średni\\\" || LevelDifficult === \\\"Trudny\\\"}",
-=======
     		source: "(388:8) {#if LevelDifficult === \\\"Średni\\\" || LevelDifficult === \\\"Trudny\\\"}",
->>>>>>> Stashed changes
     		ctx
     	});
 
     	return block;
     }
 
-<<<<<<< Updated upstream
-    // (381:2) {#if isChallengeInfoModalOpen}
-    function create_if_block_1(ctx) {
-=======
     // (409:2) {#if isChallengeInfoModalOpen}
     function create_if_block_1$1(ctx) {
->>>>>>> Stashed changes
     	let modal;
     	let current;
 
@@ -70536,11 +70291,7 @@ var app = (function () {
     			props: {
     				Header: "Tryb wyzwania",
     				paragraph: " Czeka cię 5 poziomów które musisz ukończyć w jak najkrótszym czasie.",
-<<<<<<< Updated upstream
-    				ButtonFunc: /*switchToChallengeMode*/ ctx[23],
-=======
     				ButtonFunc: /*switchToChallengeMode*/ ctx[22],
->>>>>>> Stashed changes
     				ButtonText: "Rozpocznij wyzwanie"
     			},
     			$$inline: true
@@ -70554,11 +70305,7 @@ var app = (function () {
     			mount_component(modal, target, anchor);
     			current = true;
     		},
-<<<<<<< Updated upstream
-    		p: noop,
-=======
     		p: noop$1,
->>>>>>> Stashed changes
     		i: function intro(local) {
     			if (current) return;
     			transition_in(modal.$$.fragment, local);
@@ -70577,41 +70324,24 @@ var app = (function () {
     		block,
     		id: create_if_block_1$1.name,
     		type: "if",
-<<<<<<< Updated upstream
-    		source: "(381:2) {#if isChallengeInfoModalOpen}",
-=======
     		source: "(409:2) {#if isChallengeInfoModalOpen}",
->>>>>>> Stashed changes
     		ctx
     	});
 
     	return block;
     }
 
-<<<<<<< Updated upstream
-    // (387:2) {#if isChallengeCompleteModalOpen}
-    function create_if_block$3(ctx) {
-=======
     // (418:2) {#if isChallengeCompleteModalOpen}
     function create_if_block$4(ctx) {
->>>>>>> Stashed changes
     	let modal;
     	let current;
 
     	modal = new Modal({
     			props: {
     				Header: "Gratulacje!",
-<<<<<<< Updated upstream
-    				paragraph: "Ukończyłeś wyzwanie w czasie " + /*PlayerTime*/ ctx[12] + ". Podaj swoje imię:",
-    				ButtonFunc: /*finishChallenge*/ ctx[24],
-    				ButtonText: "Zakończ",
-    				$$slots: { default: [create_default_slot$1] },
-    				$$scope: { ctx }
-=======
     				paragraph: "Ukończyłeś wyzwanie w czasie " + /*PlayerTime*/ ctx[12] + ". Sprawdź swój wynik w profilu oraz sprawdz czy udało ci się zająć miejsce w rankingu!",
     				ButtonFunc: /*finishChallenge*/ ctx[23],
     				ButtonText: "Zakończ"
->>>>>>> Stashed changes
     			},
     			$$inline: true
     		});
@@ -70626,16 +70356,7 @@ var app = (function () {
     		},
     		p: function update(ctx, dirty) {
     			const modal_changes = {};
-<<<<<<< Updated upstream
-    			if (dirty[0] & /*PlayerTime*/ 4096) modal_changes.paragraph = "Ukończyłeś wyzwanie w czasie " + /*PlayerTime*/ ctx[12] + ". Podaj swoje imię:";
-
-    			if (dirty[0] & /*playerName*/ 32768 | dirty[2] & /*$$scope*/ 128) {
-    				modal_changes.$$scope = { dirty, ctx };
-    			}
-
-=======
     			if (dirty[0] & /*PlayerTime*/ 4096) modal_changes.paragraph = "Ukończyłeś wyzwanie w czasie " + /*PlayerTime*/ ctx[12] + ". Sprawdź swój wynik w profilu oraz sprawdz czy udało ci się zająć miejsce w rankingu!";
->>>>>>> Stashed changes
     			modal.$set(modal_changes);
     		},
     		i: function intro(local) {
@@ -70654,79 +70375,20 @@ var app = (function () {
 
     	dispatch_dev("SvelteRegisterBlock", {
     		block,
-<<<<<<< Updated upstream
-    		id: create_if_block$3.name,
-    		type: "if",
-    		source: "(387:2) {#if isChallengeCompleteModalOpen}",
-=======
     		id: create_if_block$4.name,
     		type: "if",
     		source: "(418:2) {#if isChallengeCompleteModalOpen}",
->>>>>>> Stashed changes
     		ctx
     	});
 
     	return block;
     }
 
-<<<<<<< Updated upstream
-    // (388:4) <Modal Header="Gratulacje!" paragraph="Ukończyłeś wyzwanie w czasie {PlayerTime}. Podaj swoje imię:" ButtonFunc={finishChallenge} ButtonText="Zakończ">
-    function create_default_slot$1(ctx) {
-    	let input;
-    	let mounted;
-    	let dispose;
-
-    	const block = {
-    		c: function create() {
-    			input = element("input");
-    			attr_dev(input, "placeholder", "Twoje imię");
-    			attr_dev(input, "class", "ModalInput svelte-1j2p3dw");
-    			add_location(input, file$i, 389, 8, 11554);
-    		},
-    		m: function mount(target, anchor) {
-    			insert_dev(target, input, anchor);
-    			set_input_value(input, /*playerName*/ ctx[15]);
-
-    			if (!mounted) {
-    				dispose = listen_dev(input, "input", /*input_input_handler_1*/ ctx[51]);
-    				mounted = true;
-    			}
-    		},
-    		p: function update(ctx, dirty) {
-    			if (dirty[0] & /*playerName*/ 32768 && input.value !== /*playerName*/ ctx[15]) {
-    				set_input_value(input, /*playerName*/ ctx[15]);
-    			}
-    		},
-    		d: function destroy(detaching) {
-    			if (detaching) detach_dev(input);
-    			mounted = false;
-    			dispose();
-    		}
-    	};
-
-    	dispatch_dev("SvelteRegisterBlock", {
-    		block,
-    		id: create_default_slot$1.name,
-    		type: "slot",
-    		source: "(388:4) <Modal Header=\\\"Gratulacje!\\\" paragraph=\\\"Ukończyłeś wyzwanie w czasie {PlayerTime}. Podaj swoje imię:\\\" ButtonFunc={finishChallenge} ButtonText=\\\"Zakończ\\\">",
-    		ctx
-    	});
-
-    	return block;
-    }
-
-    function create_fragment$j(ctx) {
-    	let main;
-    	let div10;
-    	let div6;
-    	let div5;
-=======
     function create_fragment$s(ctx) {
     	let main;
     	let div9;
     	let div5;
     	let div4;
->>>>>>> Stashed changes
     	let div0;
     	let button0;
     	let t0;
@@ -70737,47 +70399,6 @@ var app = (function () {
     	let t2;
     	let t3;
     	let t4;
-<<<<<<< Updated upstream
-    	let t5;
-    	let div3;
-    	let button2;
-
-    	let t6_value = (/*isNormalMode*/ ctx[4]
-    	? "Zacznij Wyzwanie"
-    	: "Poddaj się") + "";
-
-    	let t6;
-    	let t7;
-    	let div4;
-    	let h2;
-    	let t8;
-    	let t9;
-    	let div9;
-    	let div7;
-    	let input;
-    	let t10;
-    	let span0;
-    	let t12;
-    	let span1;
-    	let t13_value = (/*LW*/ ctx[0] === undefined ? "?" : /*LW*/ ctx[0]) + "";
-    	let t13;
-    	let t14;
-    	let div8;
-    	let button3;
-
-    	let t15_value = (/*Liczba_1*/ ctx[1] === undefined
-    	? "?"
-    	: /*Liczba_1*/ ctx[1]) + "";
-
-    	let t15;
-    	let t16;
-    	let button4;
-
-    	let t17_value = (/*Liczba_2*/ ctx[2] === undefined
-    	? "?"
-    	: /*Liczba_2*/ ctx[2]) + "";
-
-=======
     	let ul;
     	let li0;
     	let button2;
@@ -70801,57 +70422,18 @@ var app = (function () {
     	let t16;
     	let span1;
     	let t17_value = (/*LW*/ ctx[0] === undefined ? "?" : /*LW*/ ctx[0]) + "";
->>>>>>> Stashed changes
     	let t17;
     	let t18;
+    	let div7;
     	let button5;
 
-    	let t19_value = (/*Liczba_3*/ ctx[3] === undefined
+    	let t19_value = (/*Liczba_1*/ ctx[1] === undefined
     	? "?"
-<<<<<<< Updated upstream
-    	: /*Liczba_3*/ ctx[3]) + "";
-=======
     	: /*Liczba_1*/ ctx[1]) + "";
->>>>>>> Stashed changes
 
     	let t19;
     	let t20;
     	let button6;
-<<<<<<< Updated upstream
-    	let t22;
-    	let button7;
-    	let i0;
-    	let t23;
-    	let button8;
-    	let i1;
-    	let t24;
-    	let button9;
-    	let i2;
-    	let t25;
-    	let button10;
-    	let i3;
-    	let t26;
-    	let button11;
-    	let t28;
-    	let button12;
-    	let t30;
-    	let t31;
-    	let button13;
-    	let i4;
-    	let t32;
-    	let button14;
-    	let i5;
-    	let button14_disabled_value;
-    	let t33;
-    	let t34;
-    	let current;
-    	let mounted;
-    	let dispose;
-    	let if_block0 = /*isDropdownOpen*/ ctx[17] && create_if_block_3(ctx);
-    	let if_block1 = (/*LevelDifficult*/ ctx[11] === "Średni" || /*LevelDifficult*/ ctx[11] === "Trudny") && create_if_block_2(ctx);
-    	let if_block2 = /*isChallengeInfoModalOpen*/ ctx[13] && create_if_block_1(ctx);
-    	let if_block3 = /*isChallengeCompleteModalOpen*/ ctx[14] && create_if_block$3(ctx);
-=======
 
     	let t21_value = (/*Liczba_2*/ ctx[2] === undefined
     	? "?"
@@ -70901,20 +70483,13 @@ var app = (function () {
     	let if_block1 = (/*LevelDifficult*/ ctx[11] === "Średni" || /*LevelDifficult*/ ctx[11] === "Trudny") && create_if_block_2(ctx);
     	let if_block2 = /*isChallengeInfoModalOpen*/ ctx[13] && create_if_block_1$1(ctx);
     	let if_block3 = /*isChallengeCompleteModalOpen*/ ctx[14] && create_if_block$4(ctx);
->>>>>>> Stashed changes
 
     	const block = {
     		c: function create() {
     			main = element("main");
-<<<<<<< Updated upstream
-    			div10 = element("div");
-    			div6 = element("div");
-    			div5 = element("div");
-=======
     			div9 = element("div");
     			div5 = element("div");
     			div4 = element("div");
->>>>>>> Stashed changes
     			div0 = element("div");
     			button0 = element("button");
     			t0 = text("Start");
@@ -70925,35 +70500,6 @@ var app = (function () {
     			t2 = text("Poziom: ");
     			t3 = text(/*LevelDifficult*/ ctx[11]);
     			t4 = space();
-<<<<<<< Updated upstream
-    			if (if_block0) if_block0.c();
-    			t5 = space();
-    			div3 = element("div");
-    			button2 = element("button");
-    			t6 = text(t6_value);
-    			t7 = space();
-    			div4 = element("div");
-    			h2 = element("h2");
-    			t8 = text(/*levelInfo*/ ctx[10]);
-    			t9 = space();
-    			div9 = element("div");
-    			div7 = element("div");
-    			input = element("input");
-    			t10 = space();
-    			span0 = element("span");
-    			span0.textContent = "=";
-    			t12 = space();
-    			span1 = element("span");
-    			t13 = text(t13_value);
-    			t14 = space();
-    			div8 = element("div");
-    			button3 = element("button");
-    			t15 = text(t15_value);
-    			t16 = space();
-    			button4 = element("button");
-    			t17 = text(t17_value);
-    			t18 = space();
-=======
     			ul = element("ul");
     			li0 = element("li");
     			button2 = element("button");
@@ -70984,80 +70530,49 @@ var app = (function () {
     			t17 = text(t17_value);
     			t18 = space();
     			div7 = element("div");
->>>>>>> Stashed changes
     			button5 = element("button");
     			t19 = text(t19_value);
     			t20 = space();
     			button6 = element("button");
-<<<<<<< Updated upstream
-    			button6.textContent = "C";
-    			t22 = space();
-    			button7 = element("button");
-    			i0 = element("i");
-    			t23 = space();
-    			button8 = element("button");
-    			i1 = element("i");
-=======
     			t21 = text(t21_value);
     			t22 = space();
     			button7 = element("button");
     			t23 = text(t23_value);
->>>>>>> Stashed changes
     			t24 = space();
-    			button9 = element("button");
-    			i2 = element("i");
-    			t25 = space();
-    			button10 = element("button");
-    			i3 = element("i");
+    			button8 = element("button");
+    			button8.textContent = "C";
     			t26 = space();
-    			button11 = element("button");
-    			button11.textContent = "(";
+    			button9 = element("button");
+    			i0 = element("i");
+    			t27 = space();
+    			button10 = element("button");
+    			i1 = element("i");
     			t28 = space();
+    			button11 = element("button");
+    			i2 = element("i");
+    			t29 = space();
     			button12 = element("button");
-    			button12.textContent = ")";
+    			i3 = element("i");
     			t30 = space();
-    			if (if_block1) if_block1.c();
-    			t31 = space();
     			button13 = element("button");
-    			i4 = element("i");
+    			button13.textContent = "(";
     			t32 = space();
     			button14 = element("button");
-    			i5 = element("i");
-    			t33 = space();
-    			if (if_block2) if_block2.c();
+    			button14.textContent = ")";
     			t34 = space();
+    			if (if_block1) if_block1.c();
+    			t35 = space();
+    			button15 = element("button");
+    			i4 = element("i");
+    			t36 = space();
+    			button16 = element("button");
+    			i5 = element("i");
+    			t37 = space();
+    			if (if_block2) if_block2.c();
+    			t38 = space();
     			if (if_block3) if_block3.c();
     			button0.disabled = /*button4Disabled*/ ctx[8];
     			attr_dev(button0, "id", "start");
-<<<<<<< Updated upstream
-    			attr_dev(button0, "class", "svelte-1j2p3dw");
-    			add_location(button0, file$i, 268, 10, 6845);
-    			attr_dev(div0, "class", "col-xl-2 col-lg-3 col-md-3");
-    			add_location(div0, file$i, 267, 8, 6793);
-    			attr_dev(button1, "class", "btn dropdown-toggle svelte-1j2p3dw");
-    			attr_dev(button1, "type", "button");
-    			attr_dev(button1, "aria-expanded", /*isDropdownOpen*/ ctx[17]);
-    			add_location(button1, file$i, 274, 12, 7068);
-    			attr_dev(div1, "class", "dropdown svelte-1j2p3dw");
-    			add_location(div1, file$i, 273, 10, 7032);
-    			attr_dev(div2, "class", "col-xl-4 col-lg-9 col-md-9");
-    			add_location(div2, file$i, 272, 8, 6980);
-    			attr_dev(button2, "class", "svelte-1j2p3dw");
-    			add_location(button2, file$i, 293, 10, 7899);
-    			attr_dev(div3, "class", "col-xl-3 col-lg-5 col-md-5");
-    			add_location(div3, file$i, 292, 8, 7847);
-    			set_style(h2, "color", "#fff");
-    			set_style(h2, "font-weight", "900");
-    			set_style(h2, "font-family", "Arial, sans-serif");
-    			add_location(h2, file$i, 298, 10, 8128);
-    			attr_dev(div4, "class", "col-xl-3 col-lg-7 col-md-7");
-    			add_location(div4, file$i, 297, 8, 8076);
-    			attr_dev(div5, "class", "row justify-content-center align-items-center");
-    			add_location(div5, file$i, 266, 6, 6724);
-    			attr_dev(div6, "id", "Header1");
-    			attr_dev(div6, "class", "container svelte-1j2p3dw");
-    			add_location(div6, file$i, 265, 4, 6680);
-=======
     			attr_dev(button0, "class", "svelte-1wpyyd2");
     			add_location(button0, file$p, 287, 10, 7432);
     			attr_dev(div0, "class", "col-xl-2 col-lg-3 col-md-3");
@@ -71095,87 +70610,10 @@ var app = (function () {
     			attr_dev(div5, "id", "Header1");
     			attr_dev(div5, "class", "container svelte-1wpyyd2");
     			add_location(div5, file$p, 284, 4, 7267);
->>>>>>> Stashed changes
     			attr_dev(input, "type", "text");
     			attr_dev(input, "id", "wyrazenie");
     			attr_dev(input, "placeholder", "Wpisz wyrażenie");
     			input.readOnly = true;
-<<<<<<< Updated upstream
-    			attr_dev(input, "class", "svelte-1j2p3dw");
-    			add_location(input, file$i, 308, 8, 8390);
-    			attr_dev(span0, "id", "LW");
-    			set_style(span0, "color", "#808080");
-    			attr_dev(span0, "class", "svelte-1j2p3dw");
-    			add_location(span0, file$i, 315, 8, 8563);
-    			attr_dev(span1, "id", "LW");
-    			attr_dev(span1, "data-value", /*LW*/ ctx[0]);
-    			attr_dev(span1, "class", "svelte-1j2p3dw");
-    			add_location(span1, file$i, 316, 8, 8618);
-    			attr_dev(div7, "class", "equation-container svelte-1j2p3dw");
-    			add_location(div7, file$i, 307, 6, 8348);
-    			button3.disabled = /*button1Disabled*/ ctx[5];
-    			set_style(button3, "font-weight", "900");
-    			set_style(button3, "background-color", "#acc4fb");
-    			set_style(button3, "font-family", "Arial, sans-serif");
-    			attr_dev(button3, "class", "svelte-1j2p3dw");
-    			add_location(button3, file$i, 320, 8, 8739);
-    			button4.disabled = /*button2Disabled*/ ctx[6];
-    			set_style(button4, "font-weight", "900");
-    			set_style(button4, "background-color", "#acc4fb");
-    			set_style(button4, "font-family", "Arial, sans-serif");
-    			attr_dev(button4, "class", "svelte-1j2p3dw");
-    			add_location(button4, file$i, 326, 8, 9001);
-    			button5.disabled = /*button3Disabled*/ ctx[7];
-    			set_style(button5, "font-weight", "900");
-    			set_style(button5, "background-color", "#acc4fb");
-    			set_style(button5, "font-family", "Arial, sans-serif");
-    			attr_dev(button5, "class", "svelte-1j2p3dw");
-    			add_location(button5, file$i, 332, 8, 9262);
-    			set_style(button6, "font-weight", "900");
-    			set_style(button6, "background-color", "#EA3030");
-    			attr_dev(button6, "class", "svelte-1j2p3dw");
-    			add_location(button6, file$i, 338, 8, 9523);
-    			attr_dev(i0, "class", "fas fa-plus");
-    			add_location(i0, file$i, 343, 11, 9723);
-    			attr_dev(button7, "class", "svelte-1j2p3dw");
-    			add_location(button7, file$i, 342, 8, 9665);
-    			attr_dev(i1, "class", "fas fa-minus");
-    			add_location(i1, file$i, 346, 11, 9835);
-    			attr_dev(button8, "class", "svelte-1j2p3dw");
-    			add_location(button8, file$i, 345, 8, 9777);
-    			attr_dev(i2, "class", "fas fa-close");
-    			add_location(i2, file$i, 349, 11, 9948);
-    			attr_dev(button9, "class", "svelte-1j2p3dw");
-    			add_location(button9, file$i, 348, 8, 9890);
-    			attr_dev(i3, "class", "fas fa-divide");
-    			add_location(i3, file$i, 352, 11, 10061);
-    			attr_dev(button10, "class", "svelte-1j2p3dw");
-    			add_location(button10, file$i, 351, 8, 10003);
-    			set_style(button11, "font-weight", "900");
-    			attr_dev(button11, "class", "svelte-1j2p3dw");
-    			add_location(button11, file$i, 354, 8, 10117);
-    			set_style(button12, "font-weight", "900");
-    			attr_dev(button12, "class", "svelte-1j2p3dw");
-    			add_location(button12, file$i, 357, 8, 10231);
-    			attr_dev(i4, "class", "fas fa-equals");
-    			add_location(i4, file$i, 375, 41, 10902);
-    			attr_dev(button13, "class", "svelte-1j2p3dw");
-    			add_location(button13, file$i, 375, 8, 10869);
-    			attr_dev(i5, "class", "fas fa-redo");
-    			add_location(i5, file$i, 376, 88, 11028);
-    			button14.disabled = button14_disabled_value = /*RedoHistory*/ ctx[16].length > 1 ? true : false;
-    			attr_dev(button14, "class", "svelte-1j2p3dw");
-    			add_location(button14, file$i, 376, 8, 10948);
-    			attr_dev(div8, "class", "buttons svelte-1j2p3dw");
-    			add_location(div8, file$i, 319, 6, 8708);
-    			attr_dev(div9, "class", "GameControl svelte-1j2p3dw");
-    			add_location(div9, file$i, 306, 4, 8315);
-    			attr_dev(div10, "id", "Calculator");
-    			attr_dev(div10, "class", "svelte-1j2p3dw");
-    			add_location(div10, file$i, 264, 2, 6653);
-    			attr_dev(main, "class", "svelte-1j2p3dw");
-    			add_location(main, file$i, 263, 0, 6643);
-=======
     			attr_dev(input, "class", "svelte-1wpyyd2");
     			add_location(input, file$p, 335, 8, 9065);
     			attr_dev(span0, "id", "LW");
@@ -71250,23 +70688,12 @@ var app = (function () {
     			add_location(div9, file$p, 283, 2, 7240);
     			attr_dev(main, "class", "svelte-1wpyyd2");
     			add_location(main, file$p, 282, 0, 7230);
->>>>>>> Stashed changes
     		},
     		l: function claim(nodes) {
     			throw new Error("options.hydrate only works if the component was compiled with the `hydratable: true` option");
     		},
     		m: function mount(target, anchor) {
     			insert_dev(target, main, anchor);
-<<<<<<< Updated upstream
-    			append_dev(main, div10);
-    			append_dev(div10, div6);
-    			append_dev(div6, div5);
-    			append_dev(div5, div0);
-    			append_dev(div0, button0);
-    			append_dev(button0, t0);
-    			append_dev(div5, t1);
-    			append_dev(div5, div2);
-=======
     			append_dev(main, div9);
     			append_dev(div9, div5);
     			append_dev(div5, div4);
@@ -71275,72 +70702,11 @@ var app = (function () {
     			append_dev(button0, t0);
     			append_dev(div4, t1);
     			append_dev(div4, div2);
->>>>>>> Stashed changes
     			append_dev(div2, div1);
     			append_dev(div1, button1);
     			append_dev(button1, t2);
     			append_dev(button1, t3);
     			append_dev(div1, t4);
-<<<<<<< Updated upstream
-    			if (if_block0) if_block0.m(div1, null);
-    			append_dev(div5, t5);
-    			append_dev(div5, div3);
-    			append_dev(div3, button2);
-    			append_dev(button2, t6);
-    			append_dev(div5, t7);
-    			append_dev(div5, div4);
-    			append_dev(div4, h2);
-    			append_dev(h2, t8);
-    			append_dev(div10, t9);
-    			append_dev(div10, div9);
-    			append_dev(div9, div7);
-    			append_dev(div7, input);
-    			set_input_value(input, /*InputValue*/ ctx[9]);
-    			append_dev(div7, t10);
-    			append_dev(div7, span0);
-    			append_dev(div7, t12);
-    			append_dev(div7, span1);
-    			append_dev(span1, t13);
-    			append_dev(div9, t14);
-    			append_dev(div9, div8);
-    			append_dev(div8, button3);
-    			append_dev(button3, t15);
-    			append_dev(div8, t16);
-    			append_dev(div8, button4);
-    			append_dev(button4, t17);
-    			append_dev(div8, t18);
-    			append_dev(div8, button5);
-    			append_dev(button5, t19);
-    			append_dev(div8, t20);
-    			append_dev(div8, button6);
-    			append_dev(div8, t22);
-    			append_dev(div8, button7);
-    			append_dev(button7, i0);
-    			append_dev(div8, t23);
-    			append_dev(div8, button8);
-    			append_dev(button8, i1);
-    			append_dev(div8, t24);
-    			append_dev(div8, button9);
-    			append_dev(button9, i2);
-    			append_dev(div8, t25);
-    			append_dev(div8, button10);
-    			append_dev(button10, i3);
-    			append_dev(div8, t26);
-    			append_dev(div8, button11);
-    			append_dev(div8, t28);
-    			append_dev(div8, button12);
-    			append_dev(div8, t30);
-    			if (if_block1) if_block1.m(div8, null);
-    			append_dev(div8, t31);
-    			append_dev(div8, button13);
-    			append_dev(button13, i4);
-    			append_dev(div8, t32);
-    			append_dev(div8, button14);
-    			append_dev(button14, i5);
-    			append_dev(main, t33);
-    			if (if_block2) if_block2.m(main, null);
-    			append_dev(main, t34);
-=======
     			append_dev(div1, ul);
     			append_dev(ul, li0);
     			append_dev(li0, button2);
@@ -71405,44 +70771,11 @@ var app = (function () {
     			append_dev(main, t37);
     			if (if_block2) if_block2.m(main, null);
     			append_dev(main, t38);
->>>>>>> Stashed changes
     			if (if_block3) if_block3.m(main, null);
     			current = true;
 
     			if (!mounted) {
     				dispose = [
-<<<<<<< Updated upstream
-    					listen_dev(button0, "click", /*losujLiczby*/ ctx[18], false, false, false, false),
-    					listen_dev(button1, "click", /*toggleDropdown*/ ctx[31], false, false, false, false),
-    					listen_dev(
-    						button2,
-    						"click",
-    						function () {
-    							if (is_function(/*isNormalMode*/ ctx[4]
-    							? /*openChallengeInfoModal*/ ctx[22]
-    							: /*Giveup*/ ctx[25])) (/*isNormalMode*/ ctx[4]
-    							? /*openChallengeInfoModal*/ ctx[22]
-    							: /*Giveup*/ ctx[25]).apply(this, arguments);
-    						},
-    						false,
-    						false,
-    						false,
-    						false
-    					),
-    					listen_dev(input, "input", /*input_input_handler*/ ctx[35]),
-    					listen_dev(button3, "click", /*click_handler_3*/ ctx[36], false, false, false, false),
-    					listen_dev(button4, "click", /*click_handler_4*/ ctx[37], false, false, false, false),
-    					listen_dev(button5, "click", /*click_handler_5*/ ctx[38], false, false, false, false),
-    					listen_dev(button6, "click", /*click_handler_6*/ ctx[39], false, false, false, false),
-    					listen_dev(button7, "click", /*click_handler_7*/ ctx[40], false, false, false, false),
-    					listen_dev(button8, "click", /*click_handler_8*/ ctx[41], false, false, false, false),
-    					listen_dev(button9, "click", /*click_handler_9*/ ctx[42], false, false, false, false),
-    					listen_dev(button10, "click", /*click_handler_10*/ ctx[43], false, false, false, false),
-    					listen_dev(button11, "click", /*click_handler_11*/ ctx[44], false, false, false, false),
-    					listen_dev(button12, "click", /*click_handler_12*/ ctx[45], false, false, false, false),
-    					listen_dev(button13, "click", /*click_handler_16*/ ctx[49], false, false, false, false),
-    					listen_dev(button14, "click", /*click_handler_17*/ ctx[50], false, false, false, false)
-=======
     					listen_dev(button0, "click", /*losujLiczby*/ ctx[17], false, false, false, false),
     					listen_dev(button2, "click", /*setEasy*/ ctx[18], false, false, false, false),
     					listen_dev(button3, "click", /*setMedium*/ ctx[19], false, false, false, false),
@@ -71460,91 +70793,30 @@ var app = (function () {
     					listen_dev(button14, "click", /*click_handler_9*/ ctx[40], false, false, false, false),
     					listen_dev(button15, "click", /*click_handler_13*/ ctx[44], false, false, false, false),
     					listen_dev(button16, "click", /*click_handler_14*/ ctx[45], false, false, false, false)
->>>>>>> Stashed changes
     				];
 
     				mounted = true;
     			}
     		},
-<<<<<<< Updated upstream
-    		p: function update(new_ctx, dirty) {
-    			ctx = new_ctx;
-
-=======
     		p: function update(ctx, dirty) {
->>>>>>> Stashed changes
     			if (!current || dirty[0] & /*button4Disabled*/ 256) {
     				prop_dev(button0, "disabled", /*button4Disabled*/ ctx[8]);
     			}
 
     			if (!current || dirty[0] & /*LevelDifficult*/ 2048) set_data_dev(t3, /*LevelDifficult*/ ctx[11]);
-<<<<<<< Updated upstream
-
-    			if (!current || dirty[0] & /*isDropdownOpen*/ 131072) {
-    				attr_dev(button1, "aria-expanded", /*isDropdownOpen*/ ctx[17]);
-    			}
-
-    			if (/*isDropdownOpen*/ ctx[17]) {
-    				if (if_block0) {
-    					if_block0.p(ctx, dirty);
-    				} else {
-    					if_block0 = create_if_block_3(ctx);
-    					if_block0.c();
-    					if_block0.m(div1, null);
-    				}
-    			} else if (if_block0) {
-    				if_block0.d(1);
-    				if_block0 = null;
-    			}
-
-    			if ((!current || dirty[0] & /*isNormalMode*/ 16) && t6_value !== (t6_value = (/*isNormalMode*/ ctx[4]
-    			? "Zacznij Wyzwanie"
-    			: "Poddaj się") + "")) set_data_dev(t6, t6_value);
-
-    			if (!current || dirty[0] & /*levelInfo*/ 1024) set_data_dev(t8, /*levelInfo*/ ctx[10]);
-=======
     			if (/*token*/ ctx[16]) if_block0.p(ctx, dirty);
     			if (!current || dirty[0] & /*levelInfo*/ 1024) set_data_dev(t12, /*levelInfo*/ ctx[10]);
->>>>>>> Stashed changes
 
     			if (dirty[0] & /*InputValue*/ 512 && input.value !== /*InputValue*/ ctx[9]) {
     				set_input_value(input, /*InputValue*/ ctx[9]);
     			}
 
-<<<<<<< Updated upstream
-    			if ((!current || dirty[0] & /*LW*/ 1) && t13_value !== (t13_value = (/*LW*/ ctx[0] === undefined ? "?" : /*LW*/ ctx[0]) + "")) set_data_dev(t13, t13_value);
-=======
     			if ((!current || dirty[0] & /*LW*/ 1) && t17_value !== (t17_value = (/*LW*/ ctx[0] === undefined ? "?" : /*LW*/ ctx[0]) + "")) set_data_dev(t17, t17_value);
->>>>>>> Stashed changes
 
     			if (!current || dirty[0] & /*LW*/ 1) {
     				attr_dev(span1, "data-value", /*LW*/ ctx[0]);
     			}
 
-<<<<<<< Updated upstream
-    			if ((!current || dirty[0] & /*Liczba_1*/ 2) && t15_value !== (t15_value = (/*Liczba_1*/ ctx[1] === undefined
-    			? "?"
-    			: /*Liczba_1*/ ctx[1]) + "")) set_data_dev(t15, t15_value);
-
-    			if (!current || dirty[0] & /*button1Disabled*/ 32) {
-    				prop_dev(button3, "disabled", /*button1Disabled*/ ctx[5]);
-    			}
-
-    			if ((!current || dirty[0] & /*Liczba_2*/ 4) && t17_value !== (t17_value = (/*Liczba_2*/ ctx[2] === undefined
-    			? "?"
-    			: /*Liczba_2*/ ctx[2]) + "")) set_data_dev(t17, t17_value);
-
-    			if (!current || dirty[0] & /*button2Disabled*/ 64) {
-    				prop_dev(button4, "disabled", /*button2Disabled*/ ctx[6]);
-    			}
-
-    			if ((!current || dirty[0] & /*Liczba_3*/ 8) && t19_value !== (t19_value = (/*Liczba_3*/ ctx[3] === undefined
-    			? "?"
-    			: /*Liczba_3*/ ctx[3]) + "")) set_data_dev(t19, t19_value);
-
-    			if (!current || dirty[0] & /*button3Disabled*/ 128) {
-    				prop_dev(button5, "disabled", /*button3Disabled*/ ctx[7]);
-=======
     			if ((!current || dirty[0] & /*Liczba_1*/ 2) && t19_value !== (t19_value = (/*Liczba_1*/ ctx[1] === undefined
     			? "?"
     			: /*Liczba_1*/ ctx[1]) + "")) set_data_dev(t19, t19_value);
@@ -71567,7 +70839,6 @@ var app = (function () {
 
     			if (!current || dirty[0] & /*button3Disabled*/ 128) {
     				prop_dev(button7, "disabled", /*button3Disabled*/ ctx[7]);
->>>>>>> Stashed changes
     			}
 
     			if (/*LevelDifficult*/ ctx[11] === "Średni" || /*LevelDifficult*/ ctx[11] === "Trudny") {
@@ -71576,24 +70847,15 @@ var app = (function () {
     				} else {
     					if_block1 = create_if_block_2(ctx);
     					if_block1.c();
-<<<<<<< Updated upstream
-    					if_block1.m(div8, t31);
-=======
     					if_block1.m(div7, t35);
->>>>>>> Stashed changes
     				}
     			} else if (if_block1) {
     				if_block1.d(1);
     				if_block1 = null;
     			}
 
-<<<<<<< Updated upstream
-    			if (!current || dirty[0] & /*RedoHistory*/ 65536 && button14_disabled_value !== (button14_disabled_value = /*RedoHistory*/ ctx[16].length > 1 ? true : false)) {
-    				prop_dev(button14, "disabled", button14_disabled_value);
-=======
     			if (!current || dirty[0] & /*RedoHistory*/ 32768 && button16_disabled_value !== (button16_disabled_value = /*RedoHistory*/ ctx[15].length > 1 ? true : false)) {
     				prop_dev(button16, "disabled", button16_disabled_value);
->>>>>>> Stashed changes
     			}
 
     			if (/*isChallengeInfoModalOpen*/ ctx[13]) {
@@ -71604,17 +70866,10 @@ var app = (function () {
     						transition_in(if_block2, 1);
     					}
     				} else {
-<<<<<<< Updated upstream
-    					if_block2 = create_if_block_1(ctx);
-    					if_block2.c();
-    					transition_in(if_block2, 1);
-    					if_block2.m(main, t34);
-=======
     					if_block2 = create_if_block_1$1(ctx);
     					if_block2.c();
     					transition_in(if_block2, 1);
     					if_block2.m(main, t38);
->>>>>>> Stashed changes
     				}
     			} else if (if_block2) {
     				group_outros();
@@ -71634,11 +70889,7 @@ var app = (function () {
     						transition_in(if_block3, 1);
     					}
     				} else {
-<<<<<<< Updated upstream
-    					if_block3 = create_if_block$3(ctx);
-=======
     					if_block3 = create_if_block$4(ctx);
->>>>>>> Stashed changes
     					if_block3.c();
     					transition_in(if_block3, 1);
     					if_block3.m(main, null);
@@ -71677,11 +70928,7 @@ var app = (function () {
 
     	dispatch_dev("SvelteRegisterBlock", {
     		block,
-<<<<<<< Updated upstream
-    		id: create_fragment$j.name,
-=======
     		id: create_fragment$s.name,
->>>>>>> Stashed changes
     		type: "component",
     		source: "",
     		ctx
@@ -71698,11 +70945,7 @@ var app = (function () {
     	return (/^[+\-*/]$/).test(value);
     }
 
-<<<<<<< Updated upstream
-    function instance$j($$self, $$props, $$invalidate) {
-=======
     function instance$s($$self, $$props, $$invalidate) {
->>>>>>> Stashed changes
     	let { $$slots: slots = {}, $$scope } = $$props;
     	validate_slots('GameSection', slots, []);
     	let LW;
@@ -71719,11 +70962,6 @@ var app = (function () {
     	let levelInfo = "MathBetter";
     	let LevelDifficult = "Łatwy";
     	let PlayerTime;
-<<<<<<< Updated upstream
-
-    	async function GenerujLiczby() {
-    		$$invalidate(8, button4Disabled = true); // Wyłącz przycisk
-=======
     	const token = localStorage.getItem("token");
 
     	async function getUserDetails() {
@@ -71732,22 +70970,15 @@ var app = (function () {
     		}
 
     		const headers = { Authorization: `Bearer ${token}` };
->>>>>>> Stashed changes
 
     		try {
-    			$$invalidate(1, Liczba_1 = generateRandomValue(l_range));
-    			$$invalidate(2, Liczba_2 = generateRandomValue(l_range));
-    			$$invalidate(3, Liczba_3 = generateRandomValue(l_range));
-    			$$invalidate(0, LW = await Generator(Liczba_1, Liczba_2, Liczba_3, LevelDifficult));
+    			const response = await axios$1.get(`http://127.0.0.1:8000/api/user/`, { headers });
+    			return response.data.user.id;
     		} catch(error) {
-    			console.error('Błąd podczas generowania liczb:', error);
-    		} finally {
-    			$$invalidate(8, button4Disabled = false); // Włącz przycisk po zakończeniu
+    			console.error("Błąd podczas wykonywania zapytania HTTP:", error);
     		}
     	}
 
-<<<<<<< Updated upstream
-=======
     	async function GenerujLiczby() {
     		$$invalidate(1, Liczba_1 = generateRandomValue(l_range));
     		$$invalidate(2, Liczba_2 = generateRandomValue(l_range));
@@ -71755,7 +70986,6 @@ var app = (function () {
     		$$invalidate(0, LW = await Generator(Liczba_1, Liczba_2, Liczba_3, LevelDifficult));
     	}
 
->>>>>>> Stashed changes
     	function losujLiczby() {
     		clearInput();
 
@@ -71770,11 +71000,7 @@ var app = (function () {
     			GenerujLiczby();
     			$$invalidate(10, levelInfo = `Poziom: ${currentLevel}/5`);
 
-<<<<<<< Updated upstream
-    			if (currentLevel === 5) {
-=======
     			if (currentLevel === 2) {
->>>>>>> Stashed changes
     				$$invalidate(12, PlayerTime = formattedTime);
     				timerValue = elapsedMilliseconds;
     				openChallengeCompleteModal();
@@ -71830,38 +71056,22 @@ var app = (function () {
     		l_range = 10;
     		$$invalidate(11, LevelDifficult = "Łatwy");
     		losujLiczby();
-<<<<<<< Updated upstream
-    		toggleDropdown();
-=======
->>>>>>> Stashed changes
     	}
 
     	function setMedium() {
     		l_range = 10;
     		$$invalidate(11, LevelDifficult = "Średni");
     		losujLiczby();
-<<<<<<< Updated upstream
-    		toggleDropdown();
-=======
->>>>>>> Stashed changes
     	}
 
     	function setHard() {
     		l_range = 15;
     		$$invalidate(11, LevelDifficult = "Trudny");
     		losujLiczby();
-<<<<<<< Updated upstream
-    		toggleDropdown();
-=======
->>>>>>> Stashed changes
     	}
 
     	let isChallengeInfoModalOpen = false;
     	let isChallengeCompleteModalOpen = false;
-<<<<<<< Updated upstream
-    	let playerName = "";
-=======
->>>>>>> Stashed changes
 
     	function openChallengeInfoModal() {
     		$$invalidate(13, isChallengeInfoModalOpen = true);
@@ -71888,16 +71098,6 @@ var app = (function () {
     		closeChallengeInfoModal(); // Close the info modal when switching to challenge mode
     	}
 
-<<<<<<< Updated upstream
-    	function finishChallenge() {
-    		addResult(playerName, timerValue, LevelDifficult);
-    		$$invalidate(4, isNormalMode = true);
-    		losujLiczby();
-    		startTimer();
-    		timerValue = 0;
-    		$$invalidate(15, playerName = ""); // Reset playerName after finishing challenge
-    		closeChallengeCompleteModal(); // Close the completion modal
-=======
     	async function finishChallenge() {
     		if (!token) {
     			return null; // Jeśli brakuje tokenu, funkcja zwraca null.
@@ -71918,7 +71118,6 @@ var app = (function () {
     		} catch(error) {
     			console.error("Błąd podczas wykonywania zapytania HTTP:", error);
     		} // Możesz obsłużyć błąd tutaj, jeśli jest to konieczne.
->>>>>>> Stashed changes
     	}
 
     	function Giveup() {
@@ -71982,11 +71181,7 @@ var app = (function () {
     	function clearInput() {
     		$$invalidate(9, InputValue = "");
     		LastAdd = " ";
-<<<<<<< Updated upstream
-    		$$invalidate(16, RedoHistory = [""]);
-=======
     		$$invalidate(15, RedoHistory = [""]);
->>>>>>> Stashed changes
     		$$invalidate(5, button1Disabled = false);
     		$$invalidate(6, button2Disabled = false);
     		$$invalidate(7, button3Disabled = false);
@@ -72011,58 +71206,17 @@ var app = (function () {
     		}
     	}
 
-<<<<<<< Updated upstream
-    	let isDropdownOpen = false; // Zmienna do śledzenia stanu dropdownu
-
-    	function toggleDropdown() {
-    		$$invalidate(17, isDropdownOpen = !isDropdownOpen);
-    	}
-
-    	const writable_props = [];
-
-    	Object.keys($$props).forEach(key => {
-    		if (!~writable_props.indexOf(key) && key.slice(0, 2) !== '$$' && key !== 'slot') console_1$4.warn(`<GameSection> was created with unknown prop '${key}'`);
-    	});
-
-    	const click_handler = () => setEasy();
-    	const click_handler_1 = () => setMedium();
-    	const click_handler_2 = () => setHard();
-
-=======
     	const writable_props = [];
 
     	Object.keys($$props).forEach(key => {
     		if (!~writable_props.indexOf(key) && key.slice(0, 2) !== '$$' && key !== 'slot') console_1$6.warn(`<GameSection> was created with unknown prop '${key}'`);
     	});
 
->>>>>>> Stashed changes
     	function input_input_handler() {
     		InputValue = this.value;
     		$$invalidate(9, InputValue);
     	}
 
-<<<<<<< Updated upstream
-    	const click_handler_3 = () => Buttonl(1);
-    	const click_handler_4 = () => Buttonl(2);
-    	const click_handler_5 = () => Buttonl(3);
-    	const click_handler_6 = () => clearInput();
-    	const click_handler_7 = () => addToExpression("+");
-    	const click_handler_8 = () => addToExpression("-");
-    	const click_handler_9 = () => addToExpression("*");
-    	const click_handler_10 = () => addToExpression("/");
-    	const click_handler_11 = () => addToExpression("(");
-    	const click_handler_12 = () => addToExpression(")");
-    	const click_handler_13 = () => addToExpression("^2");
-    	const click_handler_14 = () => addToExpression("sqrt(");
-    	const click_handler_15 = () => addToExpression("!");
-    	const click_handler_16 = () => check();
-    	const click_handler_17 = () => redo();
-
-    	function input_input_handler_1() {
-    		playerName = this.value;
-    		$$invalidate(15, playerName);
-    	}
-=======
     	const click_handler = () => Buttonl(1);
     	const click_handler_1 = () => Buttonl(2);
     	const click_handler_2 = () => Buttonl(3);
@@ -72078,16 +71232,12 @@ var app = (function () {
     	const click_handler_12 = () => addToExpression("!");
     	const click_handler_13 = () => check();
     	const click_handler_14 = () => redo();
->>>>>>> Stashed changes
 
     	$$self.$capture_state = () => ({
     		Generator,
     		addResult,
     		Modal,
-<<<<<<< Updated upstream
-=======
     		axios: axios$1,
->>>>>>> Stashed changes
     		LW,
     		Liczba_1,
     		Liczba_2,
@@ -72104,11 +71254,8 @@ var app = (function () {
     		levelInfo,
     		LevelDifficult,
     		PlayerTime,
-<<<<<<< Updated upstream
-=======
     		token,
     		getUserDetails,
->>>>>>> Stashed changes
     		GenerujLiczby,
     		generateRandomValue,
     		losujLiczby,
@@ -72125,10 +71272,6 @@ var app = (function () {
     		setHard,
     		isChallengeInfoModalOpen,
     		isChallengeCompleteModalOpen,
-<<<<<<< Updated upstream
-    		playerName,
-=======
->>>>>>> Stashed changes
     		openChallengeInfoModal,
     		closeChallengeInfoModal,
     		openChallengeCompleteModal,
@@ -72144,13 +71287,7 @@ var app = (function () {
     		addToExpression,
     		isOperator,
     		clearInput,
-<<<<<<< Updated upstream
-    		check,
-    		isDropdownOpen,
-    		toggleDropdown
-=======
     		check
->>>>>>> Stashed changes
     	});
 
     	$$self.$inject_state = $$props => {
@@ -72176,15 +71313,8 @@ var app = (function () {
     		if ('timerValue' in $$props) timerValue = $$props.timerValue;
     		if ('isChallengeInfoModalOpen' in $$props) $$invalidate(13, isChallengeInfoModalOpen = $$props.isChallengeInfoModalOpen);
     		if ('isChallengeCompleteModalOpen' in $$props) $$invalidate(14, isChallengeCompleteModalOpen = $$props.isChallengeCompleteModalOpen);
-<<<<<<< Updated upstream
-    		if ('playerName' in $$props) $$invalidate(15, playerName = $$props.playerName);
-    		if ('LastAdd' in $$props) LastAdd = $$props.LastAdd;
-    		if ('RedoHistory' in $$props) $$invalidate(16, RedoHistory = $$props.RedoHistory);
-    		if ('isDropdownOpen' in $$props) $$invalidate(17, isDropdownOpen = $$props.isDropdownOpen);
-=======
     		if ('LastAdd' in $$props) LastAdd = $$props.LastAdd;
     		if ('RedoHistory' in $$props) $$invalidate(15, RedoHistory = $$props.RedoHistory);
->>>>>>> Stashed changes
     	};
 
     	if ($$props && "$$inject" in $$props) {
@@ -72207,14 +71337,8 @@ var app = (function () {
     		PlayerTime,
     		isChallengeInfoModalOpen,
     		isChallengeCompleteModalOpen,
-<<<<<<< Updated upstream
-    		playerName,
-    		RedoHistory,
-    		isDropdownOpen,
-=======
     		RedoHistory,
     		token,
->>>>>>> Stashed changes
     		losujLiczby,
     		setEasy,
     		setMedium,
@@ -72228,18 +71352,10 @@ var app = (function () {
     		addToExpression,
     		clearInput,
     		check,
-<<<<<<< Updated upstream
-    		toggleDropdown,
-    		click_handler,
-    		click_handler_1,
-    		click_handler_2,
-    		input_input_handler,
-=======
     		input_input_handler,
     		click_handler,
     		click_handler_1,
     		click_handler_2,
->>>>>>> Stashed changes
     		click_handler_3,
     		click_handler_4,
     		click_handler_5,
@@ -72251,389 +71367,20 @@ var app = (function () {
     		click_handler_11,
     		click_handler_12,
     		click_handler_13,
-<<<<<<< Updated upstream
-    		click_handler_14,
-    		click_handler_15,
-    		click_handler_16,
-    		click_handler_17,
-    		input_input_handler_1
-=======
     		click_handler_14
->>>>>>> Stashed changes
     	];
     }
 
     class GameSection extends SvelteComponentDev {
     	constructor(options) {
     		super(options);
-<<<<<<< Updated upstream
-    		init(this, options, instance$j, create_fragment$j, safe_not_equal, {}, null, [-1, -1, -1]);
-=======
     		init(this, options, instance$s, create_fragment$s, safe_not_equal, {}, null, [-1, -1, -1]);
->>>>>>> Stashed changes
 
     		dispatch_dev("SvelteRegisterComponent", {
     			component: this,
     			tagName: "GameSection",
     			options,
-<<<<<<< Updated upstream
-    			id: create_fragment$j.name
-    		});
-    	}
-    }
-
-    /* src\Components\DefaultComponents\Navbar.svelte generated by Svelte v3.59.2 */
-
-    const file$h = "src\\Components\\DefaultComponents\\Navbar.svelte";
-
-    function create_fragment$i(ctx) {
-    	let div5;
-    	let div1;
-    	let div0;
-    	let svg;
-    	let defs;
-    	let g0;
-    	let path0;
-    	let g1;
-    	let path1;
-    	let g2;
-    	let path2;
-    	let t0;
-    	let div4;
-    	let div2;
-    	let button;
-    	let span;
-    	let t2;
-    	let div3;
-    	let ul;
-    	let li0;
-    	let a0;
-    	let t4;
-    	let li1;
-    	let a1;
-    	let t6;
-    	let li2;
-    	let a2;
-    	let t8;
-    	let li3;
-    	let a3;
-    	let div5_class_value;
-
-    	const block = {
-    		c: function create() {
-    			div5 = element("div");
-    			div1 = element("div");
-    			div0 = element("div");
-    			svg = svg_element("svg");
-    			defs = svg_element("defs");
-    			g0 = svg_element("g");
-    			path0 = svg_element("path");
-    			g1 = svg_element("g");
-    			path1 = svg_element("path");
-    			g2 = svg_element("g");
-    			path2 = svg_element("path");
-    			t0 = space();
-    			div4 = element("div");
-    			div2 = element("div");
-    			button = element("button");
-    			span = element("span");
-    			span.textContent = "Menu";
-    			t2 = space();
-    			div3 = element("div");
-    			ul = element("ul");
-    			li0 = element("li");
-    			a0 = element("a");
-    			a0.textContent = "Home";
-    			t4 = space();
-    			li1 = element("li");
-    			a1 = element("a");
-    			a1.textContent = "Ranking";
-    			t6 = space();
-    			li2 = element("li");
-    			a2 = element("a");
-    			a2.textContent = "Zacznij grę";
-    			t8 = space();
-    			li3 = element("li");
-    			a3 = element("a");
-    			a3.textContent = "Jak grać?";
-    			attr_dev(defs, "id", "SvgjsDefs3345");
-    			add_location(defs, file$h, 12, 9, 393);
-    			attr_dev(path0, "d", "M5.8 5.68 l3.34 0 l0 14.28 l-1.88 0 l0 -11.3 l-1.78 11.34 l-0.74 0 l-0.18 -0.04 l-0.16 0.04 l-0.74 0 l-1.76 -11.34 l0 11.3 l-1.9 0 l0 -14.28 l3.36 0 l1.22 8.08 z M16.054000000000002 20 l-0.72 -4.94 l-2.02 0 l-0.66 4.94 l-1.92 0 l2.16 -14.3 l2.58 0 l2.5 14.3 l-1.92 0 z M13.574 13.16 l1.48 0 l-0.76 -5.2 z M24.887999999999998 5.68 l0 1.92 l-2.38 0 l0 12.42 l-1.92 0 l0 -12.42 l-2.62 0 l0 -1.92 l6.92 0 z M30.162000000000003 5.720000000000001 l1.9 0 l0 14.26 l-1.9 0 l0 -7.54 l-1.7 0 l0 7.54 l-1.9 0 l0 -14.26 l1.9 0 l0 4.84 l1.7 0 l0 -4.84 z");
-    			add_location(path0, file$h, 17, 11, 646);
-    			attr_dev(g0, "id", "SvgjsG3346");
-    			attr_dev(g0, "featurekey", "nameLeftFeature-0");
-    			attr_dev(g0, "transform", "matrix(2.510460057376075,0,0,2.510460057376075,-0.0000023941612790833236,14.740588502133564)");
-    			attr_dev(g0, "fill", "#194759");
-    			add_location(g0, file$h, 12, 36, 420);
-    			attr_dev(path1, "xmlns", "http://www.w3.org/2000/svg");
-    			attr_dev(path1, "d", "M73.591,21.324v-3.697c0-0.161-0.034-0.321-0.086-0.479l21.103-6.051L50.02,5L5.392,11.338l13.302,3.75v5.134  c-0.626,0.132-1.097,0.668-1.141,1.323h-0.01c0,0.012,0.005,0.024,0.006,0.036c-0.001,0.02-0.006,0.039-0.006,0.059h0.009v7.307h0.6  v-6.686c0.052,0.022,0.107,0.041,0.164,0.059v7.226h0.6v-7.124c0.026,0.001,0.051,0.005,0.077,0.005c0.03,0,0.057-0.004,0.087-0.005  v7.125h0.6v-7.229c0.057-0.019,0.112-0.038,0.164-0.061v6.69h0.6V21.64h0c0,0,0,0,0-0.001v-0.095c0,0,0,0,0,0h-0.01  c-0.043-0.654-0.515-1.191-1.141-1.323v-4.965l7.161,2.019c-0.028,0.116-0.047,0.233-0.047,0.351v9.636  c-4.846,4.993-7.851,11.781-7.892,19.263l-7.786,22.076h10.433V74.1h0.9v0.002h-0.9c0,5.826,4.739,10.565,10.565,10.565h5.85V95  h15.541h13.297h15.54V66.144c5.104-5.241,7.91-12.138,7.91-19.463C89.866,35.443,83.186,25.742,73.591,21.324z M24.103,50.254  c0-1.9,1.541-3.44,3.441-3.44c1.9,0,3.441,1.541,3.441,3.44c0,1.901-1.541,3.441-3.441,3.441  C25.644,53.695,24.103,52.155,24.103,50.254z M80.42,65.138l-0.263,0.264V93.2H54.919V82.867h-7.65  c-4.833,0-8.764-3.932-8.764-8.765h-0.9V74.1h0.9v-7.299h-9.689l7.042-19.967v-0.154c0-14.394,11.71-26.105,26.104-26.105  c14.394,0,26.104,11.711,26.104,26.105C88.066,53.651,85.351,60.206,80.42,65.138z M47.003,50.254c0,1.901-1.541,3.441-3.441,3.441  c-1.9,0-3.441-1.541-3.441-3.441c0-1.9,1.541-3.44,3.441-3.44C45.462,46.814,47.003,48.354,47.003,50.254z M79.633,38.017  c0.741,0.973,1.185,2.185,1.185,3.504c0,1.53-0.599,2.922-1.577,3.957c-0.166,2.185-1.551,4.031-3.483,4.862v0.021  c-2.357,1.373-3.767,3.716-4.193,6.528h-2.182l-1.216-0.003H66.09v-6.2c0-2.276-1.427-4.435-3.226-5.203  c-0.858-0.334-1.753-0.892-2.404-1.621c-0.929,0.631-2.045,1.003-3.243,1.003c-1.203,0-2.318-0.366-3.244-0.993  c-0.917,0.603-2.026,0.959-3.214,0.959c-3.26,0-5.898-2.644-5.9-5.904c0-2.433,1.473-4.524,3.579-5.423  c0.572-2.599,2.873-4.541,5.644-4.541c0.147,0,0.28,0.013,0.417,0.019c1.045-1.526,2.798-2.524,4.786-2.524  c0.984,0,1.908,0.245,2.719,0.682c0.915-0.609,2.01-0.962,3.188-0.962c1.513,0,2.893,0.589,3.926,1.548  c0.434-0.103,0.882-0.166,1.35-0.166c2.338,0,4.359,1.408,5.262,3.424c2.375,0.719,4.103,2.922,4.103,5.528  C79.833,37.033,79.762,37.537,79.633,38.017z");
-    			add_location(path1, file$h, 25, 11, 1435);
-    			attr_dev(g1, "id", "SvgjsG3347");
-    			attr_dev(g1, "featurekey", "inlineSymbolFeature-0");
-    			attr_dev(g1, "transform", "matrix(1.044,0,0,1.044,94.37075179290771,-5.220000000000001)");
-    			attr_dev(g1, "fill", "#194759");
-    			add_location(g1, file$h, 20, 9, 1237);
-    			attr_dev(path2, "d", "M9.674 11.52 c0.44 0.44 0.72 1.04 0.72 1.7 l0 4.38 c0 1.32 -1.08 2.4 -2.4 2.4 l-2.96 0 l-0.02 -14.24 l2.64 0 c1.46 0.06 2.32 1.46 2.3 2.78 l-0.02 1.98 c0 0.36 -0.1 0.7 -0.26 1 z M7.994 18.08 c0.28 0 0.5 -0.22 0.5 -0.48 l-0.02 -4.38 c0 -0.28 -0.22 -0.48 -0.48 -0.48 l-1.06 0 l0 5.34 l1.06 0 z M6.914 7.66 l0 3.16 l0.8 0 c0.16 0 0.32 -0.14 0.32 -0.32 l0.02 -1.98 c0 -0.4 -0.2 -0.84 -0.48 -0.86 l-0.66 0 z M17.068 12.46 l-2.76 0 l0 5.64 l2.78 0 l0 1.9 l-4.68 0 l0 -14.28 l4.68 0 l0 1.9 l-2.78 0 l0 2.94 l2.76 0 l0 1.9 z M26.022 5.68 l0 1.92 l-2.38 0 l0 12.42 l-1.92 0 l0 -12.42 l-2.62 0 l0 -1.92 l6.92 0 z M34.956 5.68 l0 1.92 l-2.38 0 l0 12.42 l-1.92 0 l0 -12.42 l-2.62 0 l0 -1.92 l6.92 0 z M41.629999999999995 12.46 l-2.76 0 l0 5.64 l2.78 0 l0 1.9 l-4.68 0 l0 -14.28 l4.68 0 l0 1.9 l-2.78 0 l0 2.94 l2.76 0 l0 1.9 z M49.144000000000005 20.04 l-2.04 0 l-1.1 -3.02 l-0.44 0 l0 3.02 l-1.9 0 l0 -14.32 l2.98 0 c1.32 0 2.38 1.06 2.38 2.38 l0 6.54 c0 0.86 -0.44 1.6 -1.12 2.02 z M45.564 7.619999999999999 l0 7.5 l1.08 0 c0.26 0 0.48 -0.22 0.48 -0.48 l0 -6.54 c0 -0.26 -0.22 -0.48 -0.48 -0.48 l-1.08 0 z");
-    			add_location(path2, file$h, 34, 11, 3915);
-    			attr_dev(g2, "id", "SvgjsG3348");
-    			attr_dev(g2, "featurekey", "nameRightFeature-0");
-    			attr_dev(g2, "transform", "matrix(2.5069636817458774,0,0,2.5069636817458774,200.43008425273908,14.760446718032254)");
-    			attr_dev(g2, "fill", "#194759");
-    			add_location(g2, file$h, 29, 9, 3693);
-    			attr_dev(svg, "width", "185.1024107666016");
-    			attr_dev(svg, "height", "53.74168651596148");
-    			attr_dev(svg, "viewBox", "0 0 323.63230995317167 93.96000000000001");
-    			attr_dev(svg, "class", "css-1j8o68f");
-    			add_location(svg, file$h, 7, 6, 224);
-    			set_style(div0, "transform", "scale(1)");
-    			set_style(div0, "margin-left", "10%");
-    			add_location(div0, file$h, 6, 4, 166);
-    			attr_dev(div1, "class", "d-flex align-items-center");
-    			add_location(div1, file$h, 5, 2, 121);
-    			attr_dev(span, "class", "align-middle svelte-zmp6oq");
-    			attr_dev(span, "id", "navbar-toggler");
-    			add_location(span, file$h, 52, 8, 5491);
-    			attr_dev(button, "class", "navbar-toggler w-75 svelte-zmp6oq");
-    			attr_dev(button, "type", "button");
-    			attr_dev(button, "data-bs-toggle", "collapse");
-    			attr_dev(button, "data-bs-target", "#navbarNavDropdown");
-    			attr_dev(button, "aria-controls", "navbarNavDropdown");
-    			attr_dev(button, "aria-expanded", "true");
-    			attr_dev(button, "aria-label", "Toggle navigation");
-    			add_location(button, file$h, 43, 6, 5212);
-    			attr_dev(div2, "class", "navbar-dark text-center my-2");
-    			add_location(div2, file$h, 42, 4, 5162);
-    			attr_dev(a0, "href", "/");
-    			attr_dev(a0, "class", "nav-link active svelte-zmp6oq");
-    			attr_dev(a0, "aria-current", "page");
-    			add_location(a0, file$h, 62, 10, 5784);
-    			attr_dev(li0, "class", "nav-item svelte-zmp6oq");
-    			add_location(li0, file$h, 60, 6, 5742);
-    			attr_dev(a1, "href", "/#/Ranking");
-    			attr_dev(a1, "class", "nav-link svelte-zmp6oq");
-    			add_location(a1, file$h, 67, 10, 5917);
-    			attr_dev(li1, "class", "nav-item svelte-zmp6oq");
-    			add_location(li1, file$h, 65, 6, 5875);
-    			attr_dev(a2, "href", "/#/Game");
-    			attr_dev(a2, "class", "nav-link svelte-zmp6oq");
-    			add_location(a2, file$h, 72, 10, 6039);
-    			attr_dev(li2, "class", "nav-item svelte-zmp6oq");
-    			add_location(li2, file$h, 70, 6, 5996);
-    			attr_dev(a3, "href", "/#/About");
-    			attr_dev(a3, "class", "nav-link svelte-zmp6oq");
-    			add_location(a3, file$h, 77, 10, 6161);
-    			attr_dev(li3, "class", "nav-item svelte-zmp6oq");
-    			add_location(li3, file$h, 75, 6, 6119);
-    			attr_dev(ul, "class", "navbar-nav mx-auto align-items-center");
-    			add_location(ul, file$h, 59, 4, 5684);
-    			attr_dev(div3, "class", "text-center collapse navbar-collapse");
-    			attr_dev(div3, "id", "navbarNavDropdown");
-    			add_location(div3, file$h, 55, 4, 5584);
-    			attr_dev(div4, "class", "navbar-expand-md justify-content-center ");
-    			add_location(div4, file$h, 41, 2, 5101);
-    			attr_dev(div5, "id", "mainNavigation");
-    			attr_dev(div5, "class", div5_class_value = "" + (null_to_empty(/*isSticky*/ ctx[0] ? "sticky" : "static") + " svelte-zmp6oq"));
-    			add_location(div5, file$h, 4, 0, 53);
-    		},
-    		l: function claim(nodes) {
-    			throw new Error("options.hydrate only works if the component was compiled with the `hydratable: true` option");
-    		},
-    		m: function mount(target, anchor) {
-    			insert_dev(target, div5, anchor);
-    			append_dev(div5, div1);
-    			append_dev(div1, div0);
-    			append_dev(div0, svg);
-    			append_dev(svg, defs);
-    			append_dev(svg, g0);
-    			append_dev(g0, path0);
-    			append_dev(svg, g1);
-    			append_dev(g1, path1);
-    			append_dev(svg, g2);
-    			append_dev(g2, path2);
-    			append_dev(div5, t0);
-    			append_dev(div5, div4);
-    			append_dev(div4, div2);
-    			append_dev(div2, button);
-    			append_dev(button, span);
-    			append_dev(div4, t2);
-    			append_dev(div4, div3);
-    			append_dev(div3, ul);
-    			append_dev(ul, li0);
-    			append_dev(li0, a0);
-    			append_dev(ul, t4);
-    			append_dev(ul, li1);
-    			append_dev(li1, a1);
-    			append_dev(ul, t6);
-    			append_dev(ul, li2);
-    			append_dev(li2, a2);
-    			append_dev(ul, t8);
-    			append_dev(ul, li3);
-    			append_dev(li3, a3);
-    		},
-    		p: function update(ctx, [dirty]) {
-    			if (dirty & /*isSticky*/ 1 && div5_class_value !== (div5_class_value = "" + (null_to_empty(/*isSticky*/ ctx[0] ? "sticky" : "static") + " svelte-zmp6oq"))) {
-    				attr_dev(div5, "class", div5_class_value);
-    			}
-    		},
-    		i: noop,
-    		o: noop,
-    		d: function destroy(detaching) {
-    			if (detaching) detach_dev(div5);
-    		}
-    	};
-
-    	dispatch_dev("SvelteRegisterBlock", {
-    		block,
-    		id: create_fragment$i.name,
-    		type: "component",
-    		source: "",
-    		ctx
-    	});
-
-    	return block;
-    }
-
-    function instance$i($$self, $$props, $$invalidate) {
-    	let { $$slots: slots = {}, $$scope } = $$props;
-    	validate_slots('Navbar', slots, []);
-    	let { isSticky = true } = $$props;
-    	const writable_props = ['isSticky'];
-
-    	Object.keys($$props).forEach(key => {
-    		if (!~writable_props.indexOf(key) && key.slice(0, 2) !== '$$' && key !== 'slot') console.warn(`<Navbar> was created with unknown prop '${key}'`);
-    	});
-
-    	$$self.$$set = $$props => {
-    		if ('isSticky' in $$props) $$invalidate(0, isSticky = $$props.isSticky);
-    	};
-
-    	$$self.$capture_state = () => ({ isSticky });
-
-    	$$self.$inject_state = $$props => {
-    		if ('isSticky' in $$props) $$invalidate(0, isSticky = $$props.isSticky);
-    	};
-
-    	if ($$props && "$$inject" in $$props) {
-    		$$self.$inject_state($$props.$$inject);
-    	}
-
-    	return [isSticky];
-    }
-
-    class Navbar extends SvelteComponentDev {
-    	constructor(options) {
-    		super(options);
-    		init(this, options, instance$i, create_fragment$i, safe_not_equal, { isSticky: 0 });
-
-    		dispatch_dev("SvelteRegisterComponent", {
-    			component: this,
-    			tagName: "Navbar",
-    			options,
-    			id: create_fragment$i.name
-    		});
-    	}
-
-    	get isSticky() {
-    		throw new Error("<Navbar>: Props cannot be read directly from the component instance unless compiling with 'accessors: true' or '<svelte:options accessors/>'");
-    	}
-
-    	set isSticky(value) {
-    		throw new Error("<Navbar>: Props cannot be set directly on the component instance unless compiling with 'accessors: true' or '<svelte:options accessors/>'");
-    	}
-    }
-
-    /* src\Pages\Game.svelte generated by Svelte v3.59.2 */
-    const file$g = "src\\Pages\\Game.svelte";
-
-    function create_fragment$h(ctx) {
-    	let div;
-    	let navbar;
-    	let t;
-    	let gamesection;
-    	let current;
-
-    	navbar = new Navbar({
-    			props: { isSticky: false },
-    			$$inline: true
-    		});
-
-    	gamesection = new GameSection({ $$inline: true });
-
-    	const block = {
-    		c: function create() {
-    			div = element("div");
-    			create_component(navbar.$$.fragment);
-    			t = space();
-    			create_component(gamesection.$$.fragment);
-    			attr_dev(div, "class", "Game svelte-1g4uvap");
-    			add_location(div, file$g, 5, 0, 170);
-    		},
-    		l: function claim(nodes) {
-    			throw new Error("options.hydrate only works if the component was compiled with the `hydratable: true` option");
-    		},
-    		m: function mount(target, anchor) {
-    			insert_dev(target, div, anchor);
-    			mount_component(navbar, div, null);
-    			append_dev(div, t);
-    			mount_component(gamesection, div, null);
-    			current = true;
-    		},
-    		p: noop,
-    		i: function intro(local) {
-    			if (current) return;
-    			transition_in(navbar.$$.fragment, local);
-    			transition_in(gamesection.$$.fragment, local);
-    			current = true;
-    		},
-    		o: function outro(local) {
-    			transition_out(navbar.$$.fragment, local);
-    			transition_out(gamesection.$$.fragment, local);
-    			current = false;
-    		},
-    		d: function destroy(detaching) {
-    			if (detaching) detach_dev(div);
-    			destroy_component(navbar);
-    			destroy_component(gamesection);
-    		}
-    	};
-
-    	dispatch_dev("SvelteRegisterBlock", {
-    		block,
-    		id: create_fragment$h.name,
-    		type: "component",
-    		source: "",
-    		ctx
-    	});
-
-    	return block;
-    }
-
-    function instance$h($$self, $$props, $$invalidate) {
-    	let { $$slots: slots = {}, $$scope } = $$props;
-    	validate_slots('Game', slots, []);
-    	const writable_props = [];
-
-    	Object.keys($$props).forEach(key => {
-    		if (!~writable_props.indexOf(key) && key.slice(0, 2) !== '$$' && key !== 'slot') console.warn(`<Game> was created with unknown prop '${key}'`);
-    	});
-
-    	$$self.$capture_state = () => ({ GameSection, Navbar });
-    	return [];
-    }
-
-    class Game extends SvelteComponentDev {
-    	constructor(options) {
-    		super(options);
-    		init(this, options, instance$h, create_fragment$h, safe_not_equal, {});
-
-    		dispatch_dev("SvelteRegisterComponent", {
-    			component: this,
-    			tagName: "Game",
-    			options,
-    			id: create_fragment$h.name
-=======
     			id: create_fragment$s.name
->>>>>>> Stashed changes
     		});
     	}
     }
@@ -72746,11 +71493,7 @@ var app = (function () {
      * @param {*=}value initial value
      * @param {StartStopNotifier=} start
      */
-<<<<<<< Updated upstream
-    function writable(value, start = noop) {
-=======
     function writable(value, start = noop$1) {
->>>>>>> Stashed changes
         let stop;
         const subscribers = new Set();
         function set(new_value) {
@@ -72774,19 +71517,11 @@ var app = (function () {
         function update(fn) {
             set(fn(value));
         }
-<<<<<<< Updated upstream
-        function subscribe(run, invalidate = noop) {
-            const subscriber = [run, invalidate];
-            subscribers.add(subscriber);
-            if (subscribers.size === 1) {
-                stop = start(set) || noop;
-=======
         function subscribe(run, invalidate = noop$1) {
             const subscriber = [run, invalidate];
             subscribers.add(subscriber);
             if (subscribers.size === 1) {
                 stop = start(set) || noop$1;
->>>>>>> Stashed changes
             }
             run(value);
             return () => {
@@ -72809,11 +71544,7 @@ var app = (function () {
             let started = false;
             const values = [];
             let pending = 0;
-<<<<<<< Updated upstream
-            let cleanup = noop;
-=======
             let cleanup = noop$1;
->>>>>>> Stashed changes
             const sync = () => {
                 if (pending) {
                     return;
@@ -72824,11 +71555,7 @@ var app = (function () {
                     set(result);
                 }
                 else {
-<<<<<<< Updated upstream
-                    cleanup = is_function(result) ? result : noop;
-=======
                     cleanup = is_function(result) ? result : noop$1;
->>>>>>> Stashed changes
                 }
             };
             const unsubscribers = stores_array.map((store, i) => subscribe(store, (value) => {
@@ -72882,11 +71609,7 @@ var app = (function () {
 
     /* node_modules\svelte-spa-router\Router.svelte generated by Svelte v3.59.2 */
 
-<<<<<<< Updated upstream
-    const { Error: Error_1, Object: Object_1, console: console_1$3 } = globals;
-=======
     const { Error: Error_1$3, Object: Object_1$4, console: console_1$5 } = globals;
->>>>>>> Stashed changes
 
     // (267:0) {:else}
     function create_else_block$2(ctx) {
@@ -72981,11 +71704,7 @@ var app = (function () {
     }
 
     // (260:0) {#if componentParams}
-<<<<<<< Updated upstream
-    function create_if_block$2(ctx) {
-=======
     function create_if_block$3(ctx) {
->>>>>>> Stashed changes
     	let switch_instance;
     	let switch_instance_anchor;
     	let current;
@@ -73070,11 +71789,7 @@ var app = (function () {
 
     	dispatch_dev("SvelteRegisterBlock", {
     		block,
-<<<<<<< Updated upstream
-    		id: create_if_block$2.name,
-=======
     		id: create_if_block$3.name,
->>>>>>> Stashed changes
     		type: "if",
     		source: "(260:0) {#if componentParams}",
     		ctx
@@ -73083,20 +71798,12 @@ var app = (function () {
     	return block;
     }
 
-<<<<<<< Updated upstream
-    function create_fragment$g(ctx) {
-=======
     function create_fragment$r(ctx) {
->>>>>>> Stashed changes
     	let current_block_type_index;
     	let if_block;
     	let if_block_anchor;
     	let current;
-<<<<<<< Updated upstream
-    	const if_block_creators = [create_if_block$2, create_else_block$1];
-=======
     	const if_block_creators = [create_if_block$3, create_else_block$2];
->>>>>>> Stashed changes
     	const if_blocks = [];
 
     	function select_block_type(ctx, dirty) {
@@ -73113,11 +71820,7 @@ var app = (function () {
     			if_block_anchor = empty();
     		},
     		l: function claim(nodes) {
-<<<<<<< Updated upstream
-    			throw new Error_1("options.hydrate only works if the component was compiled with the `hydratable: true` option");
-=======
     			throw new Error_1$3("options.hydrate only works if the component was compiled with the `hydratable: true` option");
->>>>>>> Stashed changes
     		},
     		m: function mount(target, anchor) {
     			if_blocks[current_block_type_index].m(target, anchor);
@@ -73168,11 +71871,7 @@ var app = (function () {
 
     	dispatch_dev("SvelteRegisterBlock", {
     		block,
-<<<<<<< Updated upstream
-    		id: create_fragment$g.name,
-=======
     		id: create_fragment$r.name,
->>>>>>> Stashed changes
     		type: "component",
     		source: "",
     		ctx
@@ -73373,11 +72072,7 @@ var app = (function () {
     	window.location.hash = href;
     }
 
-<<<<<<< Updated upstream
-    function instance$g($$self, $$props, $$invalidate) {
-=======
     function instance$r($$self, $$props, $$invalidate) {
->>>>>>> Stashed changes
     	let { $$slots: slots = {}, $$scope } = $$props;
     	validate_slots('Router', slots, []);
     	let { routes = {} } = $$props;
@@ -73693,13 +72388,8 @@ var app = (function () {
 
     	const writable_props = ['routes', 'prefix', 'restoreScrollState'];
 
-<<<<<<< Updated upstream
-    	Object_1.keys($$props).forEach(key => {
-    		if (!~writable_props.indexOf(key) && key.slice(0, 2) !== '$$' && key !== 'slot') console_1$3.warn(`<Router> was created with unknown prop '${key}'`);
-=======
     	Object_1$4.keys($$props).forEach(key => {
     		if (!~writable_props.indexOf(key) && key.slice(0, 2) !== '$$' && key !== 'slot') console_1$5.warn(`<Router> was created with unknown prop '${key}'`);
->>>>>>> Stashed changes
     	});
 
     	function routeEvent_handler(event) {
@@ -73797,11 +72487,7 @@ var app = (function () {
     	constructor(options) {
     		super(options);
 
-<<<<<<< Updated upstream
-    		init(this, options, instance$g, create_fragment$g, safe_not_equal, {
-=======
     		init(this, options, instance$r, create_fragment$r, safe_not_equal, {
->>>>>>> Stashed changes
     			routes: 3,
     			prefix: 4,
     			restoreScrollState: 5
@@ -73811,20 +72497,12 @@ var app = (function () {
     			component: this,
     			tagName: "Router",
     			options,
-<<<<<<< Updated upstream
-    			id: create_fragment$g.name
-=======
     			id: create_fragment$r.name
->>>>>>> Stashed changes
     		});
     	}
 
     	get routes() {
-<<<<<<< Updated upstream
-    		throw new Error_1("<Router>: Props cannot be read directly from the component instance unless compiling with 'accessors: true' or '<svelte:options accessors/>'");
-=======
     		throw new Error_1$3("<Router>: Props cannot be read directly from the component instance unless compiling with 'accessors: true' or '<svelte:options accessors/>'");
->>>>>>> Stashed changes
     	}
 
     	set routes(value) {
@@ -73844,9 +72522,6 @@ var app = (function () {
     	}
 
     	set restoreScrollState(value) {
-<<<<<<< Updated upstream
-    		throw new Error_1("<Router>: Props cannot be set directly on the component instance unless compiling with 'accessors: true' or '<svelte:options accessors/>'");
-=======
     		throw new Error_1$3("<Router>: Props cannot be set directly on the component instance unless compiling with 'accessors: true' or '<svelte:options accessors/>'");
     	}
     }
@@ -74230,60 +72905,40 @@ var app = (function () {
     			options,
     			id: create_fragment$p.name
     		});
->>>>>>> Stashed changes
     	}
     }
 
     /* src\Components\RankingComponents\LeaderboardEasy.svelte generated by Svelte v3.59.2 */
 
-<<<<<<< Updated upstream
-    const { console: console_1$2 } = globals;
-    const file$f = "src\\Components\\RankingComponents\\LeaderboardEasy.svelte";
-=======
     const { Object: Object_1$3, console: console_1$4 } = globals;
     const file$m = "src\\Components\\RankingComponents\\LeaderboardEasy.svelte";
->>>>>>> Stashed changes
 
     function get_each_context$4(ctx, list, i) {
     	const child_ctx = ctx.slice();
-    	child_ctx[4] = list[i];
+    	child_ctx[2] = list[i];
     	return child_ctx;
     }
 
-<<<<<<< Updated upstream
-    // (42:6) {#each results.slice(0, maxResults) as result (result.id)}
-    function create_each_block$3(key_1, ctx) {
-=======
     // (18:6) {#each Object.values(data) as result }
     function create_each_block$4(ctx) {
->>>>>>> Stashed changes
     	let li;
     	let player_Name;
-    	let t0_value = /*result*/ ctx[4].user_name + "";
+    	let t0_value = /*result*/ ctx[2][1].name + "";
     	let t0;
     	let t1;
     	let player_Time;
-    	let t2_value = Math.floor(/*result*/ ctx[4].time / (1000 * 60)) + "";
+    	let t2_value = Math.floor(/*result*/ ctx[2][0].time / (1000 * 60)) + "";
     	let t2;
     	let t3;
-    	let t4_value = Math.floor(/*result*/ ctx[4].time % (1000 * 60) / 1000) + "";
+    	let t4_value = Math.floor(/*result*/ ctx[2][0].time % (1000 * 60) / 1000) + "";
     	let t4;
     	let t5;
-<<<<<<< Updated upstream
-    	let t6_value = Math.floor(/*result*/ ctx[4].time % (1000 * 60) / 1000) % 1000 + "";
-=======
     	let t6_value = Math.floor(/*result*/ ctx[2][0].time % (1000 * 60) / 1000) % 1000 + "";
->>>>>>> Stashed changes
     	let t6;
     	let t7;
     	let t8;
 
     	const block = {
-<<<<<<< Updated upstream
-    		key: key_1,
-    		first: null,
-=======
->>>>>>> Stashed changes
     		c: function create() {
     			li = element("li");
     			player_Name = element("player_Name");
@@ -74297,22 +72952,12 @@ var app = (function () {
     			t6 = text(t6_value);
     			t7 = text("ms");
     			t8 = space();
-<<<<<<< Updated upstream
-    			attr_dev(player_Name, "class", "svelte-1n3v63v");
-    			add_location(player_Name, file$f, 43, 10, 1079);
-    			attr_dev(player_Time, "class", "svelte-1n3v63v");
-    			add_location(player_Time, file$f, 44, 10, 1136);
-    			attr_dev(li, "class", "svelte-1n3v63v");
-    			add_location(li, file$f, 42, 8, 1063);
-    			this.first = li;
-=======
     			attr_dev(player_Name, "class", "svelte-87tagx");
     			add_location(player_Name, file$m, 19, 4, 333);
     			attr_dev(player_Time, "class", "svelte-87tagx");
     			add_location(player_Time, file$m, 20, 4, 383);
     			attr_dev(li, "class", "svelte-87tagx");
     			add_location(li, file$m, 18, 2, 323);
->>>>>>> Stashed changes
     		},
     		m: function mount(target, anchor) {
     			insert_dev(target, li, anchor);
@@ -74328,20 +72973,11 @@ var app = (function () {
     			append_dev(player_Time, t7);
     			append_dev(li, t8);
     		},
-<<<<<<< Updated upstream
-    		p: function update(new_ctx, dirty) {
-    			ctx = new_ctx;
-    			if (dirty & /*results*/ 1 && t0_value !== (t0_value = /*result*/ ctx[4].user_name + "")) set_data_dev(t0, t0_value);
-    			if (dirty & /*results*/ 1 && t2_value !== (t2_value = Math.floor(/*result*/ ctx[4].time / (1000 * 60)) + "")) set_data_dev(t2, t2_value);
-    			if (dirty & /*results*/ 1 && t4_value !== (t4_value = Math.floor(/*result*/ ctx[4].time % (1000 * 60) / 1000) + "")) set_data_dev(t4, t4_value);
-    			if (dirty & /*results*/ 1 && t6_value !== (t6_value = Math.floor(/*result*/ ctx[4].time % (1000 * 60) / 1000) % 1000 + "")) set_data_dev(t6, t6_value);
-=======
     		p: function update(ctx, dirty) {
     			if (dirty & /*data*/ 1 && t0_value !== (t0_value = /*result*/ ctx[2][1].name + "")) set_data_dev(t0, t0_value);
     			if (dirty & /*data*/ 1 && t2_value !== (t2_value = Math.floor(/*result*/ ctx[2][0].time / (1000 * 60)) + "")) set_data_dev(t2, t2_value);
     			if (dirty & /*data*/ 1 && t4_value !== (t4_value = Math.floor(/*result*/ ctx[2][0].time % (1000 * 60) / 1000) + "")) set_data_dev(t4, t4_value);
     			if (dirty & /*data*/ 1 && t6_value !== (t6_value = Math.floor(/*result*/ ctx[2][0].time % (1000 * 60) / 1000) % 1000 + "")) set_data_dev(t6, t6_value);
->>>>>>> Stashed changes
     		},
     		d: function destroy(detaching) {
     			if (detaching) detach_dev(li);
@@ -74350,26 +72986,16 @@ var app = (function () {
 
     	dispatch_dev("SvelteRegisterBlock", {
     		block,
-<<<<<<< Updated upstream
-    		id: create_each_block$3.name,
-    		type: "each",
-    		source: "(42:6) {#each results.slice(0, maxResults) as result (result.id)}",
-=======
     		id: create_each_block$4.name,
     		type: "each",
     		source: "(18:6) {#each Object.values(data) as result }",
->>>>>>> Stashed changes
     		ctx
     	});
 
     	return block;
     }
 
-<<<<<<< Updated upstream
-    function create_fragment$f(ctx) {
-=======
     function create_fragment$o(ctx) {
->>>>>>> Stashed changes
     	let div;
     	let h1;
     	let svg0;
@@ -74377,33 +73003,16 @@ var app = (function () {
     	let t0;
     	let t1;
     	let ul;
-<<<<<<< Updated upstream
-    	let each_blocks = [];
-    	let each_1_lookup = new Map();
-=======
->>>>>>> Stashed changes
     	let t2;
     	let svg1;
     	let symbol;
     	let path;
-<<<<<<< Updated upstream
-    	let each_value = /*results*/ ctx[0].slice(0, /*maxResults*/ ctx[1]);
-    	validate_each_argument(each_value);
-    	const get_key = ctx => /*result*/ ctx[4].id;
-    	validate_each_keys(ctx, each_value, get_each_context$3, get_key);
-
-    	for (let i = 0; i < each_value.length; i += 1) {
-    		let child_ctx = get_each_context$3(ctx, each_value, i);
-    		let key = get_key(child_ctx);
-    		each_1_lookup.set(key, each_blocks[i] = create_each_block$3(key, child_ctx));
-=======
     	let each_value = Object.values(/*data*/ ctx[0]);
     	validate_each_argument(each_value);
     	let each_blocks = [];
 
     	for (let i = 0; i < each_value.length; i += 1) {
     		each_blocks[i] = create_each_block$4(get_each_context$4(ctx, each_value, i));
->>>>>>> Stashed changes
     	}
 
     	const block = {
@@ -74425,22 +73034,6 @@ var app = (function () {
     			symbol = svg_element("symbol");
     			path = svg_element("path");
     			xlink_attr(use, "xlink:href", "#cup");
-<<<<<<< Updated upstream
-    			attr_dev(use, "class", "svelte-1n3v63v");
-    			add_location(use, file$f, 34, 8, 888);
-    			attr_dev(svg0, "class", "ico-cup svelte-1n3v63v");
-    			add_location(svg0, file$f, 33, 6, 857);
-    			attr_dev(h1, "class", "svelte-1n3v63v");
-    			add_location(h1, file$f, 32, 4, 845);
-    			attr_dev(ul, "class", "svelte-1n3v63v");
-    			add_location(ul, file$f, 39, 4, 974);
-    			attr_dev(div, "class", "leaderboard svelte-1n3v63v");
-    			add_location(div, file$f, 31, 0, 814);
-    			attr_dev(path, "fill", "#ffd700");
-    			attr_dev(path, "d", "M21.215,1.428c-0.744,0-1.438,0.213-2.024,0.579V0.865c0-0.478-0.394-0.865-0.88-0.865H6.69\r\n    C6.204,0,5.81,0.387,5.81,0.865v1.142C5.224,1.641,4.53,1.428,3.785,1.428C1.698,1.428,0,3.097,0,5.148\r\n    C0,7.2,1.698,8.869,3.785,8.869h1.453c0.315,0,0.572,0.252,0.572,0.562c0,0.311-0.257,0.563-0.572,0.563\r\n    c-0.486,0-0.88,0.388-0.88,0.865c0,0.478,0.395,0.865,0.88,0.865c0.421,0,0.816-0.111,1.158-0.303\r\n    c0.318,0.865,0.761,1.647,1.318,2.31c0.686,0.814,1.515,1.425,2.433,1.808c-0.04,0.487-0.154,1.349-0.481,2.191\r\n    c-0.591,1.519-1.564,2.257-2.975,2.257H5.238c-0.486,0-0.88,0.388-0.88,0.865v4.283c0,0.478,0.395,0.865,0.88,0.865h14.525\r\n    c0.485,0,0.88-0.388,0.88-0.865v-4.283c0-0.478-0.395-0.865-0.88-0.865h-1.452c-1.411,0-2.385-0.738-2.975-2.257\r\n    c-0.328-0.843-0.441-1.704-0.482-2.191c0.918-0.383,1.748-0.993,2.434-1.808c0.557-0.663,1-1.445,1.318-2.31\r\n    c0.342,0.192,0.736,0.303,1.157,0.303c0.486,0,0.88-0.387,0.88-0.865c0-0.478-0.394-0.865-0.88-0.865\r\n    c-0.315,0-0.572-0.252-0.572-0.563c0-0.31,0.257-0.562,0.572-0.562h1.452C23.303,8.869,25,7.2,25,5.148\r\n    C25,3.097,23.303,1.428,21.215,1.428z M5.238,7.138H3.785c-1.116,0-2.024-0.893-2.024-1.99c0-1.097,0.908-1.99,2.024-1.99\r\n    c1.117,0,2.025,0.893,2.025,1.99v2.06C5.627,7.163,5.435,7.138,5.238,7.138z M18.883,21.717v2.553H6.118v-2.553H18.883\r\n    L18.883,21.717z M13.673,18.301c0.248,0.65,0.566,1.214,0.947,1.686h-4.24c0.381-0.472,0.699-1.035,0.947-1.686\r\n    c0.33-0.865,0.479-1.723,0.545-2.327c0.207,0.021,0.416,0.033,0.627,0.033c0.211,0,0.42-0.013,0.627-0.033\r\n    C13.195,16.578,13.344,17.436,13.673,18.301z M12.5,14.276c-2.856,0-4.93-2.638-4.93-6.273V1.73h9.859v6.273\r\n    C17.43,11.638,15.357,14.276,12.5,14.276z M21.215,7.138h-1.452c-0.197,0-0.39,0.024-0.572,0.07v-2.06\r\n    c0-1.097,0.908-1.99,2.024-1.99c1.117,0,2.025,0.893,2.025,1.99C23.241,6.246,22.333,7.138,21.215,7.138z");
-    			attr_dev(path, "class", "svelte-1n3v63v");
-    			add_location(path, file$f, 61, 6, 1611);
-=======
     			attr_dev(use, "class", "svelte-87tagx");
     			add_location(use, file$m, 10, 8, 174);
     			attr_dev(svg0, "class", "ico-cup svelte-87tagx");
@@ -74455,7 +73048,6 @@ var app = (function () {
     			attr_dev(path, "d", "M21.215,1.428c-0.744,0-1.438,0.213-2.024,0.579V0.865c0-0.478-0.394-0.865-0.88-0.865H6.69\r\n    C6.204,0,5.81,0.387,5.81,0.865v1.142C5.224,1.641,4.53,1.428,3.785,1.428C1.698,1.428,0,3.097,0,5.148\r\n    C0,7.2,1.698,8.869,3.785,8.869h1.453c0.315,0,0.572,0.252,0.572,0.562c0,0.311-0.257,0.563-0.572,0.563\r\n    c-0.486,0-0.88,0.388-0.88,0.865c0,0.478,0.395,0.865,0.88,0.865c0.421,0,0.816-0.111,1.158-0.303\r\n    c0.318,0.865,0.761,1.647,1.318,2.31c0.686,0.814,1.515,1.425,2.433,1.808c-0.04,0.487-0.154,1.349-0.481,2.191\r\n    c-0.591,1.519-1.564,2.257-2.975,2.257H5.238c-0.486,0-0.88,0.388-0.88,0.865v4.283c0,0.478,0.395,0.865,0.88,0.865h14.525\r\n    c0.485,0,0.88-0.388,0.88-0.865v-4.283c0-0.478-0.395-0.865-0.88-0.865h-1.452c-1.411,0-2.385-0.738-2.975-2.257\r\n    c-0.328-0.843-0.441-1.704-0.482-2.191c0.918-0.383,1.748-0.993,2.434-1.808c0.557-0.663,1-1.445,1.318-2.31\r\n    c0.342,0.192,0.736,0.303,1.157,0.303c0.486,0,0.88-0.387,0.88-0.865c0-0.478-0.394-0.865-0.88-0.865\r\n    c-0.315,0-0.572-0.252-0.572-0.563c0-0.31,0.257-0.562,0.572-0.562h1.452C23.303,8.869,25,7.2,25,5.148\r\n    C25,3.097,23.303,1.428,21.215,1.428z M5.238,7.138H3.785c-1.116,0-2.024-0.893-2.024-1.99c0-1.097,0.908-1.99,2.024-1.99\r\n    c1.117,0,2.025,0.893,2.025,1.99v2.06C5.627,7.163,5.435,7.138,5.238,7.138z M18.883,21.717v2.553H6.118v-2.553H18.883\r\n    L18.883,21.717z M13.673,18.301c0.248,0.65,0.566,1.214,0.947,1.686h-4.24c0.381-0.472,0.699-1.035,0.947-1.686\r\n    c0.33-0.865,0.479-1.723,0.545-2.327c0.207,0.021,0.416,0.033,0.627,0.033c0.211,0,0.42-0.013,0.627-0.033\r\n    C13.195,16.578,13.344,17.436,13.673,18.301z M12.5,14.276c-2.856,0-4.93-2.638-4.93-6.273V1.73h9.859v6.273\r\n    C17.43,11.638,15.357,14.276,12.5,14.276z M21.215,7.138h-1.452c-0.197,0-0.39,0.024-0.572,0.07v-2.06\r\n    c0-1.097,0.908-1.99,2.024-1.99c1.117,0,2.025,0.893,2.025,1.99C23.241,6.246,22.333,7.138,21.215,7.138z");
     			attr_dev(path, "class", "svelte-87tagx");
     			add_location(path, file$m, 37, 6, 855);
->>>>>>> Stashed changes
     			attr_dev(symbol, "id", "cup");
     			attr_dev(symbol, "x", "0px");
     			attr_dev(symbol, "y", "0px");
@@ -74464,19 +73056,11 @@ var app = (function () {
     			attr_dev(symbol, "viewBox", "0 0 25 26");
     			attr_dev(symbol, "enable-background", "new 0 0 25 26");
     			attr_dev(symbol, "xml:space", "preserve");
-<<<<<<< Updated upstream
-    			attr_dev(symbol, "class", "svelte-1n3v63v");
-    			add_location(symbol, file$f, 51, 4, 1406);
-    			set_style(svg1, "display", "none");
-    			attr_dev(svg1, "class", "svelte-1n3v63v");
-    			add_location(svg1, file$f, 50, 2, 1372);
-=======
     			attr_dev(symbol, "class", "svelte-87tagx");
     			add_location(symbol, file$m, 27, 4, 650);
     			set_style(svg1, "display", "none");
     			attr_dev(svg1, "class", "svelte-87tagx");
     			add_location(svg1, file$m, 26, 2, 616);
->>>>>>> Stashed changes
     		},
     		l: function claim(nodes) {
     			throw new Error("options.hydrate only works if the component was compiled with the `hydratable: true` option");
@@ -74502,24 +73086,6 @@ var app = (function () {
     			append_dev(symbol, path);
     		},
     		p: function update(ctx, [dirty]) {
-<<<<<<< Updated upstream
-    			if (dirty & /*Math, results, maxResults*/ 3) {
-    				each_value = /*results*/ ctx[0].slice(0, /*maxResults*/ ctx[1]);
-    				validate_each_argument(each_value);
-    				validate_each_keys(ctx, each_value, get_each_context$3, get_key);
-    				each_blocks = update_keyed_each(each_blocks, dirty, get_key, 1, ctx, each_value, each_1_lookup, ul, destroy_block, create_each_block$3, null, get_each_context$3);
-    			}
-    		},
-    		i: noop,
-    		o: noop,
-    		d: function destroy(detaching) {
-    			if (detaching) detach_dev(div);
-
-    			for (let i = 0; i < each_blocks.length; i += 1) {
-    				each_blocks[i].d();
-    			}
-
-=======
     			if (dirty & /*Math, Object, data*/ 1) {
     				each_value = Object.values(/*data*/ ctx[0]);
     				validate_each_argument(each_value);
@@ -74549,7 +73115,6 @@ var app = (function () {
     		d: function destroy(detaching) {
     			if (detaching) detach_dev(div);
     			destroy_each(each_blocks, detaching);
->>>>>>> Stashed changes
     			if (detaching) detach_dev(t2);
     			if (detaching) detach_dev(svg1);
     		}
@@ -74557,11 +73122,7 @@ var app = (function () {
 
     	dispatch_dev("SvelteRegisterBlock", {
     		block,
-<<<<<<< Updated upstream
-    		id: create_fragment$f.name,
-=======
     		id: create_fragment$o.name,
->>>>>>> Stashed changes
     		type: "component",
     		source: "",
     		ctx
@@ -74570,38 +73131,13 @@ var app = (function () {
     	return block;
     }
 
-<<<<<<< Updated upstream
-    function instance$f($$self, $$props, $$invalidate) {
-=======
     function instance$o($$self, $$props, $$invalidate) {
->>>>>>> Stashed changes
     	let { $$slots: slots = {}, $$scope } = $$props;
     	validate_slots('LeaderboardEasy', slots, []);
     	let maxResults = 10;
-    	let difficulty = "Easy";
-    	let results = [];
+    	let { data } = $$props;
+    	console.log(data);
 
-<<<<<<< Updated upstream
-    	const getResults = async () => {
-    		try {
-    			const response = await fetch(`http://127.0.0.1:8000/results/?difficulty=${difficulty}`, {
-    				method: "GET",
-    				mode: "cors",
-    				credentials: "same-origin"
-    			});
-
-    			if (response.ok) {
-    				$$invalidate(0, results = await response.json());
-
-    				// Sortowanie wyników od najwyższego do najniższego czasu
-    				results.sort((a, b) => a.time - b.time);
-    			} else {
-    				console.error("Błąd podczas pobierania wyników.");
-    			}
-    		} catch(error) {
-    			console.error("Błąd pobierania danych:", error);
-    		}
-=======
     	$$self.$$.on_mount.push(function () {
     		if (data === undefined && !('data' in $$props || $$self.$$.bound[$$self.$$.props['data']])) {
     			console_1$4.warn("<LeaderboardEasy> was created without expected prop 'data'");
@@ -74616,63 +73152,31 @@ var app = (function () {
 
     	$$self.$$set = $$props => {
     		if ('data' in $$props) $$invalidate(0, data = $$props.data);
->>>>>>> Stashed changes
     	};
 
-    	getResults(); // Automatycznie pobierz wyniki po załadowaniu strony
-    	const writable_props = [];
-
-    	Object.keys($$props).forEach(key => {
-    		if (!~writable_props.indexOf(key) && key.slice(0, 2) !== '$$' && key !== 'slot') console_1$2.warn(`<LeaderboardEasy> was created with unknown prop '${key}'`);
-    	});
-
-    	$$self.$capture_state = () => ({
-    		maxResults,
-    		difficulty,
-    		results,
-    		getResults
-    	});
+    	$$self.$capture_state = () => ({ maxResults, data });
 
     	$$self.$inject_state = $$props => {
-<<<<<<< Updated upstream
-    		if ('maxResults' in $$props) $$invalidate(1, maxResults = $$props.maxResults);
-    		if ('difficulty' in $$props) difficulty = $$props.difficulty;
-    		if ('results' in $$props) $$invalidate(0, results = $$props.results);
-=======
     		if ('maxResults' in $$props) maxResults = $$props.maxResults;
     		if ('data' in $$props) $$invalidate(0, data = $$props.data);
->>>>>>> Stashed changes
     	};
 
     	if ($$props && "$$inject" in $$props) {
     		$$self.$inject_state($$props.$$inject);
     	}
 
-<<<<<<< Updated upstream
-    	return [results, maxResults];
-=======
     	return [data];
->>>>>>> Stashed changes
     }
 
     class LeaderboardEasy extends SvelteComponentDev {
     	constructor(options) {
     		super(options);
-<<<<<<< Updated upstream
-    		init(this, options, instance$f, create_fragment$f, safe_not_equal, {});
-=======
     		init(this, options, instance$o, create_fragment$o, safe_not_equal, { data: 0 });
->>>>>>> Stashed changes
 
     		dispatch_dev("SvelteRegisterComponent", {
     			component: this,
     			tagName: "LeaderboardEasy",
     			options,
-<<<<<<< Updated upstream
-    			id: create_fragment$f.name
-    		});
-    	}
-=======
     			id: create_fragment$o.name
     		});
     	}
@@ -74684,37 +73188,10 @@ var app = (function () {
     	set data(value) {
     		throw new Error("<LeaderboardEasy>: Props cannot be set directly on the component instance unless compiling with 'accessors: true' or '<svelte:options accessors/>'");
     	}
->>>>>>> Stashed changes
     }
 
     /* src\Components\RankingComponents\LeaderboardMedium.svelte generated by Svelte v3.59.2 */
 
-<<<<<<< Updated upstream
-    const { console: console_1$1 } = globals;
-    const file$e = "src\\Components\\RankingComponents\\LeaderboardMedium.svelte";
-
-    function get_each_context$2(ctx, list, i) {
-    	const child_ctx = ctx.slice();
-    	child_ctx[4] = list[i];
-    	return child_ctx;
-    }
-
-    // (42:6) {#each results.slice(0, maxResults) as result (result.id)}
-    function create_each_block$2(key_1, ctx) {
-    	let li;
-    	let player_Name;
-    	let t0_value = /*result*/ ctx[4].user_name + "";
-    	let t0;
-    	let t1;
-    	let player_Time;
-    	let t2_value = Math.floor(/*result*/ ctx[4].time / (1000 * 60)) + "";
-    	let t2;
-    	let t3;
-    	let t4_value = Math.floor(/*result*/ ctx[4].time % (1000 * 60) / 1000) + "";
-    	let t4;
-    	let t5;
-    	let t6_value = Math.floor(/*result*/ ctx[4].time % (1000 * 60) / 1000) % 1000 + "";
-=======
     const { Object: Object_1$2 } = globals;
     const file$l = "src\\Components\\RankingComponents\\LeaderboardMedium.svelte";
 
@@ -74739,17 +73216,11 @@ var app = (function () {
     	let t4;
     	let t5;
     	let t6_value = Math.floor(/*result*/ ctx[1][0].time % (1000 * 60) / 1000) % 1000 + "";
->>>>>>> Stashed changes
     	let t6;
     	let t7;
     	let t8;
 
     	const block = {
-<<<<<<< Updated upstream
-    		key: key_1,
-    		first: null,
-=======
->>>>>>> Stashed changes
     		c: function create() {
     			li = element("li");
     			player_Name = element("player_Name");
@@ -74763,22 +73234,12 @@ var app = (function () {
     			t6 = text(t6_value);
     			t7 = text("ms");
     			t8 = space();
-<<<<<<< Updated upstream
-    			attr_dev(player_Name, "class", "svelte-19oree6");
-    			add_location(player_Name, file$e, 43, 10, 1085);
-    			attr_dev(player_Time, "class", "svelte-19oree6");
-    			add_location(player_Time, file$e, 44, 10, 1142);
-    			attr_dev(li, "class", "svelte-19oree6");
-    			add_location(li, file$e, 42, 8, 1069);
-    			this.first = li;
-=======
     			attr_dev(player_Name, "class", "svelte-10fe36w");
     			add_location(player_Name, file$l, 17, 4, 285);
     			attr_dev(player_Time, "class", "svelte-10fe36w");
     			add_location(player_Time, file$l, 18, 4, 335);
     			attr_dev(li, "class", "svelte-10fe36w");
     			add_location(li, file$l, 16, 2, 275);
->>>>>>> Stashed changes
     		},
     		m: function mount(target, anchor) {
     			insert_dev(target, li, anchor);
@@ -74794,20 +73255,11 @@ var app = (function () {
     			append_dev(player_Time, t7);
     			append_dev(li, t8);
     		},
-<<<<<<< Updated upstream
-    		p: function update(new_ctx, dirty) {
-    			ctx = new_ctx;
-    			if (dirty & /*results*/ 1 && t0_value !== (t0_value = /*result*/ ctx[4].user_name + "")) set_data_dev(t0, t0_value);
-    			if (dirty & /*results*/ 1 && t2_value !== (t2_value = Math.floor(/*result*/ ctx[4].time / (1000 * 60)) + "")) set_data_dev(t2, t2_value);
-    			if (dirty & /*results*/ 1 && t4_value !== (t4_value = Math.floor(/*result*/ ctx[4].time % (1000 * 60) / 1000) + "")) set_data_dev(t4, t4_value);
-    			if (dirty & /*results*/ 1 && t6_value !== (t6_value = Math.floor(/*result*/ ctx[4].time % (1000 * 60) / 1000) % 1000 + "")) set_data_dev(t6, t6_value);
-=======
     		p: function update(ctx, dirty) {
     			if (dirty & /*data*/ 1 && t0_value !== (t0_value = /*result*/ ctx[1][1].name + "")) set_data_dev(t0, t0_value);
     			if (dirty & /*data*/ 1 && t2_value !== (t2_value = Math.floor(/*result*/ ctx[1][0].time / (1000 * 60)) + "")) set_data_dev(t2, t2_value);
     			if (dirty & /*data*/ 1 && t4_value !== (t4_value = Math.floor(/*result*/ ctx[1][0].time % (1000 * 60) / 1000) + "")) set_data_dev(t4, t4_value);
     			if (dirty & /*data*/ 1 && t6_value !== (t6_value = Math.floor(/*result*/ ctx[1][0].time % (1000 * 60) / 1000) % 1000 + "")) set_data_dev(t6, t6_value);
->>>>>>> Stashed changes
     		},
     		d: function destroy(detaching) {
     			if (detaching) detach_dev(li);
@@ -74816,26 +73268,16 @@ var app = (function () {
 
     	dispatch_dev("SvelteRegisterBlock", {
     		block,
-<<<<<<< Updated upstream
-    		id: create_each_block$2.name,
-    		type: "each",
-    		source: "(42:6) {#each results.slice(0, maxResults) as result (result.id)}",
-=======
     		id: create_each_block$3.name,
     		type: "each",
     		source: "(16:6) {#each Object.values(data) as result }",
->>>>>>> Stashed changes
     		ctx
     	});
 
     	return block;
     }
 
-<<<<<<< Updated upstream
-    function create_fragment$e(ctx) {
-=======
     function create_fragment$n(ctx) {
->>>>>>> Stashed changes
     	let div;
     	let h1;
     	let svg0;
@@ -74843,33 +73285,16 @@ var app = (function () {
     	let t0;
     	let t1;
     	let ul;
-<<<<<<< Updated upstream
-    	let each_blocks = [];
-    	let each_1_lookup = new Map();
-=======
->>>>>>> Stashed changes
     	let t2;
     	let svg1;
     	let symbol;
     	let path;
-<<<<<<< Updated upstream
-    	let each_value = /*results*/ ctx[0].slice(0, /*maxResults*/ ctx[1]);
-    	validate_each_argument(each_value);
-    	const get_key = ctx => /*result*/ ctx[4].id;
-    	validate_each_keys(ctx, each_value, get_each_context$2, get_key);
-
-    	for (let i = 0; i < each_value.length; i += 1) {
-    		let child_ctx = get_each_context$2(ctx, each_value, i);
-    		let key = get_key(child_ctx);
-    		each_1_lookup.set(key, each_blocks[i] = create_each_block$2(key, child_ctx));
-=======
     	let each_value = Object.values(/*data*/ ctx[0]);
     	validate_each_argument(each_value);
     	let each_blocks = [];
 
     	for (let i = 0; i < each_value.length; i += 1) {
     		each_blocks[i] = create_each_block$3(get_each_context$3(ctx, each_value, i));
->>>>>>> Stashed changes
     	}
 
     	const block = {
@@ -74891,22 +73316,6 @@ var app = (function () {
     			symbol = svg_element("symbol");
     			path = svg_element("path");
     			xlink_attr(use, "xlink:href", "#cup");
-<<<<<<< Updated upstream
-    			attr_dev(use, "class", "svelte-19oree6");
-    			add_location(use, file$e, 34, 8, 892);
-    			attr_dev(svg0, "class", "ico-cup svelte-19oree6");
-    			add_location(svg0, file$e, 33, 6, 861);
-    			attr_dev(h1, "class", "svelte-19oree6");
-    			add_location(h1, file$e, 32, 4, 849);
-    			attr_dev(ul, "class", "svelte-19oree6");
-    			add_location(ul, file$e, 39, 4, 980);
-    			attr_dev(div, "class", "leaderboard svelte-19oree6");
-    			add_location(div, file$e, 31, 0, 818);
-    			attr_dev(path, "fill", "#ffd700");
-    			attr_dev(path, "d", "M21.215,1.428c-0.744,0-1.438,0.213-2.024,0.579V0.865c0-0.478-0.394-0.865-0.88-0.865H6.69\r\n    C6.204,0,5.81,0.387,5.81,0.865v1.142C5.224,1.641,4.53,1.428,3.785,1.428C1.698,1.428,0,3.097,0,5.148\r\n    C0,7.2,1.698,8.869,3.785,8.869h1.453c0.315,0,0.572,0.252,0.572,0.562c0,0.311-0.257,0.563-0.572,0.563\r\n    c-0.486,0-0.88,0.388-0.88,0.865c0,0.478,0.395,0.865,0.88,0.865c0.421,0,0.816-0.111,1.158-0.303\r\n    c0.318,0.865,0.761,1.647,1.318,2.31c0.686,0.814,1.515,1.425,2.433,1.808c-0.04,0.487-0.154,1.349-0.481,2.191\r\n    c-0.591,1.519-1.564,2.257-2.975,2.257H5.238c-0.486,0-0.88,0.388-0.88,0.865v4.283c0,0.478,0.395,0.865,0.88,0.865h14.525\r\n    c0.485,0,0.88-0.388,0.88-0.865v-4.283c0-0.478-0.395-0.865-0.88-0.865h-1.452c-1.411,0-2.385-0.738-2.975-2.257\r\n    c-0.328-0.843-0.441-1.704-0.482-2.191c0.918-0.383,1.748-0.993,2.434-1.808c0.557-0.663,1-1.445,1.318-2.31\r\n    c0.342,0.192,0.736,0.303,1.157,0.303c0.486,0,0.88-0.387,0.88-0.865c0-0.478-0.394-0.865-0.88-0.865\r\n    c-0.315,0-0.572-0.252-0.572-0.563c0-0.31,0.257-0.562,0.572-0.562h1.452C23.303,8.869,25,7.2,25,5.148\r\n    C25,3.097,23.303,1.428,21.215,1.428z M5.238,7.138H3.785c-1.116,0-2.024-0.893-2.024-1.99c0-1.097,0.908-1.99,2.024-1.99\r\n    c1.117,0,2.025,0.893,2.025,1.99v2.06C5.627,7.163,5.435,7.138,5.238,7.138z M18.883,21.717v2.553H6.118v-2.553H18.883\r\n    L18.883,21.717z M13.673,18.301c0.248,0.65,0.566,1.214,0.947,1.686h-4.24c0.381-0.472,0.699-1.035,0.947-1.686\r\n    c0.33-0.865,0.479-1.723,0.545-2.327c0.207,0.021,0.416,0.033,0.627,0.033c0.211,0,0.42-0.013,0.627-0.033\r\n    C13.195,16.578,13.344,17.436,13.673,18.301z M12.5,14.276c-2.856,0-4.93-2.638-4.93-6.273V1.73h9.859v6.273\r\n    C17.43,11.638,15.357,14.276,12.5,14.276z M21.215,7.138h-1.452c-0.197,0-0.39,0.024-0.572,0.07v-2.06\r\n    c0-1.097,0.908-1.99,2.024-1.99c1.117,0,2.025,0.893,2.025,1.99C23.241,6.246,22.333,7.138,21.215,7.138z");
-    			attr_dev(path, "class", "svelte-19oree6");
-    			add_location(path, file$e, 61, 6, 1617);
-=======
     			attr_dev(use, "class", "svelte-10fe36w");
     			add_location(use, file$l, 8, 8, 124);
     			attr_dev(svg0, "class", "ico-cup svelte-10fe36w");
@@ -74921,7 +73330,6 @@ var app = (function () {
     			attr_dev(path, "d", "M21.215,1.428c-0.744,0-1.438,0.213-2.024,0.579V0.865c0-0.478-0.394-0.865-0.88-0.865H6.69\r\n    C6.204,0,5.81,0.387,5.81,0.865v1.142C5.224,1.641,4.53,1.428,3.785,1.428C1.698,1.428,0,3.097,0,5.148\r\n    C0,7.2,1.698,8.869,3.785,8.869h1.453c0.315,0,0.572,0.252,0.572,0.562c0,0.311-0.257,0.563-0.572,0.563\r\n    c-0.486,0-0.88,0.388-0.88,0.865c0,0.478,0.395,0.865,0.88,0.865c0.421,0,0.816-0.111,1.158-0.303\r\n    c0.318,0.865,0.761,1.647,1.318,2.31c0.686,0.814,1.515,1.425,2.433,1.808c-0.04,0.487-0.154,1.349-0.481,2.191\r\n    c-0.591,1.519-1.564,2.257-2.975,2.257H5.238c-0.486,0-0.88,0.388-0.88,0.865v4.283c0,0.478,0.395,0.865,0.88,0.865h14.525\r\n    c0.485,0,0.88-0.388,0.88-0.865v-4.283c0-0.478-0.395-0.865-0.88-0.865h-1.452c-1.411,0-2.385-0.738-2.975-2.257\r\n    c-0.328-0.843-0.441-1.704-0.482-2.191c0.918-0.383,1.748-0.993,2.434-1.808c0.557-0.663,1-1.445,1.318-2.31\r\n    c0.342,0.192,0.736,0.303,1.157,0.303c0.486,0,0.88-0.387,0.88-0.865c0-0.478-0.394-0.865-0.88-0.865\r\n    c-0.315,0-0.572-0.252-0.572-0.563c0-0.31,0.257-0.562,0.572-0.562h1.452C23.303,8.869,25,7.2,25,5.148\r\n    C25,3.097,23.303,1.428,21.215,1.428z M5.238,7.138H3.785c-1.116,0-2.024-0.893-2.024-1.99c0-1.097,0.908-1.99,2.024-1.99\r\n    c1.117,0,2.025,0.893,2.025,1.99v2.06C5.627,7.163,5.435,7.138,5.238,7.138z M18.883,21.717v2.553H6.118v-2.553H18.883\r\n    L18.883,21.717z M13.673,18.301c0.248,0.65,0.566,1.214,0.947,1.686h-4.24c0.381-0.472,0.699-1.035,0.947-1.686\r\n    c0.33-0.865,0.479-1.723,0.545-2.327c0.207,0.021,0.416,0.033,0.627,0.033c0.211,0,0.42-0.013,0.627-0.033\r\n    C13.195,16.578,13.344,17.436,13.673,18.301z M12.5,14.276c-2.856,0-4.93-2.638-4.93-6.273V1.73h9.859v6.273\r\n    C17.43,11.638,15.357,14.276,12.5,14.276z M21.215,7.138h-1.452c-0.197,0-0.39,0.024-0.572,0.07v-2.06\r\n    c0-1.097,0.908-1.99,2.024-1.99c1.117,0,2.025,0.893,2.025,1.99C23.241,6.246,22.333,7.138,21.215,7.138z");
     			attr_dev(path, "class", "svelte-10fe36w");
     			add_location(path, file$l, 35, 6, 807);
->>>>>>> Stashed changes
     			attr_dev(symbol, "id", "cup");
     			attr_dev(symbol, "x", "0px");
     			attr_dev(symbol, "y", "0px");
@@ -74930,19 +73338,11 @@ var app = (function () {
     			attr_dev(symbol, "viewBox", "0 0 25 26");
     			attr_dev(symbol, "enable-background", "new 0 0 25 26");
     			attr_dev(symbol, "xml:space", "preserve");
-<<<<<<< Updated upstream
-    			attr_dev(symbol, "class", "svelte-19oree6");
-    			add_location(symbol, file$e, 51, 4, 1412);
-    			set_style(svg1, "display", "none");
-    			attr_dev(svg1, "class", "svelte-19oree6");
-    			add_location(svg1, file$e, 50, 2, 1378);
-=======
     			attr_dev(symbol, "class", "svelte-10fe36w");
     			add_location(symbol, file$l, 25, 4, 602);
     			set_style(svg1, "display", "none");
     			attr_dev(svg1, "class", "svelte-10fe36w");
     			add_location(svg1, file$l, 24, 2, 568);
->>>>>>> Stashed changes
     		},
     		l: function claim(nodes) {
     			throw new Error("options.hydrate only works if the component was compiled with the `hydratable: true` option");
@@ -74968,24 +73368,6 @@ var app = (function () {
     			append_dev(symbol, path);
     		},
     		p: function update(ctx, [dirty]) {
-<<<<<<< Updated upstream
-    			if (dirty & /*Math, results, maxResults*/ 3) {
-    				each_value = /*results*/ ctx[0].slice(0, /*maxResults*/ ctx[1]);
-    				validate_each_argument(each_value);
-    				validate_each_keys(ctx, each_value, get_each_context$2, get_key);
-    				each_blocks = update_keyed_each(each_blocks, dirty, get_key, 1, ctx, each_value, each_1_lookup, ul, destroy_block, create_each_block$2, null, get_each_context$2);
-    			}
-    		},
-    		i: noop,
-    		o: noop,
-    		d: function destroy(detaching) {
-    			if (detaching) detach_dev(div);
-
-    			for (let i = 0; i < each_blocks.length; i += 1) {
-    				each_blocks[i].d();
-    			}
-
-=======
     			if (dirty & /*Math, Object, data*/ 1) {
     				each_value = Object.values(/*data*/ ctx[0]);
     				validate_each_argument(each_value);
@@ -75015,7 +73397,6 @@ var app = (function () {
     		d: function destroy(detaching) {
     			if (detaching) detach_dev(div);
     			destroy_each(each_blocks, detaching);
->>>>>>> Stashed changes
     			if (detaching) detach_dev(t2);
     			if (detaching) detach_dev(svg1);
     		}
@@ -75023,11 +73404,7 @@ var app = (function () {
 
     	dispatch_dev("SvelteRegisterBlock", {
     		block,
-<<<<<<< Updated upstream
-    		id: create_fragment$e.name,
-=======
     		id: create_fragment$n.name,
->>>>>>> Stashed changes
     		type: "component",
     		source: "",
     		ctx
@@ -75036,54 +73413,6 @@ var app = (function () {
     	return block;
     }
 
-<<<<<<< Updated upstream
-    function instance$e($$self, $$props, $$invalidate) {
-    	let { $$slots: slots = {}, $$scope } = $$props;
-    	validate_slots('LeaderboardMedium', slots, []);
-    	let maxResults = 10;
-    	let difficulty = "Medium";
-    	let results = [];
-
-    	const getResults = async () => {
-    		try {
-    			const response = await fetch(`http://127.0.0.1:8000/results/?difficulty=${difficulty}`, {
-    				method: "GET",
-    				mode: "cors",
-    				credentials: "same-origin"
-    			});
-
-    			if (response.ok) {
-    				$$invalidate(0, results = await response.json());
-
-    				// Sortowanie wyników od najwyższego do najniższego czasu
-    				results.sort((a, b) => a.time - b.time);
-    			} else {
-    				console.error("Błąd podczas pobierania wyników.");
-    			}
-    		} catch(error) {
-    			console.error("Błąd pobierania danych:", error);
-    		}
-    	};
-
-    	getResults(); // Automatycznie pobierz wyniki po załadowaniu strony
-    	const writable_props = [];
-
-    	Object.keys($$props).forEach(key => {
-    		if (!~writable_props.indexOf(key) && key.slice(0, 2) !== '$$' && key !== 'slot') console_1$1.warn(`<LeaderboardMedium> was created with unknown prop '${key}'`);
-    	});
-
-    	$$self.$capture_state = () => ({
-    		maxResults,
-    		difficulty,
-    		results,
-    		getResults
-    	});
-
-    	$$self.$inject_state = $$props => {
-    		if ('maxResults' in $$props) $$invalidate(1, maxResults = $$props.maxResults);
-    		if ('difficulty' in $$props) difficulty = $$props.difficulty;
-    		if ('results' in $$props) $$invalidate(0, results = $$props.results);
-=======
     function instance$n($$self, $$props, $$invalidate) {
     	let { $$slots: slots = {}, $$scope } = $$props;
     	validate_slots('LeaderboardMedium', slots, []);
@@ -75109,38 +73438,24 @@ var app = (function () {
 
     	$$self.$inject_state = $$props => {
     		if ('data' in $$props) $$invalidate(0, data = $$props.data);
->>>>>>> Stashed changes
     	};
 
     	if ($$props && "$$inject" in $$props) {
     		$$self.$inject_state($$props.$$inject);
     	}
 
-<<<<<<< Updated upstream
-    	return [results, maxResults];
-=======
     	return [data];
->>>>>>> Stashed changes
     }
 
     class LeaderboardMedium extends SvelteComponentDev {
     	constructor(options) {
     		super(options);
-<<<<<<< Updated upstream
-    		init(this, options, instance$e, create_fragment$e, safe_not_equal, {});
-=======
     		init(this, options, instance$n, create_fragment$n, safe_not_equal, { data: 0 });
->>>>>>> Stashed changes
 
     		dispatch_dev("SvelteRegisterComponent", {
     			component: this,
     			tagName: "LeaderboardMedium",
     			options,
-<<<<<<< Updated upstream
-    			id: create_fragment$e.name
-    		});
-    	}
-=======
     			id: create_fragment$n.name
     		});
     	}
@@ -75152,37 +73467,10 @@ var app = (function () {
     	set data(value) {
     		throw new Error("<LeaderboardMedium>: Props cannot be set directly on the component instance unless compiling with 'accessors: true' or '<svelte:options accessors/>'");
     	}
->>>>>>> Stashed changes
     }
 
     /* src\Components\RankingComponents\LeaderboardHard.svelte generated by Svelte v3.59.2 */
 
-<<<<<<< Updated upstream
-    const { console: console_1 } = globals;
-    const file$d = "src\\Components\\RankingComponents\\LeaderboardHard.svelte";
-
-    function get_each_context$1(ctx, list, i) {
-    	const child_ctx = ctx.slice();
-    	child_ctx[4] = list[i];
-    	return child_ctx;
-    }
-
-    // (41:6) {#each results.slice(0, maxResults) as result (result.id)}
-    function create_each_block$1(key_1, ctx) {
-    	let li;
-    	let player_Name;
-    	let t0_value = /*result*/ ctx[4].user_name + "";
-    	let t0;
-    	let t1;
-    	let player_Time;
-    	let t2_value = Math.floor(/*result*/ ctx[4].time / (1000 * 60)) + "";
-    	let t2;
-    	let t3;
-    	let t4_value = Math.floor(/*result*/ ctx[4].time % (1000 * 60) / 1000) + "";
-    	let t4;
-    	let t5;
-    	let t6_value = Math.floor(/*result*/ ctx[4].time % (1000 * 60) / 1000) % 1000 + "";
-=======
     const { Object: Object_1$1 } = globals;
     const file$k = "src\\Components\\RankingComponents\\LeaderboardHard.svelte";
 
@@ -75207,17 +73495,11 @@ var app = (function () {
     	let t4;
     	let t5;
     	let t6_value = Math.floor(/*result*/ ctx[1][0].time % (1000 * 60) / 1000) % 1000 + "";
->>>>>>> Stashed changes
     	let t6;
     	let t7;
     	let t8;
 
     	const block = {
-<<<<<<< Updated upstream
-    		key: key_1,
-    		first: null,
-=======
->>>>>>> Stashed changes
     		c: function create() {
     			li = element("li");
     			player_Name = element("player_Name");
@@ -75231,22 +73513,12 @@ var app = (function () {
     			t6 = text(t6_value);
     			t7 = text("ms");
     			t8 = space();
-<<<<<<< Updated upstream
-    			attr_dev(player_Name, "class", "svelte-16apcip");
-    			add_location(player_Name, file$d, 42, 10, 1075);
-    			attr_dev(player_Time, "class", "svelte-16apcip");
-    			add_location(player_Time, file$d, 43, 10, 1132);
-    			attr_dev(li, "class", "svelte-16apcip");
-    			add_location(li, file$d, 41, 8, 1059);
-    			this.first = li;
-=======
     			attr_dev(player_Name, "class", "svelte-9n22ez");
     			add_location(player_Name, file$k, 17, 4, 283);
     			attr_dev(player_Time, "class", "svelte-9n22ez");
     			add_location(player_Time, file$k, 18, 4, 333);
     			attr_dev(li, "class", "svelte-9n22ez");
     			add_location(li, file$k, 16, 2, 273);
->>>>>>> Stashed changes
     		},
     		m: function mount(target, anchor) {
     			insert_dev(target, li, anchor);
@@ -75262,20 +73534,11 @@ var app = (function () {
     			append_dev(player_Time, t7);
     			append_dev(li, t8);
     		},
-<<<<<<< Updated upstream
-    		p: function update(new_ctx, dirty) {
-    			ctx = new_ctx;
-    			if (dirty & /*results*/ 1 && t0_value !== (t0_value = /*result*/ ctx[4].user_name + "")) set_data_dev(t0, t0_value);
-    			if (dirty & /*results*/ 1 && t2_value !== (t2_value = Math.floor(/*result*/ ctx[4].time / (1000 * 60)) + "")) set_data_dev(t2, t2_value);
-    			if (dirty & /*results*/ 1 && t4_value !== (t4_value = Math.floor(/*result*/ ctx[4].time % (1000 * 60) / 1000) + "")) set_data_dev(t4, t4_value);
-    			if (dirty & /*results*/ 1 && t6_value !== (t6_value = Math.floor(/*result*/ ctx[4].time % (1000 * 60) / 1000) % 1000 + "")) set_data_dev(t6, t6_value);
-=======
     		p: function update(ctx, dirty) {
     			if (dirty & /*data*/ 1 && t0_value !== (t0_value = /*result*/ ctx[1][1].name + "")) set_data_dev(t0, t0_value);
     			if (dirty & /*data*/ 1 && t2_value !== (t2_value = Math.floor(/*result*/ ctx[1][0].time / (1000 * 60)) + "")) set_data_dev(t2, t2_value);
     			if (dirty & /*data*/ 1 && t4_value !== (t4_value = Math.floor(/*result*/ ctx[1][0].time % (1000 * 60) / 1000) + "")) set_data_dev(t4, t4_value);
     			if (dirty & /*data*/ 1 && t6_value !== (t6_value = Math.floor(/*result*/ ctx[1][0].time % (1000 * 60) / 1000) % 1000 + "")) set_data_dev(t6, t6_value);
->>>>>>> Stashed changes
     		},
     		d: function destroy(detaching) {
     			if (detaching) detach_dev(li);
@@ -75284,26 +73547,16 @@ var app = (function () {
 
     	dispatch_dev("SvelteRegisterBlock", {
     		block,
-<<<<<<< Updated upstream
-    		id: create_each_block$1.name,
-    		type: "each",
-    		source: "(41:6) {#each results.slice(0, maxResults) as result (result.id)}",
-=======
     		id: create_each_block$2.name,
     		type: "each",
     		source: "(16:6) {#each Object.values(data) as result }",
->>>>>>> Stashed changes
     		ctx
     	});
 
     	return block;
     }
 
-<<<<<<< Updated upstream
-    function create_fragment$d(ctx) {
-=======
     function create_fragment$m(ctx) {
->>>>>>> Stashed changes
     	let div;
     	let h1;
     	let svg0;
@@ -75311,33 +73564,16 @@ var app = (function () {
     	let t0;
     	let t1;
     	let ul;
-<<<<<<< Updated upstream
-    	let each_blocks = [];
-    	let each_1_lookup = new Map();
-=======
->>>>>>> Stashed changes
     	let t2;
     	let svg1;
     	let symbol;
     	let path;
-<<<<<<< Updated upstream
-    	let each_value = /*results*/ ctx[0].slice(0, /*maxResults*/ ctx[1]);
-    	validate_each_argument(each_value);
-    	const get_key = ctx => /*result*/ ctx[4].id;
-    	validate_each_keys(ctx, each_value, get_each_context$1, get_key);
-
-    	for (let i = 0; i < each_value.length; i += 1) {
-    		let child_ctx = get_each_context$1(ctx, each_value, i);
-    		let key = get_key(child_ctx);
-    		each_1_lookup.set(key, each_blocks[i] = create_each_block$1(key, child_ctx));
-=======
     	let each_value = Object.values(/*data*/ ctx[0]);
     	validate_each_argument(each_value);
     	let each_blocks = [];
 
     	for (let i = 0; i < each_value.length; i += 1) {
     		each_blocks[i] = create_each_block$2(get_each_context$2(ctx, each_value, i));
->>>>>>> Stashed changes
     	}
 
     	const block = {
@@ -75359,22 +73595,6 @@ var app = (function () {
     			symbol = svg_element("symbol");
     			path = svg_element("path");
     			xlink_attr(use, "xlink:href", "#cup");
-<<<<<<< Updated upstream
-    			attr_dev(use, "class", "svelte-16apcip");
-    			add_location(use, file$d, 33, 8, 884);
-    			attr_dev(svg0, "class", "ico-cup svelte-16apcip");
-    			add_location(svg0, file$d, 32, 6, 853);
-    			attr_dev(h1, "class", "svelte-16apcip");
-    			add_location(h1, file$d, 31, 4, 841);
-    			attr_dev(ul, "class", "svelte-16apcip");
-    			add_location(ul, file$d, 38, 4, 970);
-    			attr_dev(div, "class", "leaderboard svelte-16apcip");
-    			add_location(div, file$d, 30, 0, 810);
-    			attr_dev(path, "fill", "#ffd700");
-    			attr_dev(path, "d", "M21.215,1.428c-0.744,0-1.438,0.213-2.024,0.579V0.865c0-0.478-0.394-0.865-0.88-0.865H6.69\r\n    C6.204,0,5.81,0.387,5.81,0.865v1.142C5.224,1.641,4.53,1.428,3.785,1.428C1.698,1.428,0,3.097,0,5.148\r\n    C0,7.2,1.698,8.869,3.785,8.869h1.453c0.315,0,0.572,0.252,0.572,0.562c0,0.311-0.257,0.563-0.572,0.563\r\n    c-0.486,0-0.88,0.388-0.88,0.865c0,0.478,0.395,0.865,0.88,0.865c0.421,0,0.816-0.111,1.158-0.303\r\n    c0.318,0.865,0.761,1.647,1.318,2.31c0.686,0.814,1.515,1.425,2.433,1.808c-0.04,0.487-0.154,1.349-0.481,2.191\r\n    c-0.591,1.519-1.564,2.257-2.975,2.257H5.238c-0.486,0-0.88,0.388-0.88,0.865v4.283c0,0.478,0.395,0.865,0.88,0.865h14.525\r\n    c0.485,0,0.88-0.388,0.88-0.865v-4.283c0-0.478-0.395-0.865-0.88-0.865h-1.452c-1.411,0-2.385-0.738-2.975-2.257\r\n    c-0.328-0.843-0.441-1.704-0.482-2.191c0.918-0.383,1.748-0.993,2.434-1.808c0.557-0.663,1-1.445,1.318-2.31\r\n    c0.342,0.192,0.736,0.303,1.157,0.303c0.486,0,0.88-0.387,0.88-0.865c0-0.478-0.394-0.865-0.88-0.865\r\n    c-0.315,0-0.572-0.252-0.572-0.563c0-0.31,0.257-0.562,0.572-0.562h1.452C23.303,8.869,25,7.2,25,5.148\r\n    C25,3.097,23.303,1.428,21.215,1.428z M5.238,7.138H3.785c-1.116,0-2.024-0.893-2.024-1.99c0-1.097,0.908-1.99,2.024-1.99\r\n    c1.117,0,2.025,0.893,2.025,1.99v2.06C5.627,7.163,5.435,7.138,5.238,7.138z M18.883,21.717v2.553H6.118v-2.553H18.883\r\n    L18.883,21.717z M13.673,18.301c0.248,0.65,0.566,1.214,0.947,1.686h-4.24c0.381-0.472,0.699-1.035,0.947-1.686\r\n    c0.33-0.865,0.479-1.723,0.545-2.327c0.207,0.021,0.416,0.033,0.627,0.033c0.211,0,0.42-0.013,0.627-0.033\r\n    C13.195,16.578,13.344,17.436,13.673,18.301z M12.5,14.276c-2.856,0-4.93-2.638-4.93-6.273V1.73h9.859v6.273\r\n    C17.43,11.638,15.357,14.276,12.5,14.276z M21.215,7.138h-1.452c-0.197,0-0.39,0.024-0.572,0.07v-2.06\r\n    c0-1.097,0.908-1.99,2.024-1.99c1.117,0,2.025,0.893,2.025,1.99C23.241,6.246,22.333,7.138,21.215,7.138z");
-    			attr_dev(path, "class", "svelte-16apcip");
-    			add_location(path, file$d, 60, 6, 1607);
-=======
     			attr_dev(use, "class", "svelte-9n22ez");
     			add_location(use, file$k, 8, 8, 124);
     			attr_dev(svg0, "class", "ico-cup svelte-9n22ez");
@@ -75389,7 +73609,6 @@ var app = (function () {
     			attr_dev(path, "d", "M21.215,1.428c-0.744,0-1.438,0.213-2.024,0.579V0.865c0-0.478-0.394-0.865-0.88-0.865H6.69\r\n    C6.204,0,5.81,0.387,5.81,0.865v1.142C5.224,1.641,4.53,1.428,3.785,1.428C1.698,1.428,0,3.097,0,5.148\r\n    C0,7.2,1.698,8.869,3.785,8.869h1.453c0.315,0,0.572,0.252,0.572,0.562c0,0.311-0.257,0.563-0.572,0.563\r\n    c-0.486,0-0.88,0.388-0.88,0.865c0,0.478,0.395,0.865,0.88,0.865c0.421,0,0.816-0.111,1.158-0.303\r\n    c0.318,0.865,0.761,1.647,1.318,2.31c0.686,0.814,1.515,1.425,2.433,1.808c-0.04,0.487-0.154,1.349-0.481,2.191\r\n    c-0.591,1.519-1.564,2.257-2.975,2.257H5.238c-0.486,0-0.88,0.388-0.88,0.865v4.283c0,0.478,0.395,0.865,0.88,0.865h14.525\r\n    c0.485,0,0.88-0.388,0.88-0.865v-4.283c0-0.478-0.395-0.865-0.88-0.865h-1.452c-1.411,0-2.385-0.738-2.975-2.257\r\n    c-0.328-0.843-0.441-1.704-0.482-2.191c0.918-0.383,1.748-0.993,2.434-1.808c0.557-0.663,1-1.445,1.318-2.31\r\n    c0.342,0.192,0.736,0.303,1.157,0.303c0.486,0,0.88-0.387,0.88-0.865c0-0.478-0.394-0.865-0.88-0.865\r\n    c-0.315,0-0.572-0.252-0.572-0.563c0-0.31,0.257-0.562,0.572-0.562h1.452C23.303,8.869,25,7.2,25,5.148\r\n    C25,3.097,23.303,1.428,21.215,1.428z M5.238,7.138H3.785c-1.116,0-2.024-0.893-2.024-1.99c0-1.097,0.908-1.99,2.024-1.99\r\n    c1.117,0,2.025,0.893,2.025,1.99v2.06C5.627,7.163,5.435,7.138,5.238,7.138z M18.883,21.717v2.553H6.118v-2.553H18.883\r\n    L18.883,21.717z M13.673,18.301c0.248,0.65,0.566,1.214,0.947,1.686h-4.24c0.381-0.472,0.699-1.035,0.947-1.686\r\n    c0.33-0.865,0.479-1.723,0.545-2.327c0.207,0.021,0.416,0.033,0.627,0.033c0.211,0,0.42-0.013,0.627-0.033\r\n    C13.195,16.578,13.344,17.436,13.673,18.301z M12.5,14.276c-2.856,0-4.93-2.638-4.93-6.273V1.73h9.859v6.273\r\n    C17.43,11.638,15.357,14.276,12.5,14.276z M21.215,7.138h-1.452c-0.197,0-0.39,0.024-0.572,0.07v-2.06\r\n    c0-1.097,0.908-1.99,2.024-1.99c1.117,0,2.025,0.893,2.025,1.99C23.241,6.246,22.333,7.138,21.215,7.138z");
     			attr_dev(path, "class", "svelte-9n22ez");
     			add_location(path, file$k, 35, 6, 805);
->>>>>>> Stashed changes
     			attr_dev(symbol, "id", "cup");
     			attr_dev(symbol, "x", "0px");
     			attr_dev(symbol, "y", "0px");
@@ -75398,19 +73617,11 @@ var app = (function () {
     			attr_dev(symbol, "viewBox", "0 0 25 26");
     			attr_dev(symbol, "enable-background", "new 0 0 25 26");
     			attr_dev(symbol, "xml:space", "preserve");
-<<<<<<< Updated upstream
-    			attr_dev(symbol, "class", "svelte-16apcip");
-    			add_location(symbol, file$d, 50, 4, 1402);
-    			set_style(svg1, "display", "none");
-    			attr_dev(svg1, "class", "svelte-16apcip");
-    			add_location(svg1, file$d, 49, 2, 1368);
-=======
     			attr_dev(symbol, "class", "svelte-9n22ez");
     			add_location(symbol, file$k, 25, 4, 600);
     			set_style(svg1, "display", "none");
     			attr_dev(svg1, "class", "svelte-9n22ez");
     			add_location(svg1, file$k, 24, 2, 566);
->>>>>>> Stashed changes
     		},
     		l: function claim(nodes) {
     			throw new Error("options.hydrate only works if the component was compiled with the `hydratable: true` option");
@@ -75436,24 +73647,6 @@ var app = (function () {
     			append_dev(symbol, path);
     		},
     		p: function update(ctx, [dirty]) {
-<<<<<<< Updated upstream
-    			if (dirty & /*Math, results, maxResults*/ 3) {
-    				each_value = /*results*/ ctx[0].slice(0, /*maxResults*/ ctx[1]);
-    				validate_each_argument(each_value);
-    				validate_each_keys(ctx, each_value, get_each_context$1, get_key);
-    				each_blocks = update_keyed_each(each_blocks, dirty, get_key, 1, ctx, each_value, each_1_lookup, ul, destroy_block, create_each_block$1, null, get_each_context$1);
-    			}
-    		},
-    		i: noop,
-    		o: noop,
-    		d: function destroy(detaching) {
-    			if (detaching) detach_dev(div);
-
-    			for (let i = 0; i < each_blocks.length; i += 1) {
-    				each_blocks[i].d();
-    			}
-
-=======
     			if (dirty & /*Math, Object, data*/ 1) {
     				each_value = Object.values(/*data*/ ctx[0]);
     				validate_each_argument(each_value);
@@ -75483,7 +73676,6 @@ var app = (function () {
     		d: function destroy(detaching) {
     			if (detaching) detach_dev(div);
     			destroy_each(each_blocks, detaching);
->>>>>>> Stashed changes
     			if (detaching) detach_dev(t2);
     			if (detaching) detach_dev(svg1);
     		}
@@ -75491,11 +73683,7 @@ var app = (function () {
 
     	dispatch_dev("SvelteRegisterBlock", {
     		block,
-<<<<<<< Updated upstream
-    		id: create_fragment$d.name,
-=======
     		id: create_fragment$m.name,
->>>>>>> Stashed changes
     		type: "component",
     		source: "",
     		ctx
@@ -75504,54 +73692,6 @@ var app = (function () {
     	return block;
     }
 
-<<<<<<< Updated upstream
-    function instance$d($$self, $$props, $$invalidate) {
-    	let { $$slots: slots = {}, $$scope } = $$props;
-    	validate_slots('LeaderboardHard', slots, []);
-    	let maxResults = 10;
-    	let difficulty = "Hard";
-    	let results = [];
-
-    	const getResults = async () => {
-    		try {
-    			const response = await fetch(`http://127.0.0.1:8000/results/?difficulty=${difficulty}`, {
-    				method: "GET",
-    				mode: "cors",
-    				credentials: "same-origin"
-    			});
-
-    			if (response.ok) {
-    				$$invalidate(0, results = await response.json());
-
-    				// Sortowanie wyników od najwyższego do najniższego czasu
-    				results.sort((a, b) => a.time - b.time);
-    			} else {
-    				console.error("Błąd podczas pobierania wyników.");
-    			}
-    		} catch(error) {
-    			console.error("Błąd pobierania danych:", error);
-    		}
-    	};
-
-    	getResults(); // Automatycznie pobierz wyniki po załadowaniu strony
-    	const writable_props = [];
-
-    	Object.keys($$props).forEach(key => {
-    		if (!~writable_props.indexOf(key) && key.slice(0, 2) !== '$$' && key !== 'slot') console_1.warn(`<LeaderboardHard> was created with unknown prop '${key}'`);
-    	});
-
-    	$$self.$capture_state = () => ({
-    		maxResults,
-    		difficulty,
-    		results,
-    		getResults
-    	});
-
-    	$$self.$inject_state = $$props => {
-    		if ('maxResults' in $$props) $$invalidate(1, maxResults = $$props.maxResults);
-    		if ('difficulty' in $$props) difficulty = $$props.difficulty;
-    		if ('results' in $$props) $$invalidate(0, results = $$props.results);
-=======
     function instance$m($$self, $$props, $$invalidate) {
     	let { $$slots: slots = {}, $$scope } = $$props;
     	validate_slots('LeaderboardHard', slots, []);
@@ -75577,53 +73717,43 @@ var app = (function () {
 
     	$$self.$inject_state = $$props => {
     		if ('data' in $$props) $$invalidate(0, data = $$props.data);
->>>>>>> Stashed changes
     	};
 
     	if ($$props && "$$inject" in $$props) {
     		$$self.$inject_state($$props.$$inject);
     	}
 
-<<<<<<< Updated upstream
-    	return [results, maxResults];
-=======
     	return [data];
->>>>>>> Stashed changes
     }
 
     class LeaderboardHard extends SvelteComponentDev {
     	constructor(options) {
     		super(options);
-<<<<<<< Updated upstream
-    		init(this, options, instance$d, create_fragment$d, safe_not_equal, {});
-=======
     		init(this, options, instance$m, create_fragment$m, safe_not_equal, { data: 0 });
->>>>>>> Stashed changes
 
     		dispatch_dev("SvelteRegisterComponent", {
     			component: this,
     			tagName: "LeaderboardHard",
     			options,
-<<<<<<< Updated upstream
-    			id: create_fragment$d.name
-=======
     			id: create_fragment$m.name
->>>>>>> Stashed changes
     		});
+    	}
+
+    	get data() {
+    		throw new Error("<LeaderboardHard>: Props cannot be read directly from the component instance unless compiling with 'accessors: true' or '<svelte:options accessors/>'");
+    	}
+
+    	set data(value) {
+    		throw new Error("<LeaderboardHard>: Props cannot be set directly on the component instance unless compiling with 'accessors: true' or '<svelte:options accessors/>'");
     	}
     }
 
     /* src\Pages\Ranking.svelte generated by Svelte v3.59.2 */
-    const file$c = "src\\Pages\\Ranking.svelte";
 
-<<<<<<< Updated upstream
-    function create_fragment$c(ctx) {
-=======
     const { console: console_1$3 } = globals;
     const file$j = "src\\Pages\\Ranking.svelte";
 
     function create_fragment$l(ctx) {
->>>>>>> Stashed changes
     	let navbar;
     	let t0;
     	let main;
@@ -75647,11 +73777,6 @@ var app = (function () {
     			$$inline: true
     		});
 
-<<<<<<< Updated upstream
-    	leaderboardeasy = new LeaderboardEasy({ $$inline: true });
-    	leaderboardmedium = new LeaderboardMedium({ $$inline: true });
-    	leaderboardhard = new LeaderboardHard({ $$inline: true });
-=======
     	leaderboardeasy = new LeaderboardEasy({
     			props: { data: /*results*/ ctx[0].Easy },
     			$$inline: true
@@ -75666,7 +73791,6 @@ var app = (function () {
     			props: { data: /*results*/ ctx[0].Hard },
     			$$inline: true
     		});
->>>>>>> Stashed changes
 
     	const block = {
     		c: function create() {
@@ -75688,27 +73812,6 @@ var app = (function () {
     			create_component(leaderboardhard.$$.fragment);
     			attr_dev(div0, "class", "position-relative");
     			set_style(div0, "min-height", "600px");
-<<<<<<< Updated upstream
-    			add_location(div0, file$c, 18, 8, 548);
-    			attr_dev(div1, "class", "col-xl-4 col-lg-4 col-12 ");
-    			add_location(div1, file$c, 17, 6, 499);
-    			attr_dev(div2, "class", "position-relative");
-    			set_style(div2, "min-height", "600px");
-    			add_location(div2, file$c, 23, 8, 725);
-    			attr_dev(div3, "class", "col-xl-4 col-lg-4 col-12 ");
-    			add_location(div3, file$c, 22, 6, 675);
-    			attr_dev(div4, "class", "position-relative");
-    			set_style(div4, "min-height", "600px");
-    			add_location(div4, file$c, 28, 8, 904);
-    			attr_dev(div5, "class", "col-xl-4 col-lg-4 col-12 ");
-    			add_location(div5, file$c, 27, 6, 854);
-    			attr_dev(div6, "class", "row gx-10");
-    			add_location(div6, file$c, 16, 4, 468);
-    			attr_dev(div7, "class", "container");
-    			add_location(div7, file$c, 15, 2, 439);
-    			attr_dev(div8, "class", "container");
-    			add_location(div8, file$c, 11, 0, 402);
-=======
     			add_location(div0, file$j, 47, 8, 1181);
     			attr_dev(div1, "class", "col-xl-4 col-lg-12 col-12 ");
     			add_location(div1, file$j, 46, 6, 1131);
@@ -75728,7 +73831,6 @@ var app = (function () {
     			add_location(div7, file$j, 44, 2, 1071);
     			attr_dev(main, "class", "svelte-13gfj3j");
     			add_location(main, file$j, 43, 2, 1061);
->>>>>>> Stashed changes
     		},
     		l: function claim(nodes) {
     			throw new Error("options.hydrate only works if the component was compiled with the `hydratable: true` option");
@@ -75752,9 +73854,6 @@ var app = (function () {
     			mount_component(leaderboardhard, div4, null);
     			current = true;
     		},
-<<<<<<< Updated upstream
-    		p: noop,
-=======
     		p: function update(ctx, [dirty]) {
     			const leaderboardeasy_changes = {};
     			if (dirty & /*results*/ 1) leaderboardeasy_changes.data = /*results*/ ctx[0].Easy;
@@ -75766,7 +73865,6 @@ var app = (function () {
     			if (dirty & /*results*/ 1) leaderboardhard_changes.data = /*results*/ ctx[0].Hard;
     			leaderboardhard.$set(leaderboardhard_changes);
     		},
->>>>>>> Stashed changes
     		i: function intro(local) {
     			if (current) return;
     			transition_in(navbar.$$.fragment, local);
@@ -75794,11 +73892,7 @@ var app = (function () {
 
     	dispatch_dev("SvelteRegisterBlock", {
     		block,
-<<<<<<< Updated upstream
-    		id: create_fragment$c.name,
-=======
     		id: create_fragment$l.name,
->>>>>>> Stashed changes
     		type: "component",
     		source: "",
     		ctx
@@ -75807,33 +73901,41 @@ var app = (function () {
     	return block;
     }
 
-<<<<<<< Updated upstream
-    function instance$c($$self, $$props, $$invalidate) {
-=======
     function instance$l($$self, $$props, $$invalidate) {
->>>>>>> Stashed changes
     	let { $$slots: slots = {}, $$scope } = $$props;
     	validate_slots('Ranking', slots, []);
+    	let results = { Easy: [], Medium: [], Hard: [] };
+
+    	const getResults = async () => {
+    		try {
+    			const response = await fetch(`http://127.0.0.1:8000/api/BestResults/`, {
+    				method: "GET",
+    				mode: "cors",
+    				credentials: "same-origin"
+    			});
+
+    			if (response.ok) {
+    				$$invalidate(0, results = await response.json());
+    				console.log(results);
+    			} else {
+    				console.error("Błąd podczas pobierania wyników.");
+    			}
+    		} catch(error) {
+    			console.error("Błąd pobierania danych:", error);
+    		}
+    	};
+
+    	getResults(); // Automatycznie pobierz wyniki po załadowaniu strony
     	const writable_props = [];
 
     	Object.keys($$props).forEach(key => {
-<<<<<<< Updated upstream
-    		if (!~writable_props.indexOf(key) && key.slice(0, 2) !== '$$' && key !== 'slot') console.warn(`<Ranking> was created with unknown prop '${key}'`);
-=======
     		if (!~writable_props.indexOf(key) && key.slice(0, 2) !== '$$' && key !== 'slot') console_1$3.warn(`<Ranking> was created with unknown prop '${key}'`);
->>>>>>> Stashed changes
     	});
 
     	$$self.$capture_state = () => ({
     		LeaderboardEasy,
     		LeaderboardMedium,
     		LeaderboardHard,
-<<<<<<< Updated upstream
-    		Navbar
-    	});
-
-    	return [];
-=======
     		Navbar,
     		results,
     		getResults
@@ -75848,27 +73950,18 @@ var app = (function () {
     	}
 
     	return [results];
->>>>>>> Stashed changes
     }
 
     class Ranking extends SvelteComponentDev {
     	constructor(options) {
     		super(options);
-<<<<<<< Updated upstream
-    		init(this, options, instance$c, create_fragment$c, safe_not_equal, {});
-=======
     		init(this, options, instance$l, create_fragment$l, safe_not_equal, {});
->>>>>>> Stashed changes
 
     		dispatch_dev("SvelteRegisterComponent", {
     			component: this,
     			tagName: "Ranking",
     			options,
-<<<<<<< Updated upstream
-    			id: create_fragment$c.name
-=======
     			id: create_fragment$l.name
->>>>>>> Stashed changes
     		});
     	}
     }
@@ -75908,17 +74001,10 @@ var app = (function () {
     }
 
     /* src\Components\HowToPlayComponents\Accordion.svelte generated by Svelte v3.59.2 */
-<<<<<<< Updated upstream
-    const file$b = "src\\Components\\HowToPlayComponents\\Accordion.svelte";
-
-    // (31:0) {#if show === i}
-    function create_if_block$1(ctx) {
-=======
     const file$i = "src\\Components\\HowToPlayComponents\\Accordion.svelte";
 
     // (31:0) {#if show === i}
     function create_if_block$2(ctx) {
->>>>>>> Stashed changes
     	let div;
     	let current;
     	const default_slot_template = /*#slots*/ ctx[5].default;
@@ -75929,11 +74015,7 @@ var app = (function () {
     			div = element("div");
     			if (default_slot) default_slot.c();
     			attr_dev(div, "class", "collapse__body svelte-w68gti");
-<<<<<<< Updated upstream
-    			add_location(div, file$b, 31, 0, 582);
-=======
     			add_location(div, file$i, 31, 0, 582);
->>>>>>> Stashed changes
     		},
     		m: function mount(target, anchor) {
     			insert_dev(target, div, anchor);
@@ -75977,11 +74059,7 @@ var app = (function () {
 
     	dispatch_dev("SvelteRegisterBlock", {
     		block,
-<<<<<<< Updated upstream
-    		id: create_if_block$1.name,
-=======
     		id: create_if_block$2.name,
->>>>>>> Stashed changes
     		type: "if",
     		source: "(31:0) {#if show === i}",
     		ctx
@@ -75990,11 +74068,7 @@ var app = (function () {
     	return block;
     }
 
-<<<<<<< Updated upstream
-    function create_fragment$b(ctx) {
-=======
     function create_fragment$k(ctx) {
->>>>>>> Stashed changes
     	let div1;
     	let div0;
     	let t0;
@@ -76002,11 +74076,7 @@ var app = (function () {
     	let current;
     	let mounted;
     	let dispose;
-<<<<<<< Updated upstream
-    	let if_block = /*show*/ ctx[1] === /*i*/ ctx[0] && create_if_block$1(ctx);
-=======
     	let if_block = /*show*/ ctx[1] === /*i*/ ctx[0] && create_if_block$2(ctx);
->>>>>>> Stashed changes
 
     	const block = {
     		c: function create() {
@@ -76016,15 +74086,9 @@ var app = (function () {
     			t1 = space();
     			if (if_block) if_block.c();
     			attr_dev(div0, "class", "collapse__header svelte-w68gti");
-<<<<<<< Updated upstream
-    			add_location(div0, file$b, 27, 0, 487);
-    			attr_dev(div1, "class", "AccordionBody svelte-w68gti");
-    			add_location(div1, file$b, 26, 0, 458);
-=======
     			add_location(div0, file$i, 27, 0, 487);
     			attr_dev(div1, "class", "AccordionBody svelte-w68gti");
     			add_location(div1, file$i, 26, 0, 458);
->>>>>>> Stashed changes
     		},
     		l: function claim(nodes) {
     			throw new Error("options.hydrate only works if the component was compiled with the `hydratable: true` option");
@@ -76065,11 +74129,7 @@ var app = (function () {
     						transition_in(if_block, 1);
     					}
     				} else {
-<<<<<<< Updated upstream
-    					if_block = create_if_block$1(ctx);
-=======
     					if_block = create_if_block$2(ctx);
->>>>>>> Stashed changes
     					if_block.c();
     					transition_in(if_block, 1);
     					if_block.m(div1, null);
@@ -76103,11 +74163,7 @@ var app = (function () {
 
     	dispatch_dev("SvelteRegisterBlock", {
     		block,
-<<<<<<< Updated upstream
-    		id: create_fragment$b.name,
-=======
     		id: create_fragment$k.name,
->>>>>>> Stashed changes
     		type: "component",
     		source: "",
     		ctx
@@ -76116,11 +74172,7 @@ var app = (function () {
     	return block;
     }
 
-<<<<<<< Updated upstream
-    function instance$b($$self, $$props, $$invalidate) {
-=======
     function instance$k($$self, $$props, $$invalidate) {
->>>>>>> Stashed changes
     	let { $$slots: slots = {}, $$scope } = $$props;
     	validate_slots('Accordion', slots, ['default']);
     	let { i } = $$props;
@@ -76179,21 +74231,13 @@ var app = (function () {
     class Accordion extends SvelteComponentDev {
     	constructor(options) {
     		super(options);
-<<<<<<< Updated upstream
-    		init(this, options, instance$b, create_fragment$b, safe_not_equal, { i: 0, show: 1, showCollapse: 2, item: 3 });
-=======
     		init(this, options, instance$k, create_fragment$k, safe_not_equal, { i: 0, show: 1, showCollapse: 2, item: 3 });
->>>>>>> Stashed changes
 
     		dispatch_dev("SvelteRegisterComponent", {
     			component: this,
     			tagName: "Accordion",
     			options,
-<<<<<<< Updated upstream
-    			id: create_fragment$b.name
-=======
     			id: create_fragment$k.name
->>>>>>> Stashed changes
     		});
     	}
 
@@ -76232,15 +74276,9 @@ var app = (function () {
 
     /* src\Components\HowToPlayComponents\LearnDescription.svelte generated by Svelte v3.59.2 */
 
-<<<<<<< Updated upstream
-    const file$a = "src\\Components\\HowToPlayComponents\\LearnDescription.svelte";
-
-    function create_fragment$a(ctx) {
-=======
     const file$h = "src\\Components\\HowToPlayComponents\\LearnDescription.svelte";
 
     function create_fragment$j(ctx) {
->>>>>>> Stashed changes
     	let div1;
     	let div0;
     	let img;
@@ -76260,15 +74298,6 @@ var app = (function () {
     			attr_dev(img, "alt", "photo");
     			attr_dev(img, "loading", "lazy");
     			attr_dev(img, "class", "svelte-zl8nor");
-<<<<<<< Updated upstream
-    			add_location(img, file$a, 5, 6, 85);
-    			attr_dev(h1, "class", "svelte-zl8nor");
-    			add_location(h1, file$a, 6, 6, 156);
-    			attr_dev(div0, "class", "content svelte-zl8nor");
-    			add_location(div0, file$a, 4, 4, 56);
-    			attr_dev(div1, "class", "MainContainer svelte-zl8nor");
-    			add_location(div1, file$a, 3, 0, 23);
-=======
     			add_location(img, file$h, 5, 6, 85);
     			attr_dev(h1, "class", "svelte-zl8nor");
     			add_location(h1, file$h, 6, 6, 156);
@@ -76276,7 +74305,6 @@ var app = (function () {
     			add_location(div0, file$h, 4, 4, 56);
     			attr_dev(div1, "class", "MainContainer svelte-zl8nor");
     			add_location(div1, file$h, 3, 0, 23);
->>>>>>> Stashed changes
     		},
     		l: function claim(nodes) {
     			throw new Error("options.hydrate only works if the component was compiled with the `hydratable: true` option");
@@ -76288,15 +74316,9 @@ var app = (function () {
     			append_dev(div0, t0);
     			append_dev(div0, h1);
     		},
-<<<<<<< Updated upstream
-    		p: noop,
-    		i: noop,
-    		o: noop,
-=======
     		p: noop$1,
     		i: noop$1,
     		o: noop$1,
->>>>>>> Stashed changes
     		d: function destroy(detaching) {
     			if (detaching) detach_dev(div1);
     		}
@@ -76304,11 +74326,7 @@ var app = (function () {
 
     	dispatch_dev("SvelteRegisterBlock", {
     		block,
-<<<<<<< Updated upstream
-    		id: create_fragment$a.name,
-=======
     		id: create_fragment$j.name,
->>>>>>> Stashed changes
     		type: "component",
     		source: "",
     		ctx
@@ -76317,11 +74335,7 @@ var app = (function () {
     	return block;
     }
 
-<<<<<<< Updated upstream
-    function instance$a($$self, $$props) {
-=======
     function instance$j($$self, $$props) {
->>>>>>> Stashed changes
     	let { $$slots: slots = {}, $$scope } = $$props;
     	validate_slots('LearnDescription', slots, []);
     	const writable_props = [];
@@ -76336,36 +74350,22 @@ var app = (function () {
     class LearnDescription extends SvelteComponentDev {
     	constructor(options) {
     		super(options);
-<<<<<<< Updated upstream
-    		init(this, options, instance$a, create_fragment$a, safe_not_equal, {});
-=======
     		init(this, options, instance$j, create_fragment$j, safe_not_equal, {});
->>>>>>> Stashed changes
 
     		dispatch_dev("SvelteRegisterComponent", {
     			component: this,
     			tagName: "LearnDescription",
     			options,
-<<<<<<< Updated upstream
-    			id: create_fragment$a.name
-=======
     			id: create_fragment$j.name
->>>>>>> Stashed changes
     		});
     	}
     }
 
     /* src\Components\DefaultComponents\Bar.svelte generated by Svelte v3.59.2 */
 
-<<<<<<< Updated upstream
-    const file$9 = "src\\Components\\DefaultComponents\\Bar.svelte";
-
-    function create_fragment$9(ctx) {
-=======
     const file$g = "src\\Components\\DefaultComponents\\Bar.svelte";
 
     function create_fragment$i(ctx) {
->>>>>>> Stashed changes
     	let main;
     	let div3;
     	let div2;
@@ -76384,18 +74384,6 @@ var app = (function () {
     			h1 = element("h1");
     			t = text(/*Text*/ ctx[0]);
     			attr_dev(h1, "class", "svelte-j1wt0w");
-<<<<<<< Updated upstream
-    			add_location(h1, file$9, 8, 10, 198);
-    			attr_dev(div0, "class", "Bar text-white text-center py-3 svelte-j1wt0w");
-    			add_location(div0, file$9, 7, 8, 141);
-    			attr_dev(div1, "class", "col-12 svelte-j1wt0w");
-    			add_location(div1, file$9, 6, 6, 111);
-    			attr_dev(div2, "class", "row");
-    			add_location(div2, file$9, 5, 4, 86);
-    			attr_dev(div3, "class", "container-fluid");
-    			add_location(div3, file$9, 4, 0, 51);
-    			add_location(main, file$9, 3, 0, 43);
-=======
     			add_location(h1, file$g, 8, 10, 198);
     			attr_dev(div0, "class", "Bar text-white text-center py-3 svelte-j1wt0w");
     			add_location(div0, file$g, 7, 8, 141);
@@ -76406,7 +74394,6 @@ var app = (function () {
     			attr_dev(div3, "class", "container-fluid");
     			add_location(div3, file$g, 4, 0, 51);
     			add_location(main, file$g, 3, 0, 43);
->>>>>>> Stashed changes
     		},
     		l: function claim(nodes) {
     			throw new Error("options.hydrate only works if the component was compiled with the `hydratable: true` option");
@@ -76423,13 +74410,8 @@ var app = (function () {
     		p: function update(ctx, [dirty]) {
     			if (dirty & /*Text*/ 1) set_data_dev(t, /*Text*/ ctx[0]);
     		},
-<<<<<<< Updated upstream
-    		i: noop,
-    		o: noop,
-=======
     		i: noop$1,
     		o: noop$1,
->>>>>>> Stashed changes
     		d: function destroy(detaching) {
     			if (detaching) detach_dev(main);
     		}
@@ -76437,11 +74419,7 @@ var app = (function () {
 
     	dispatch_dev("SvelteRegisterBlock", {
     		block,
-<<<<<<< Updated upstream
-    		id: create_fragment$9.name,
-=======
     		id: create_fragment$i.name,
->>>>>>> Stashed changes
     		type: "component",
     		source: "",
     		ctx
@@ -76450,11 +74428,7 @@ var app = (function () {
     	return block;
     }
 
-<<<<<<< Updated upstream
-    function instance$9($$self, $$props, $$invalidate) {
-=======
     function instance$i($$self, $$props, $$invalidate) {
->>>>>>> Stashed changes
     	let { $$slots: slots = {}, $$scope } = $$props;
     	validate_slots('Bar', slots, []);
     	let { Text } = $$props;
@@ -76491,21 +74465,13 @@ var app = (function () {
     class Bar extends SvelteComponentDev {
     	constructor(options) {
     		super(options);
-<<<<<<< Updated upstream
-    		init(this, options, instance$9, create_fragment$9, safe_not_equal, { Text: 0 });
-=======
     		init(this, options, instance$i, create_fragment$i, safe_not_equal, { Text: 0 });
->>>>>>> Stashed changes
 
     		dispatch_dev("SvelteRegisterComponent", {
     			component: this,
     			tagName: "Bar",
     			options,
-<<<<<<< Updated upstream
-    			id: create_fragment$9.name
-=======
     			id: create_fragment$i.name
->>>>>>> Stashed changes
     		});
     	}
 
@@ -76520,15 +74486,9 @@ var app = (function () {
 
     /* src\Components\DefaultComponents\Footer.svelte generated by Svelte v3.59.2 */
 
-<<<<<<< Updated upstream
-    const file$8 = "src\\Components\\DefaultComponents\\Footer.svelte";
-
-    function create_fragment$8(ctx) {
-=======
     const file$f = "src\\Components\\DefaultComponents\\Footer.svelte";
 
     function create_fragment$h(ctx) {
->>>>>>> Stashed changes
     	let footer;
     	let p0;
     	let t3;
@@ -76546,17 +74506,6 @@ var app = (function () {
     			t4 = text("Image by ");
     			a = element("a");
     			a.textContent = "pch-vector";
-<<<<<<< Updated upstream
-    			add_location(p0, file$8, 19, 4, 339);
-    			attr_dev(a, "href", "https://www.freepik.com/author/pch-vector");
-    			attr_dev(a, "target", "_blank");
-    			attr_dev(a, "rel", "noopener noreferrer");
-    			add_location(a, file$8, 20, 34, 435);
-    			attr_dev(p1, "class", "copyright svelte-isqe6v");
-    			add_location(p1, file$8, 20, 4, 405);
-    			attr_dev(footer, "class", "footer svelte-isqe6v");
-    			add_location(footer, file$8, 18, 2, 310);
-=======
     			add_location(p0, file$f, 19, 4, 339);
     			attr_dev(a, "href", "https://www.freepik.com/author/pch-vector");
     			attr_dev(a, "target", "_blank");
@@ -76566,7 +74515,6 @@ var app = (function () {
     			add_location(p1, file$f, 20, 4, 405);
     			attr_dev(footer, "class", "footer svelte-isqe6v");
     			add_location(footer, file$f, 18, 2, 310);
->>>>>>> Stashed changes
     		},
     		l: function claim(nodes) {
     			throw new Error("options.hydrate only works if the component was compiled with the `hydratable: true` option");
@@ -76579,15 +74527,9 @@ var app = (function () {
     			append_dev(p1, t4);
     			append_dev(p1, a);
     		},
-<<<<<<< Updated upstream
-    		p: noop,
-    		i: noop,
-    		o: noop,
-=======
     		p: noop$1,
     		i: noop$1,
     		o: noop$1,
->>>>>>> Stashed changes
     		d: function destroy(detaching) {
     			if (detaching) detach_dev(footer);
     		}
@@ -76595,11 +74537,7 @@ var app = (function () {
 
     	dispatch_dev("SvelteRegisterBlock", {
     		block,
-<<<<<<< Updated upstream
-    		id: create_fragment$8.name,
-=======
     		id: create_fragment$h.name,
->>>>>>> Stashed changes
     		type: "component",
     		source: "",
     		ctx
@@ -76608,11 +74546,7 @@ var app = (function () {
     	return block;
     }
 
-<<<<<<< Updated upstream
-    function instance$8($$self, $$props, $$invalidate) {
-=======
     function instance$h($$self, $$props, $$invalidate) {
->>>>>>> Stashed changes
     	let { $$slots: slots = {}, $$scope } = $$props;
     	validate_slots('Footer', slots, []);
     	const year = new Date().getFullYear();
@@ -76629,47 +74563,29 @@ var app = (function () {
     class Footer extends SvelteComponentDev {
     	constructor(options) {
     		super(options);
-<<<<<<< Updated upstream
-    		init(this, options, instance$8, create_fragment$8, safe_not_equal, {});
-=======
     		init(this, options, instance$h, create_fragment$h, safe_not_equal, {});
->>>>>>> Stashed changes
 
     		dispatch_dev("SvelteRegisterComponent", {
     			component: this,
     			tagName: "Footer",
     			options,
-<<<<<<< Updated upstream
-    			id: create_fragment$8.name
-=======
     			id: create_fragment$h.name
->>>>>>> Stashed changes
     		});
     	}
     }
 
     /* src\Components\HowToPlayComponents\AccordionComponent.svelte generated by Svelte v3.59.2 */
 
-<<<<<<< Updated upstream
-    const file$7 = "src\\Components\\HowToPlayComponents\\AccordionComponent.svelte";
-
-    function get_each_context(ctx, list, i) {
-=======
     const file$e = "src\\Components\\HowToPlayComponents\\AccordionComponent.svelte";
 
     function get_each_context$1(ctx, list, i) {
->>>>>>> Stashed changes
     	const child_ctx = ctx.slice();
     	child_ctx[2] = list[i];
     	return child_ctx;
     }
 
     // (9:12) {#each List as item (item)}
-<<<<<<< Updated upstream
-    function create_each_block(key_1, ctx) {
-=======
     function create_each_block$1(key_1, ctx) {
->>>>>>> Stashed changes
     	let li;
     	let t_value = /*item*/ ctx[2] + "";
     	let t;
@@ -76680,13 +74596,8 @@ var app = (function () {
     		c: function create() {
     			li = element("li");
     			t = text(t_value);
-<<<<<<< Updated upstream
-    			attr_dev(li, "class", "svelte-9wzawo");
-    			add_location(li, file$7, 9, 12, 210);
-=======
     			attr_dev(li, "class", "svelte-182bs2");
     			add_location(li, file$e, 9, 12, 210);
->>>>>>> Stashed changes
     			this.first = li;
     		},
     		m: function mount(target, anchor) {
@@ -76704,11 +74615,7 @@ var app = (function () {
 
     	dispatch_dev("SvelteRegisterBlock", {
     		block,
-<<<<<<< Updated upstream
-    		id: create_each_block.name,
-=======
     		id: create_each_block$1.name,
->>>>>>> Stashed changes
     		type: "each",
     		source: "(9:12) {#each List as item (item)}",
     		ctx
@@ -76717,11 +74624,7 @@ var app = (function () {
     	return block;
     }
 
-<<<<<<< Updated upstream
-    function create_fragment$7(ctx) {
-=======
     function create_fragment$g(ctx) {
->>>>>>> Stashed changes
     	let div1;
     	let div0;
     	let h4;
@@ -76733,21 +74636,12 @@ var app = (function () {
     	let each_value = /*List*/ ctx[1];
     	validate_each_argument(each_value);
     	const get_key = ctx => /*item*/ ctx[2];
-<<<<<<< Updated upstream
-    	validate_each_keys(ctx, each_value, get_each_context, get_key);
-
-    	for (let i = 0; i < each_value.length; i += 1) {
-    		let child_ctx = get_each_context(ctx, each_value, i);
-    		let key = get_key(child_ctx);
-    		each_1_lookup.set(key, each_blocks[i] = create_each_block(key, child_ctx));
-=======
     	validate_each_keys(ctx, each_value, get_each_context$1, get_key);
 
     	for (let i = 0; i < each_value.length; i += 1) {
     		let child_ctx = get_each_context$1(ctx, each_value, i);
     		let key = get_key(child_ctx);
     		each_1_lookup.set(key, each_blocks[i] = create_each_block$1(key, child_ctx));
->>>>>>> Stashed changes
     	}
 
     	const block = {
@@ -76763,15 +74657,6 @@ var app = (function () {
     				each_blocks[i].c();
     			}
 
-<<<<<<< Updated upstream
-    			add_location(h4, file$7, 6, 8, 124);
-    			attr_dev(ol, "class", "svelte-9wzawo");
-    			add_location(ol, file$7, 7, 8, 151);
-    			attr_dev(div0, "class", "List svelte-9wzawo");
-    			add_location(div0, file$7, 5, 4, 96);
-    			attr_dev(div1, "class", "Container svelte-9wzawo");
-    			add_location(div1, file$7, 4, 0, 67);
-=======
     			add_location(h4, file$e, 6, 8, 124);
     			attr_dev(ol, "class", "svelte-182bs2");
     			add_location(ol, file$e, 7, 8, 151);
@@ -76779,7 +74664,6 @@ var app = (function () {
     			add_location(div0, file$e, 5, 4, 96);
     			attr_dev(div1, "class", "Container svelte-182bs2");
     			add_location(div1, file$e, 4, 0, 67);
->>>>>>> Stashed changes
     		},
     		l: function claim(nodes) {
     			throw new Error("options.hydrate only works if the component was compiled with the `hydratable: true` option");
@@ -76804,21 +74688,12 @@ var app = (function () {
     			if (dirty & /*List*/ 2) {
     				each_value = /*List*/ ctx[1];
     				validate_each_argument(each_value);
-<<<<<<< Updated upstream
-    				validate_each_keys(ctx, each_value, get_each_context, get_key);
-    				each_blocks = update_keyed_each(each_blocks, dirty, get_key, 1, ctx, each_value, each_1_lookup, ol, destroy_block, create_each_block, null, get_each_context);
-    			}
-    		},
-    		i: noop,
-    		o: noop,
-=======
     				validate_each_keys(ctx, each_value, get_each_context$1, get_key);
     				each_blocks = update_keyed_each(each_blocks, dirty, get_key, 1, ctx, each_value, each_1_lookup, ol, destroy_block, create_each_block$1, null, get_each_context$1);
     			}
     		},
     		i: noop$1,
     		o: noop$1,
->>>>>>> Stashed changes
     		d: function destroy(detaching) {
     			if (detaching) detach_dev(div1);
 
@@ -76830,11 +74705,7 @@ var app = (function () {
 
     	dispatch_dev("SvelteRegisterBlock", {
     		block,
-<<<<<<< Updated upstream
-    		id: create_fragment$7.name,
-=======
     		id: create_fragment$g.name,
->>>>>>> Stashed changes
     		type: "component",
     		source: "",
     		ctx
@@ -76843,11 +74714,7 @@ var app = (function () {
     	return block;
     }
 
-<<<<<<< Updated upstream
-    function instance$7($$self, $$props, $$invalidate) {
-=======
     function instance$g($$self, $$props, $$invalidate) {
->>>>>>> Stashed changes
     	let { $$slots: slots = {}, $$scope } = $$props;
     	validate_slots('AccordionComponent', slots, []);
     	let { Header } = $$props;
@@ -76891,21 +74758,13 @@ var app = (function () {
     class AccordionComponent extends SvelteComponentDev {
     	constructor(options) {
     		super(options);
-<<<<<<< Updated upstream
-    		init(this, options, instance$7, create_fragment$7, safe_not_equal, { Header: 0, List: 1 });
-=======
     		init(this, options, instance$g, create_fragment$g, safe_not_equal, { Header: 0, List: 1 });
->>>>>>> Stashed changes
 
     		dispatch_dev("SvelteRegisterComponent", {
     			component: this,
     			tagName: "AccordionComponent",
     			options,
-<<<<<<< Updated upstream
-    			id: create_fragment$7.name
-=======
     			id: create_fragment$g.name
->>>>>>> Stashed changes
     		});
     	}
 
@@ -76927,17 +74786,10 @@ var app = (function () {
     }
 
     /* src\Pages\About.svelte generated by Svelte v3.59.2 */
-<<<<<<< Updated upstream
-    const file$6 = "src\\Pages\\About.svelte";
-
-    // (22:2) <Accordion i="1" {show} {showCollapse} item="Kolejność działań">
-    function create_default_slot_1(ctx) {
-=======
     const file$d = "src\\Pages\\About.svelte";
 
     // (22:2) <Accordion i="1" {show} {showCollapse} item="Kolejność działań">
     function create_default_slot_4(ctx) {
->>>>>>> Stashed changes
     	let accordioncomponent;
     	let current;
 
@@ -76962,11 +74814,7 @@ var app = (function () {
     			mount_component(accordioncomponent, target, anchor);
     			current = true;
     		},
-<<<<<<< Updated upstream
-    		p: noop,
-=======
     		p: noop$1,
->>>>>>> Stashed changes
     		i: function intro(local) {
     			if (current) return;
     			transition_in(accordioncomponent.$$.fragment, local);
@@ -76983,11 +74831,7 @@ var app = (function () {
 
     	dispatch_dev("SvelteRegisterBlock", {
     		block,
-<<<<<<< Updated upstream
-    		id: create_default_slot_1.name,
-=======
     		id: create_default_slot_4.name,
->>>>>>> Stashed changes
     		type: "slot",
     		source: "(22:2) <Accordion i=\\\"1\\\" {show} {showCollapse} item=\\\"Kolejność działań\\\">",
     		ctx
@@ -76996,13 +74840,8 @@ var app = (function () {
     	return block;
     }
 
-<<<<<<< Updated upstream
-    // (26:2) <Accordion i="2" {show} {showCollapse} item="Łatwiejsze mnożenie" >
-    function create_default_slot(ctx) {
-=======
     // (33:2) <Accordion i="2" {show} {showCollapse} item="Łatwiejsze mnożenie">
     function create_default_slot_3(ctx) {
->>>>>>> Stashed changes
     	let accordioncomponent;
     	let current;
 
@@ -77026,9 +74865,6 @@ var app = (function () {
     			mount_component(accordioncomponent, target, anchor);
     			current = true;
     		},
-<<<<<<< Updated upstream
-    		p: noop,
-=======
     		p: noop$1,
     		i: function intro(local) {
     			if (current) return;
@@ -77189,7 +75025,6 @@ var app = (function () {
     			current = true;
     		},
     		p: noop$1,
->>>>>>> Stashed changes
     		i: function intro(local) {
     			if (current) return;
     			transition_in(accordioncomponent.$$.fragment, local);
@@ -77208,22 +75043,14 @@ var app = (function () {
     		block,
     		id: create_default_slot.name,
     		type: "slot",
-<<<<<<< Updated upstream
-    		source: "(26:2) <Accordion i=\\\"2\\\" {show} {showCollapse} item=\\\"Łatwiejsze mnożenie\\\" >",
-=======
     		source: "(68:2) <Accordion i=\\\"5\\\" {show} {showCollapse} item=\\\"Własności silni\\\">",
->>>>>>> Stashed changes
     		ctx
     	});
 
     	return block;
     }
 
-<<<<<<< Updated upstream
-    function create_fragment$6(ctx) {
-=======
     function create_fragment$f(ctx) {
->>>>>>> Stashed changes
     	let navbar;
     	let t0;
     	let learndescription;
@@ -77235,15 +75062,12 @@ var app = (function () {
     	let t3;
     	let accordion1;
     	let t4;
-<<<<<<< Updated upstream
-=======
     	let accordion2;
     	let t5;
     	let accordion3;
     	let t6;
     	let accordion4;
     	let t7;
->>>>>>> Stashed changes
     	let footer;
     	let current;
 
@@ -77267,11 +75091,7 @@ var app = (function () {
     				show: /*show*/ ctx[0],
     				showCollapse: /*showCollapse*/ ctx[1],
     				item: "Kolejność działań",
-<<<<<<< Updated upstream
-    				$$slots: { default: [create_default_slot_1] },
-=======
     				$$slots: { default: [create_default_slot_4] },
->>>>>>> Stashed changes
     				$$scope: { ctx }
     			},
     			$$inline: true
@@ -77283,8 +75103,6 @@ var app = (function () {
     				show: /*show*/ ctx[0],
     				showCollapse: /*showCollapse*/ ctx[1],
     				item: "Łatwiejsze mnożenie",
-<<<<<<< Updated upstream
-=======
     				$$slots: { default: [create_default_slot_3] },
     				$$scope: { ctx }
     			},
@@ -77321,7 +75139,6 @@ var app = (function () {
     				show: /*show*/ ctx[0],
     				showCollapse: /*showCollapse*/ ctx[1],
     				item: "Własności silni",
->>>>>>> Stashed changes
     				$$slots: { default: [create_default_slot] },
     				$$scope: { ctx }
     			},
@@ -77343,11 +75160,6 @@ var app = (function () {
     			t3 = space();
     			create_component(accordion1.$$.fragment);
     			t4 = space();
-<<<<<<< Updated upstream
-    			create_component(footer.$$.fragment);
-    			attr_dev(div, "class", "AccordionSection svelte-19go8fs");
-    			add_location(div, file$6, 20, 0, 725);
-=======
     			create_component(accordion2.$$.fragment);
     			t5 = space();
     			create_component(accordion3.$$.fragment);
@@ -77357,7 +75169,6 @@ var app = (function () {
     			create_component(footer.$$.fragment);
     			attr_dev(div, "class", "AccordionSection svelte-19go8fs");
     			add_location(div, file$d, 20, 0, 721);
->>>>>>> Stashed changes
     		},
     		l: function claim(nodes) {
     			throw new Error("options.hydrate only works if the component was compiled with the `hydratable: true` option");
@@ -77373,9 +75184,6 @@ var app = (function () {
     			mount_component(accordion0, div, null);
     			append_dev(div, t3);
     			mount_component(accordion1, div, null);
-<<<<<<< Updated upstream
-    			insert_dev(target, t4, anchor);
-=======
     			append_dev(div, t4);
     			mount_component(accordion2, div, null);
     			append_dev(div, t5);
@@ -77383,7 +75191,6 @@ var app = (function () {
     			append_dev(div, t6);
     			mount_component(accordion4, div, null);
     			insert_dev(target, t7, anchor);
->>>>>>> Stashed changes
     			mount_component(footer, target, anchor);
     			current = true;
     		},
@@ -77404,8 +75211,6 @@ var app = (function () {
     			}
 
     			accordion1.$set(accordion1_changes);
-<<<<<<< Updated upstream
-=======
     			const accordion2_changes = {};
     			if (dirty & /*show*/ 1) accordion2_changes.show = /*show*/ ctx[0];
 
@@ -77430,7 +75235,6 @@ var app = (function () {
     			}
 
     			accordion4.$set(accordion4_changes);
->>>>>>> Stashed changes
     		},
     		i: function intro(local) {
     			if (current) return;
@@ -77439,12 +75243,9 @@ var app = (function () {
     			transition_in(bar.$$.fragment, local);
     			transition_in(accordion0.$$.fragment, local);
     			transition_in(accordion1.$$.fragment, local);
-<<<<<<< Updated upstream
-=======
     			transition_in(accordion2.$$.fragment, local);
     			transition_in(accordion3.$$.fragment, local);
     			transition_in(accordion4.$$.fragment, local);
->>>>>>> Stashed changes
     			transition_in(footer.$$.fragment, local);
     			current = true;
     		},
@@ -77454,12 +75255,9 @@ var app = (function () {
     			transition_out(bar.$$.fragment, local);
     			transition_out(accordion0.$$.fragment, local);
     			transition_out(accordion1.$$.fragment, local);
-<<<<<<< Updated upstream
-=======
     			transition_out(accordion2.$$.fragment, local);
     			transition_out(accordion3.$$.fragment, local);
     			transition_out(accordion4.$$.fragment, local);
->>>>>>> Stashed changes
     			transition_out(footer.$$.fragment, local);
     			current = false;
     		},
@@ -77473,25 +75271,17 @@ var app = (function () {
     			if (detaching) detach_dev(div);
     			destroy_component(accordion0);
     			destroy_component(accordion1);
-<<<<<<< Updated upstream
-    			if (detaching) detach_dev(t4);
-=======
     			destroy_component(accordion2);
     			destroy_component(accordion3);
     			destroy_component(accordion4);
     			if (detaching) detach_dev(t7);
->>>>>>> Stashed changes
     			destroy_component(footer, detaching);
     		}
     	};
 
     	dispatch_dev("SvelteRegisterBlock", {
     		block,
-<<<<<<< Updated upstream
-    		id: create_fragment$6.name,
-=======
     		id: create_fragment$f.name,
->>>>>>> Stashed changes
     		type: "component",
     		source: "",
     		ctx
@@ -77500,11 +75290,7 @@ var app = (function () {
     	return block;
     }
 
-<<<<<<< Updated upstream
-    function instance$6($$self, $$props, $$invalidate) {
-=======
     function instance$f($$self, $$props, $$invalidate) {
->>>>>>> Stashed changes
     	let { $$slots: slots = {}, $$scope } = $$props;
     	validate_slots('About', slots, []);
     	let show = null;
@@ -77546,36 +75332,22 @@ var app = (function () {
     class About extends SvelteComponentDev {
     	constructor(options) {
     		super(options);
-<<<<<<< Updated upstream
-    		init(this, options, instance$6, create_fragment$6, safe_not_equal, {});
-=======
     		init(this, options, instance$f, create_fragment$f, safe_not_equal, {});
->>>>>>> Stashed changes
 
     		dispatch_dev("SvelteRegisterComponent", {
     			component: this,
     			tagName: "About",
     			options,
-<<<<<<< Updated upstream
-    			id: create_fragment$6.name
-=======
     			id: create_fragment$f.name
->>>>>>> Stashed changes
     		});
     	}
     }
 
     /* src\Components\HomeComponents\Box.svelte generated by Svelte v3.59.2 */
 
-<<<<<<< Updated upstream
-    const file$5 = "src\\Components\\HomeComponents\\Box.svelte";
-
-    function create_fragment$5(ctx) {
-=======
     const file$c = "src\\Components\\HomeComponents\\Box.svelte";
 
     function create_fragment$e(ctx) {
->>>>>>> Stashed changes
     	let section;
     	let div;
     	let h1;
@@ -77584,11 +75356,7 @@ var app = (function () {
     	let p;
     	let t2;
     	let t3;
-<<<<<<< Updated upstream
-    	let a;
-=======
     	let button;
->>>>>>> Stashed changes
     	let t4;
 
     	const block = {
@@ -77601,21 +75369,6 @@ var app = (function () {
     			p = element("p");
     			t2 = text(/*description*/ ctx[1]);
     			t3 = space();
-<<<<<<< Updated upstream
-    			a = element("a");
-    			t4 = text(/*buttonText*/ ctx[2]);
-    			attr_dev(h1, "class", "svelte-6ihtth");
-    			add_location(h1, file$5, 78, 6, 1874);
-    			attr_dev(p, "class", "svelte-6ihtth");
-    			add_location(p, file$5, 79, 6, 1899);
-    			attr_dev(a, "href", "/#/Game");
-    			attr_dev(a, "class", "svelte-6ihtth");
-    			add_location(a, file$5, 80, 6, 1927);
-    			attr_dev(div, "class", "containers svelte-6ihtth");
-    			add_location(div, file$5, 77, 4, 1842);
-    			attr_dev(section, "class", "hero-section svelte-6ihtth");
-    			add_location(section, file$5, 76, 2, 1806);
-=======
     			button = element("button");
     			t4 = text(/*buttonText*/ ctx[2]);
     			attr_dev(h1, "class", "svelte-3w29ee");
@@ -77628,7 +75381,6 @@ var app = (function () {
     			add_location(div, file$c, 74, 4, 1786);
     			attr_dev(section, "class", "hero-section svelte-3w29ee");
     			add_location(section, file$c, 73, 2, 1750);
->>>>>>> Stashed changes
     		},
     		l: function claim(nodes) {
     			throw new Error("options.hydrate only works if the component was compiled with the `hydratable: true` option");
@@ -77642,26 +75394,16 @@ var app = (function () {
     			append_dev(div, p);
     			append_dev(p, t2);
     			append_dev(div, t3);
-<<<<<<< Updated upstream
-    			append_dev(div, a);
-    			append_dev(a, t4);
-=======
     			append_dev(div, button);
     			append_dev(button, t4);
->>>>>>> Stashed changes
     		},
     		p: function update(ctx, [dirty]) {
     			if (dirty & /*header*/ 1) set_data_dev(t0, /*header*/ ctx[0]);
     			if (dirty & /*description*/ 2) set_data_dev(t2, /*description*/ ctx[1]);
     			if (dirty & /*buttonText*/ 4) set_data_dev(t4, /*buttonText*/ ctx[2]);
     		},
-<<<<<<< Updated upstream
-    		i: noop,
-    		o: noop,
-=======
     		i: noop$1,
     		o: noop$1,
->>>>>>> Stashed changes
     		d: function destroy(detaching) {
     			if (detaching) detach_dev(section);
     		}
@@ -77669,11 +75411,7 @@ var app = (function () {
 
     	dispatch_dev("SvelteRegisterBlock", {
     		block,
-<<<<<<< Updated upstream
-    		id: create_fragment$5.name,
-=======
     		id: create_fragment$e.name,
->>>>>>> Stashed changes
     		type: "component",
     		source: "",
     		ctx
@@ -77682,11 +75420,7 @@ var app = (function () {
     	return block;
     }
 
-<<<<<<< Updated upstream
-    function instance$5($$self, $$props, $$invalidate) {
-=======
     function instance$e($$self, $$props, $$invalidate) {
->>>>>>> Stashed changes
     	let { $$slots: slots = {}, $$scope } = $$props;
     	validate_slots('Box', slots, []);
     	let { header = "Odkryj magię matematyki w zupełnie nowy sposób!" } = $$props;
@@ -77722,21 +75456,13 @@ var app = (function () {
     class Box extends SvelteComponentDev {
     	constructor(options) {
     		super(options);
-<<<<<<< Updated upstream
-    		init(this, options, instance$5, create_fragment$5, safe_not_equal, { header: 0, description: 1, buttonText: 2 });
-=======
     		init(this, options, instance$e, create_fragment$e, safe_not_equal, { header: 0, description: 1, buttonText: 2 });
->>>>>>> Stashed changes
 
     		dispatch_dev("SvelteRegisterComponent", {
     			component: this,
     			tagName: "Box",
     			options,
-<<<<<<< Updated upstream
-    			id: create_fragment$5.name
-=======
     			id: create_fragment$e.name
->>>>>>> Stashed changes
     		});
     	}
 
@@ -77766,15 +75492,9 @@ var app = (function () {
     }
 
     /* src\Components\HomeComponents\Content.svelte generated by Svelte v3.59.2 */
-<<<<<<< Updated upstream
-    const file$4 = "src\\Components\\HomeComponents\\Content.svelte";
-
-    function create_fragment$4(ctx) {
-=======
     const file$b = "src\\Components\\HomeComponents\\Content.svelte";
 
     function create_fragment$d(ctx) {
->>>>>>> Stashed changes
     	let main;
     	let div3;
     	let div2;
@@ -77798,27 +75518,12 @@ var app = (function () {
     			div1 = element("div");
     			img = element("img");
     			attr_dev(div0, "class", "col-xl-6 col-lg-12 p-2 ");
-<<<<<<< Updated upstream
-    			add_location(div0, file$4, 7, 6, 155);
-=======
     			add_location(div0, file$b, 7, 6, 155);
->>>>>>> Stashed changes
     			if (!src_url_equal(img.src, img_src_value = "./images/Background.jpg")) attr_dev(img, "src", img_src_value);
     			attr_dev(img, "alt", "Designed by pch.vector");
     			attr_dev(img, "class", "img-fluid svelte-1he2qtl");
     			attr_dev(img, "id", "MainPhoto");
     			attr_dev(img, "loading", "lazy");
-<<<<<<< Updated upstream
-    			add_location(img, file$4, 12, 8, 337);
-    			attr_dev(div1, "class", "col-xl-6 col-lg-12 pl-3 d-flex align-items-center justify-content-center");
-    			add_location(div1, file$4, 10, 6, 230);
-    			attr_dev(div2, "class", "row");
-    			add_location(div2, file$4, 6, 4, 130);
-    			attr_dev(div3, "class", "container-fluid ");
-    			add_location(div3, file$4, 5, 2, 94);
-    			attr_dev(main, "class", "position-relative svelte-1he2qtl");
-    			add_location(main, file$4, 4, 0, 58);
-=======
     			add_location(img, file$b, 12, 8, 337);
     			attr_dev(div1, "class", "col-xl-6 col-lg-12 pl-3 d-flex align-items-center justify-content-center");
     			add_location(div1, file$b, 10, 6, 230);
@@ -77828,7 +75533,6 @@ var app = (function () {
     			add_location(div3, file$b, 5, 2, 94);
     			attr_dev(main, "class", "position-relative svelte-1he2qtl");
     			add_location(main, file$b, 4, 0, 58);
->>>>>>> Stashed changes
     		},
     		l: function claim(nodes) {
     			throw new Error("options.hydrate only works if the component was compiled with the `hydratable: true` option");
@@ -77844,11 +75548,7 @@ var app = (function () {
     			append_dev(div1, img);
     			current = true;
     		},
-<<<<<<< Updated upstream
-    		p: noop,
-=======
     		p: noop$1,
->>>>>>> Stashed changes
     		i: function intro(local) {
     			if (current) return;
     			transition_in(box.$$.fragment, local);
@@ -77866,11 +75566,7 @@ var app = (function () {
 
     	dispatch_dev("SvelteRegisterBlock", {
     		block,
-<<<<<<< Updated upstream
-    		id: create_fragment$4.name,
-=======
     		id: create_fragment$d.name,
->>>>>>> Stashed changes
     		type: "component",
     		source: "",
     		ctx
@@ -77879,11 +75575,7 @@ var app = (function () {
     	return block;
     }
 
-<<<<<<< Updated upstream
-    function instance$4($$self, $$props, $$invalidate) {
-=======
     function instance$d($$self, $$props, $$invalidate) {
->>>>>>> Stashed changes
     	let { $$slots: slots = {}, $$scope } = $$props;
     	validate_slots('Content', slots, []);
     	const writable_props = [];
@@ -77899,36 +75591,22 @@ var app = (function () {
     class Content extends SvelteComponentDev {
     	constructor(options) {
     		super(options);
-<<<<<<< Updated upstream
-    		init(this, options, instance$4, create_fragment$4, safe_not_equal, {});
-=======
     		init(this, options, instance$d, create_fragment$d, safe_not_equal, {});
->>>>>>> Stashed changes
 
     		dispatch_dev("SvelteRegisterComponent", {
     			component: this,
     			tagName: "Content",
     			options,
-<<<<<<< Updated upstream
-    			id: create_fragment$4.name
-=======
     			id: create_fragment$d.name
->>>>>>> Stashed changes
     		});
     	}
     }
 
     /* src\Components\HomeComponents\DualBox.svelte generated by Svelte v3.59.2 */
 
-<<<<<<< Updated upstream
-    const file$3 = "src\\Components\\HomeComponents\\DualBox.svelte";
-
-    function create_fragment$3(ctx) {
-=======
     const file$a = "src\\Components\\HomeComponents\\DualBox.svelte";
 
     function create_fragment$c(ctx) {
->>>>>>> Stashed changes
     	let div8;
     	let div7;
     	let div2;
@@ -77970,31 +75648,6 @@ var app = (function () {
     			attr_dev(img, "alt", "Zdjęcie");
     			attr_dev(img, "class", "img-fluid");
     			attr_dev(img, "loading", "lazy");
-<<<<<<< Updated upstream
-    			add_location(img, file$3, 66, 10, 1516);
-    			attr_dev(div0, "data-aos", "fade-down");
-    			add_location(div0, file$3, 65, 10, 1478);
-    			attr_dev(div1, "class", "square svelte-1xlo87k");
-    			add_location(div1, file$3, 64, 8, 1446);
-    			attr_dev(div2, "class", "col-lg-6 col-12  svelte-1xlo87k");
-    			add_location(div2, file$3, 63, 6, 1405);
-    			attr_dev(h2, "class", "svelte-1xlo87k");
-    			add_location(h2, file$3, 73, 10, 1795);
-    			attr_dev(p, "class", "svelte-1xlo87k");
-    			add_location(p, file$3, 74, 10, 1824);
-    			attr_dev(div3, "data-aos", "fade-down");
-    			add_location(div3, file$3, 72, 14, 1757);
-    			attr_dev(div4, "class", "BoxContent svelte-1xlo87k");
-    			add_location(div4, file$3, 71, 12, 1717);
-    			attr_dev(div5, "class", "square svelte-1xlo87k");
-    			add_location(div5, file$3, 70, 8, 1683);
-    			attr_dev(div6, "class", "col-lg-6 col-12  svelte-1xlo87k");
-    			add_location(div6, file$3, 69, 6, 1643);
-    			attr_dev(div7, "class", div7_class_value = "no-gutters " + (/*isReverse*/ ctx[3] === true ? 'DirectoryRow' : 'row') + " svelte-1xlo87k");
-    			add_location(div7, file$3, 62, 4, 1328);
-    			attr_dev(div8, "class", "container");
-    			add_location(div8, file$3, 61, 2, 1299);
-=======
     			add_location(img, file$a, 66, 10, 1516);
     			attr_dev(div0, "data-aos", "fade-down");
     			add_location(div0, file$a, 65, 10, 1478);
@@ -78018,7 +75671,6 @@ var app = (function () {
     			add_location(div7, file$a, 62, 4, 1328);
     			attr_dev(div8, "class", "container");
     			add_location(div8, file$a, 61, 2, 1299);
->>>>>>> Stashed changes
     		},
     		l: function claim(nodes) {
     			throw new Error("options.hydrate only works if the component was compiled with the `hydratable: true` option");
@@ -78049,21 +75701,12 @@ var app = (function () {
     			if (dirty & /*Header*/ 1) set_data_dev(t1, /*Header*/ ctx[0]);
     			if (dirty & /*text*/ 2) set_data_dev(t3, /*text*/ ctx[1]);
 
-<<<<<<< Updated upstream
-    			if (dirty & /*isReverse*/ 8 && div7_class_value !== (div7_class_value = "no-gutters " + (/*isReverse*/ ctx[3] === true ? 'DirectoryRow' : 'row') + " svelte-1xlo87k")) {
-    				attr_dev(div7, "class", div7_class_value);
-    			}
-    		},
-    		i: noop,
-    		o: noop,
-=======
     			if (dirty & /*isReverse*/ 8 && div7_class_value !== (div7_class_value = "no-gutters " + (/*isReverse*/ ctx[3] === true ? 'DirectoryRow' : 'row') + " svelte-11flrvg")) {
     				attr_dev(div7, "class", div7_class_value);
     			}
     		},
     		i: noop$1,
     		o: noop$1,
->>>>>>> Stashed changes
     		d: function destroy(detaching) {
     			if (detaching) detach_dev(div8);
     		}
@@ -78071,11 +75714,7 @@ var app = (function () {
 
     	dispatch_dev("SvelteRegisterBlock", {
     		block,
-<<<<<<< Updated upstream
-    		id: create_fragment$3.name,
-=======
     		id: create_fragment$c.name,
->>>>>>> Stashed changes
     		type: "component",
     		source: "",
     		ctx
@@ -78084,11 +75723,7 @@ var app = (function () {
     	return block;
     }
 
-<<<<<<< Updated upstream
-    function instance$3($$self, $$props, $$invalidate) {
-=======
     function instance$c($$self, $$props, $$invalidate) {
->>>>>>> Stashed changes
     	let { $$slots: slots = {}, $$scope } = $$props;
     	validate_slots('DualBox', slots, []);
     	let { Header } = $$props;
@@ -78147,11 +75782,7 @@ var app = (function () {
     	constructor(options) {
     		super(options);
 
-<<<<<<< Updated upstream
-    		init(this, options, instance$3, create_fragment$3, safe_not_equal, {
-=======
     		init(this, options, instance$c, create_fragment$c, safe_not_equal, {
->>>>>>> Stashed changes
     			Header: 0,
     			text: 1,
     			PhotoName: 2,
@@ -78162,11 +75793,7 @@ var app = (function () {
     			component: this,
     			tagName: "DualBox",
     			options,
-<<<<<<< Updated upstream
-    			id: create_fragment$3.name
-=======
     			id: create_fragment$c.name
->>>>>>> Stashed changes
     		});
     	}
 
@@ -78204,15 +75831,9 @@ var app = (function () {
     }
 
     /* src\Components\HomeComponents\Section.svelte generated by Svelte v3.59.2 */
-<<<<<<< Updated upstream
-    const file$2 = "src\\Components\\HomeComponents\\Section.svelte";
-
-    function create_fragment$2(ctx) {
-=======
     const file$9 = "src\\Components\\HomeComponents\\Section.svelte";
 
     function create_fragment$b(ctx) {
->>>>>>> Stashed changes
     	let div7;
     	let div6;
     	let div1;
@@ -78279,50 +75900,6 @@ var app = (function () {
     			p2 = element("p");
     			p2.textContent = "Stawiaj czoła trudnym zadaniom matematycznym, które pozwolą Ci pogłębić swoje zrozumienie tej nauki.";
     			attr_dev(i0, "class", "bi bi-pencil svelte-utxufr");
-<<<<<<< Updated upstream
-    			add_location(i0, file$2, 83, 10, 1491);
-    			attr_dev(span0, "class", "icon svelte-utxufr");
-    			add_location(span0, file$2, 82, 8, 1460);
-    			attr_dev(h30, "class", "svelte-utxufr");
-    			add_location(h30, file$2, 85, 8, 1546);
-    			attr_dev(p0, "class", "description svelte-utxufr");
-    			add_location(p0, file$2, 86, 8, 1584);
-    			attr_dev(div0, "class", "column svelte-utxufr");
-    			add_location(div0, file$2, 81, 6, 1430);
-    			attr_dev(div1, "class", "col-12 col-md-4");
-    			attr_dev(div1, "data-aos", "fade-down");
-    			add_location(div1, file$2, 80, 4, 1372);
-    			attr_dev(i1, "class", "bi bi-award svelte-utxufr");
-    			add_location(i1, file$2, 92, 10, 1877);
-    			attr_dev(span1, "class", "icon svelte-utxufr");
-    			add_location(span1, file$2, 91, 8, 1846);
-    			attr_dev(h31, "class", "svelte-utxufr");
-    			add_location(h31, file$2, 94, 8, 1931);
-    			attr_dev(p1, "class", "description svelte-utxufr");
-    			add_location(p1, file$2, 95, 8, 1963);
-    			attr_dev(div2, "class", "column svelte-utxufr");
-    			add_location(div2, file$2, 90, 6, 1816);
-    			attr_dev(div3, "class", "col-12 col-md-4");
-    			attr_dev(div3, "data-aos", "fade-down");
-    			add_location(div3, file$2, 89, 4, 1758);
-    			attr_dev(i2, "class", "bi bi-puzzle svelte-utxufr");
-    			add_location(i2, file$2, 101, 10, 2245);
-    			attr_dev(span2, "class", "icon svelte-utxufr");
-    			add_location(span2, file$2, 100, 8, 2214);
-    			attr_dev(h32, "class", "svelte-utxufr");
-    			add_location(h32, file$2, 103, 8, 2300);
-    			attr_dev(p2, "class", "description svelte-utxufr");
-    			add_location(p2, file$2, 104, 8, 2340);
-    			attr_dev(div4, "class", "column svelte-utxufr");
-    			add_location(div4, file$2, 99, 6, 2184);
-    			attr_dev(div5, "class", "col-12 col-md-4");
-    			attr_dev(div5, "data-aos", "fade-down");
-    			add_location(div5, file$2, 98, 4, 2126);
-    			attr_dev(div6, "class", "row svelte-utxufr");
-    			add_location(div6, file$2, 79, 2, 1349);
-    			attr_dev(div7, "class", "container svelte-utxufr");
-    			add_location(div7, file$2, 78, 0, 1322);
-=======
     			add_location(i0, file$9, 83, 10, 1491);
     			attr_dev(span0, "class", "icon svelte-utxufr");
     			add_location(span0, file$9, 82, 8, 1460);
@@ -78365,7 +75942,6 @@ var app = (function () {
     			add_location(div6, file$9, 79, 2, 1349);
     			attr_dev(div7, "class", "container svelte-utxufr");
     			add_location(div7, file$9, 78, 0, 1322);
->>>>>>> Stashed changes
     		},
     		l: function claim(nodes) {
     			throw new Error("options.hydrate only works if the component was compiled with the `hydratable: true` option");
@@ -78400,15 +75976,9 @@ var app = (function () {
     			append_dev(div4, t12);
     			append_dev(div4, p2);
     		},
-<<<<<<< Updated upstream
-    		p: noop,
-    		i: noop,
-    		o: noop,
-=======
     		p: noop$1,
     		i: noop$1,
     		o: noop$1,
->>>>>>> Stashed changes
     		d: function destroy(detaching) {
     			if (detaching) detach_dev(div7);
     		}
@@ -78416,11 +75986,7 @@ var app = (function () {
 
     	dispatch_dev("SvelteRegisterBlock", {
     		block,
-<<<<<<< Updated upstream
-    		id: create_fragment$2.name,
-=======
     		id: create_fragment$b.name,
->>>>>>> Stashed changes
     		type: "component",
     		source: "",
     		ctx
@@ -78429,11 +75995,7 @@ var app = (function () {
     	return block;
     }
 
-<<<<<<< Updated upstream
-    function instance$2($$self, $$props, $$invalidate) {
-=======
     function instance$b($$self, $$props, $$invalidate) {
->>>>>>> Stashed changes
     	let { $$slots: slots = {}, $$scope } = $$props;
     	validate_slots('Section', slots, []);
     	let showDescription = false;
@@ -78469,31 +76031,19 @@ var app = (function () {
     class Section extends SvelteComponentDev {
     	constructor(options) {
     		super(options);
-<<<<<<< Updated upstream
-    		init(this, options, instance$2, create_fragment$2, safe_not_equal, {});
-=======
     		init(this, options, instance$b, create_fragment$b, safe_not_equal, {});
->>>>>>> Stashed changes
 
     		dispatch_dev("SvelteRegisterComponent", {
     			component: this,
     			tagName: "Section",
     			options,
-<<<<<<< Updated upstream
-    			id: create_fragment$2.name
-=======
     			id: create_fragment$b.name
->>>>>>> Stashed changes
     		});
     	}
     }
 
     /* src\Pages\Home.svelte generated by Svelte v3.59.2 */
-<<<<<<< Updated upstream
-    const file$1 = "src\\Pages\\Home.svelte";
-=======
     const file$8 = "src\\Pages\\Home.svelte";
->>>>>>> Stashed changes
 
     // (41:2) {:else}
     function create_else_block$1(ctx) {
@@ -78503,22 +76053,13 @@ var app = (function () {
     		c: function create() {
     			p = element("p");
     			p.textContent = "Strona jest w trakcie ładowania...";
-<<<<<<< Updated upstream
-    			add_location(p, file$1, 42, 2, 2047);
-=======
     			add_location(p, file$8, 42, 2, 2047);
->>>>>>> Stashed changes
     		},
     		m: function mount(target, anchor) {
     			insert_dev(target, p, anchor);
     		},
-<<<<<<< Updated upstream
-    		i: noop,
-    		o: noop,
-=======
     		i: noop$1,
     		o: noop$1,
->>>>>>> Stashed changes
     		d: function destroy(detaching) {
     			if (detaching) detach_dev(p);
     		}
@@ -78536,11 +76077,7 @@ var app = (function () {
     }
 
     // (21:2) {#if isPageLoaded}
-<<<<<<< Updated upstream
-    function create_if_block(ctx) {
-=======
     function create_if_block$1(ctx) {
->>>>>>> Stashed changes
     	let navbar;
     	let t0;
     	let div;
@@ -78611,11 +76148,7 @@ var app = (function () {
     			t5 = space();
     			create_component(footer.$$.fragment);
     			attr_dev(div, "data-aos", "fade-up");
-<<<<<<< Updated upstream
-    			add_location(div, file$1, 22, 2, 661);
-=======
     			add_location(div, file$8, 22, 2, 661);
->>>>>>> Stashed changes
     		},
     		m: function mount(target, anchor) {
     			mount_component(navbar, target, anchor);
@@ -78675,11 +76208,7 @@ var app = (function () {
 
     	dispatch_dev("SvelteRegisterBlock", {
     		block,
-<<<<<<< Updated upstream
-    		id: create_if_block.name,
-=======
     		id: create_if_block$1.name,
->>>>>>> Stashed changes
     		type: "if",
     		source: "(21:2) {#if isPageLoaded}",
     		ctx
@@ -78688,20 +76217,12 @@ var app = (function () {
     	return block;
     }
 
-<<<<<<< Updated upstream
-    function create_fragment$1(ctx) {
-=======
     function create_fragment$a(ctx) {
->>>>>>> Stashed changes
     	let main;
     	let current_block_type_index;
     	let if_block;
     	let current;
-<<<<<<< Updated upstream
-    	const if_block_creators = [create_if_block, create_else_block];
-=======
     	const if_block_creators = [create_if_block$1, create_else_block$1];
->>>>>>> Stashed changes
     	const if_blocks = [];
 
     	function select_block_type(ctx, dirty) {
@@ -78716,11 +76237,7 @@ var app = (function () {
     		c: function create() {
     			main = element("main");
     			if_block.c();
-<<<<<<< Updated upstream
-    			add_location(main, file$1, 19, 0, 598);
-=======
     			add_location(main, file$8, 19, 0, 598);
->>>>>>> Stashed changes
     		},
     		l: function claim(nodes) {
     			throw new Error("options.hydrate only works if the component was compiled with the `hydratable: true` option");
@@ -78770,11 +76287,7 @@ var app = (function () {
 
     	dispatch_dev("SvelteRegisterBlock", {
     		block,
-<<<<<<< Updated upstream
-    		id: create_fragment$1.name,
-=======
     		id: create_fragment$a.name,
->>>>>>> Stashed changes
     		type: "component",
     		source: "",
     		ctx
@@ -78783,11 +76296,7 @@ var app = (function () {
     	return block;
     }
 
-<<<<<<< Updated upstream
-    function instance$1($$self, $$props, $$invalidate) {
-=======
     function instance$a($$self, $$props, $$invalidate) {
->>>>>>> Stashed changes
     	let { $$slots: slots = {}, $$scope } = $$props;
     	validate_slots('Home', slots, []);
     	AOS.init();
@@ -78829,18 +76338,12 @@ var app = (function () {
     class Home extends SvelteComponentDev {
     	constructor(options) {
     		super(options);
-<<<<<<< Updated upstream
-    		init(this, options, instance$1, create_fragment$1, safe_not_equal, {});
-=======
     		init(this, options, instance$a, create_fragment$a, safe_not_equal, {});
->>>>>>> Stashed changes
 
     		dispatch_dev("SvelteRegisterComponent", {
     			component: this,
     			tagName: "Home",
     			options,
-<<<<<<< Updated upstream
-=======
     			id: create_fragment$a.name
     		});
     	}
@@ -81622,7 +79125,6 @@ var app = (function () {
     			component: this,
     			tagName: "MyProfileComponent",
     			options,
->>>>>>> Stashed changes
     			id: create_fragment$1.name
     		});
     	}
@@ -81642,14 +79144,10 @@ var app = (function () {
     					'/': Home,
     					'/Game': Game,
     					'/Ranking': Ranking,
-<<<<<<< Updated upstream
-    					'/About': About
-=======
     					'/About': About,
     					'/Login': Login,
     					'/Register': Register,
     					'/Profil': MyProfileComponent
->>>>>>> Stashed changes
     				}
     			},
     			$$inline: true
@@ -81660,11 +79158,7 @@ var app = (function () {
     			main = element("main");
     			create_component(router.$$.fragment);
     			attr_dev(main, "class", "svelte-1ow06f");
-<<<<<<< Updated upstream
-    			add_location(main, file, 11, 2, 276);
-=======
     			add_location(main, file, 15, 2, 445);
->>>>>>> Stashed changes
     		},
     		l: function claim(nodes) {
     			throw new Error("options.hydrate only works if the component was compiled with the `hydratable: true` option");
@@ -81674,7 +79168,7 @@ var app = (function () {
     			mount_component(router, main, null);
     			current = true;
     		},
-    		p: noop,
+    		p: noop$1,
     		i: function intro(local) {
     			if (current) return;
     			transition_in(router.$$.fragment, local);
@@ -81717,14 +79211,10 @@ var app = (function () {
     		link,
     		Ranking,
     		About,
-<<<<<<< Updated upstream
-    		Home
-=======
     		Home,
     		Login,
     		Register,
     		MyProfileComponent
->>>>>>> Stashed changes
     	});
 
     	return [];

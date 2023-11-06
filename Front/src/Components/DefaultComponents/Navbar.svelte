@@ -1,5 +1,5 @@
 <script>
-  
+  import { link } from "svelte-spa-router";
  export let isSticky=true;
 </script>
 <div id="mainNavigation" class={isSticky ? "sticky" : "static"}>
@@ -65,27 +65,24 @@
       </li>
       <li class="nav-item">
        
-          <a href="/#/Ranking" class="nav-link">Ranking</a>
+          <a href="/Ranking" use:link class="nav-link">Ranking</a>
        
       </li>
       <li class="nav-item">
         
-          <a  href="/#/Game" class="nav-link">Zacznij grę</a>
+          <a  href="/Game" use:link class="nav-link">Zacznij grę</a>
       
       </li>
       <li class="nav-item">
        
-          <a href="/#/About" class="nav-link">Jak grać?</a>
+          <a href="/About" use:link class="nav-link">Jak grać?</a>
       
       </li>
-<<<<<<< Updated upstream
-=======
       <li class="nav-item">
        
         <a href="/Profil" use:link class="nav-link">Mój profil</a>
     
     </li>
->>>>>>> Stashed changes
     </ul>
     </div>
   </div>

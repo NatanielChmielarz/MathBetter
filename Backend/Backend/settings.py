@@ -40,12 +40,9 @@ INSTALLED_APPS = [
     'rest_framework',
     'corsheaders',
     'math_api',
-<<<<<<< Updated upstream
-=======
     'rest_framework_swagger',
     'drf_yasg',
     
->>>>>>> Stashed changes
 ]
 
 MIDDLEWARE = [
@@ -59,14 +56,7 @@ MIDDLEWARE = [
     'corsheaders.middleware.CorsMiddleware',
 ]
 ROOT_URLCONF = 'Backend.urls'
-CORS_ALLOWED_ORIGINS = [
-    "http://localhost:8080",  # Dodaj adres swojej aplikacji frontendowej
-]
 
-CORS_ALLOW_METHODS = [
-    'GET',
-    'POST',
-]
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
@@ -94,7 +84,7 @@ DATABASES = {
 		        'ENGINE': 'mssql',
 		        'HOST': 'LAPTOP-79LFMVD7\SQLBAZY',
 		        'PORT': '',
-		        'NAME': 'MathBetterDB',
+		        'NAME': 'MathBetter',
 		        'USER': 'sa',
 		        'PASSWORD': 'TestAppDB',
 		        'OPTIONS': {
@@ -144,3 +134,6 @@ STATIC_URL = 'static/'
 # https://docs.djangoproject.com/en/4.2/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+AUTH_USER_MODEL='math_api.User'
+CORS_ORIGIN_ALLOW_ALL= True
+CORS_ALLOW_CREDENTIALS=True

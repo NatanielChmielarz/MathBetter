@@ -1,16 +1,12 @@
 from rest_framework import generics
-from .models import MathResult
+from .models import MathResult , User
 from .serializers import MathResultSerializer
-<<<<<<< Updated upstream
-
-=======
 from rest_framework.views import APIView
 from .serializers import UserSerializer
 from rest_framework.response import Response
 from rest_framework.exceptions import AuthenticationFailed
 import jwt,datetime
 from rest_framework import status
->>>>>>> Stashed changes
 class MathResultListCreateView(generics.ListCreateAPIView):
     queryset = MathResult.objects.all()
     serializer_class = MathResultSerializer
@@ -19,9 +15,6 @@ class MathResultListCreateView(generics.ListCreateAPIView):
         difficult_level = self.request.query_params.get('difficulty')
         if difficult_level:
             return MathResult.objects.filter(difficult_level=difficult_level)[:10]
-<<<<<<< Updated upstream
-        return MathResult.objects.all()[:10]
-=======
         return MathResult.objects.all()[:10]
     
 class AddResultView(APIView):
@@ -135,4 +128,3 @@ class ChangePasswordView(APIView):
         user.save()
 
         return Response({'detail': 'Hasło zostało zmienione'}, status=status.HTTP_200_OK)
->>>>>>> Stashed changes

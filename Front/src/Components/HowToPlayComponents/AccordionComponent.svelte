@@ -45,4 +45,13 @@
       line-height: 1.6;
       font-family: Arial, sans-serif;
     }
+    @media (max-width: 880px)
+    {
+      .List{
+        box-shadow: none;
+      }
+      .Container{
+        margin-top: 10px;
+      }
+    }
 </style>

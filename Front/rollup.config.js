@@ -39,6 +39,7 @@ export default {
 		file: 'public/build/bundle.js',
 		
 		globals: {
+			// Przykład: "Game.svelte" zostanie przypisany do zmiennej globalnej o nazwie "Game"
 			'Game.svelte': 'Game',
 			'Home.svelte':'Home',
 			'Ranking.svelte': 'Ranking',

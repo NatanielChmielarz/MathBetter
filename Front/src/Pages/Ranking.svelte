@@ -3,16 +3,37 @@
   import LeaderboardMedium from "../Components/RankingComponents/LeaderboardMedium.svelte";
   import LeaderboardHard from "../Components/RankingComponents/LeaderboardHard.svelte";
   import Navbar from "../Components/DefaultComponents/Navbar.svelte";
-<<<<<<< Updated upstream
- 
-=======
   let results = {
     Easy: [],
     Medium: [],
     Hard: []
   };
->>>>>>> Stashed changes
  
+const getResults = async () => {
+  try {
+    const response = await fetch(
+      `http://127.0.0.1:8000/api/BestResults/`,
+      {
+        method: "GET",
+        mode: "cors",
+        credentials: "same-origin",
+      }
+    );
+
+    if (response.ok) {
+      
+      results = await response.json();
+      
+      console.log(results)
+    } else {
+      console.error("Błąd podczas pobierania wyników.");
+    }
+  } catch (error) {
+    console.error("Błąd pobierania danych:", error);
+  }
+};
+
+getResults(); // Automatycznie pobierz wyniki po załadowaniu strony
 </script>
 
 <Navbar  isSticky={true} />
@@ -25,17 +46,17 @@
     <div class="row gx-10">
       <div class="col-xl-4 col-lg-12 col-12 ">
         <div class="position-relative" style="min-height: 600px;">
-          <LeaderboardEasy />
+          <LeaderboardEasy data={results.Easy}  />
         </div>
       </div>
       <div class="col-xl-4 col-lg-12  col-12 ">
         <div class="position-relative" style="min-height: 600px;">
-          <LeaderboardMedium />
+          <LeaderboardMedium data={results.Medium}/>
         </div>
       </div>
       <div class="col-xl-4 col-lg-12  col-12 ">
         <div class="position-relative" style="min-height: 600px;">
-          <LeaderboardHard />
+          <LeaderboardHard data={results.Hard}/>
         </div>
       </div>
     </div>

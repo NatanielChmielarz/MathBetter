@@ -47,7 +47,7 @@ flex-direction: row-reverse;}
       margin: 0;
       height: 100%;
     }
-    .col-lg-6{
+    .col-md-6{
         padding: 0px;
         
     }
@@ -61,13 +61,13 @@ flex-direction: row-reverse;}
   
   <div class="container">
     <div class=" no-gutters {isReverse===true ? 'DirectoryRow' : 'row'}">
-      <div class="col-lg-6 col-12  ">
+      <div class="col-md-6 col-12  ">
         <div class="square">
           <div data-aos="fade-down">
           <img src="./images/{PhotoName}.jpg" alt="Zdjęcie" class="img-fluid" loading="lazy"></div>
         </div>
       </div>
-      <div class="col-lg-6 col-12 ">
+      <div class="col-md-6 col-12 ">
         <div class="square">
             <div class="BoxContent">
               <div data-aos="fade-down">

@@ -1,8 +1,4 @@
 from django.urls import path
-<<<<<<< Updated upstream
-from .views import MathResultListCreateView
-=======
->>>>>>> Stashed changes
 
 from django.conf.urls.static import static
 from rest_framework_swagger.views import get_swagger_view
@@ -20,10 +16,6 @@ schema_view = get_schema_view(
 )
 from .views import RegisterView,LoginView,AddResultView,UserView,BestResultView,ChangePasswordView
 urlpatterns = [
-<<<<<<< Updated upstream
-    path('results/', MathResultListCreateView.as_view(), name='math-result-list-create'),
-]
-=======
     path('docs/', schema_view.with_ui('swagger', cache_timeout=0),name='schema-swagger-ui'),
     path('register/', RegisterView.as_view()),
     path('login/',LoginView.as_view()),
@@ -35,4 +27,3 @@ urlpatterns = [
 ]
 if settings.DEBUG:
     urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
->>>>>>> Stashed changes

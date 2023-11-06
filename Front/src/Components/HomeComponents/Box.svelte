@@ -34,13 +34,7 @@ export let buttonText = "Dołącz do wyzwania";
       padding: 20px; /* Zmniejsz wcięcie wewnętrzne */
       text-align: center;
     }
-<<<<<<< Updated upstream
-    button{
-      display: flex;
-    }
-=======
     
->>>>>>> Stashed changes
     }
 
     h1 {
@@ -57,9 +51,8 @@ export let buttonText = "Dołącz do wyzwania";
       line-height: 1.6;
     }
   
-    a {
+    button {
       display: inline-block;
-      text-decoration: none;
       background-color: #f99248;
       color: #fff;
       font-weight: bold;
@@ -71,7 +64,7 @@ export let buttonText = "Dołącz do wyzwania";
       transition: background-color 0.3s ease;
     }
   
-    a:hover {
+    button:hover {
       background-color: #ad6734;
     }
     
@@ -82,6 +75,6 @@ export let buttonText = "Dołącz do wyzwania";
     <div class="containers">
       <h1>{header}</h1>
       <p>{description}</p>
-      <a href="/#/Game">{buttonText}</a>
+      <button>{buttonText}</button>
     </div>
   </section>

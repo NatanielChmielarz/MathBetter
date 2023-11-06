@@ -1,33 +1,9 @@
 <script>
   
     let maxResults = 10
-    let difficulty = "Easy";
-  let results = [];
-
-  const getResults = async () => {
-    try {
-      const response = await fetch(
-        `http://127.0.0.1:8000/results/?difficulty=${difficulty}`,
-        {
-          method: "GET",
-          mode: "cors",
-          credentials: "same-origin",
-        }
-      );
-
-      if (response.ok) {
-        results = await response.json();
-        // Sortowanie wyników od najwyższego do najniższego czasu
-        results.sort((a, b) => a.time - b.time);
-      } else {
-        console.error("Błąd podczas pobierania wyników.");
-      }
-    } catch (error) {
-      console.error("Błąd pobierania danych:", error);
-    }
-  };
-
-  getResults(); // Automatycznie pobierz wyniki po załadowaniu strony
+    
+    export let data
+    console.log(data)
 </script>
 <div class="leaderboard">
     <h1>
@@ -39,12 +15,12 @@
    
     <ul >
       
-      {#each results.slice(0, maxResults) as result (result.id)}
-        <li>
-          <player_Name>{result.user_name}</player_Name>
-          <player_Time>{ Math.floor(result.time / (1000 * 60))}m {Math.floor((result.time  % (1000 * 60)) / 1000)} s {(Math.floor((result.time  % (1000 * 60)) / 1000))%1000}ms</player_Time>
-        </li>
-      {/each}
+      {#each Object.values(data) as result }
+  <li>
+    <player_Name>{ result[1].name}</player_Name>
+    <player_Time>{ Math.floor(result[0].time / (1000 * 60))}m {Math.floor((result[0].time  % (1000 * 60)) / 1000)} s {(Math.floor((result[0].time  % (1000 * 60)) / 1000))%1000}ms</player_Time>
+  </li>
+{/each}
     </ul>
   </div>
 
