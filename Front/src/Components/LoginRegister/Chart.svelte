@@ -58,4 +58,10 @@
   </svg>
       
   <style>  
+  @media(max-width:425px){
+    svg{
+      width: 300px;
+      height: 300px;
+    }
+  }
   </style>

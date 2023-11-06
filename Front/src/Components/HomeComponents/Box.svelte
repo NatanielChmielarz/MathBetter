@@ -3,6 +3,7 @@
   export let header = "Odkryj magię matematyki w zupełnie nowy sposób!";
 export let description = "Przygotuj się do wciągającej gry matematycznej, która sprawi, że zapomnisz o nudnych wzorach. Rywalizuj z innymi graczami, rozwiązuj zagadki i ciekawe zadania matematyczne. Czekają na Ciebie nie tylko niesamowite odkrycia, ale również emocjonująca rywalizacja, która pozwoli Ci udowodnić swoje umiejętności.";
 export let buttonText = "Dołącz do wyzwania";
+import { push } from "svelte-spa-router";
   </script>
   
   <style>
@@ -75,6 +76,6 @@ export let buttonText = "Dołącz do wyzwania";
     <div class="containers">
       <h1>{header}</h1>
       <p>{description}</p>
-      <button>{buttonText}</button>
+      <button on:click={()=>{push("/game")}}>{buttonText}</button>
     </div>
   </section>

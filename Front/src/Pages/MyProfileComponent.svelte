@@ -54,7 +54,7 @@
                     <p>{Data.user.email}</p> 
                 </div>
             </div>
-                <div class="col-12 d-flex">
+                <div class="col-12 d-flex Options">
         <ul>
             <li><i class="bi bi-bar-chart icons"></i><button on:click={() => StatsOrPass = "stats"}> Statystyki</button></li>
             <li><i class="bi bi-lock icons"></i> <button on:click={() => StatsOrPass = "pass"}>Hasło</button></li>
@@ -121,6 +121,17 @@
             
             font-size: 24px;
         }
+        @media(max-width:991px){
+          .UserPanel ul {
+            display: flex;
+        }
+        .Options{
+          justify-content: space-between;
+        }
+        
+       
+        }
+       
   i {
     font-size: 60px;
     margin-right: 10px;
