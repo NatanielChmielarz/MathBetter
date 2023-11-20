@@ -3,7 +3,29 @@
   import { addResult } from "./Generator.js";
   import Modal from "../DefaultComponents/modal.svelte";
   import axios from "axios";
+  import { onMount } from "svelte";
+  let userId
+  onMount(async () => {
+    if (!token) {
+    return null; // Jeśli brakuje tokenu, funkcja zwraca null.
+  }
 
+  let response; // Deklarujemy zmienną do przechowania odpowiedzi z zapytania HTTP.
+
+  const headers = {
+    Authorization: `Bearer ${token}`,
+  };
+
+  try {
+    response = await axios.get(`http://127.0.0.1:8000/api/user/`, {
+      headers,
+    });
+    userId = response.data.user.id;
+  }
+  catch(Error){
+    console.log(Error)
+  }
+	});
   let LW;
   let Liczba_1, Liczba_2, Liczba_3;
   let l_range = 10;
@@ -60,7 +82,7 @@
       GenerujLiczby();
       levelInfo = `Poziom: ${currentLevel}/5`;
 
-      if (currentLevel === 2) {
+      if (currentLevel === 6) {
         PlayerTime = formattedTime;
         timerValue = elapsedMilliseconds;
         openChallengeCompleteModal();
@@ -163,32 +185,14 @@
   }
 
   async function finishChallenge() {
-  if (!token) {
-    return null; // Jeśli brakuje tokenu, funkcja zwraca null.
-  }
-
-  let response; // Deklarujemy zmienną do przechowania odpowiedzi z zapytania HTTP.
-
-  const headers = {
-    Authorization: `Bearer ${token}`,
-  };
-
-  try {
-    response = await axios.get(`http://127.0.0.1:8000/api/user/`, {
-      headers,
-    });
-    const userId = response.data.user.id;
+ 
     addResult(userId, timerValue, LevelDifficult);
      isNormalMode = true;
     losujLiczby();
     startTimer();
     timerValue = 0;
     closeChallengeCompleteModal(); // Close the completion modal
-  } catch (error) {
-    console.error("Błąd podczas wykonywania zapytania HTTP:", error);
-    // Możesz obsłużyć błąd tutaj, jeśli jest to konieczne.
-  }
-}
+  } 
   function Giveup() {
     isNormalMode = true;
     losujLiczby();
@@ -315,7 +319,7 @@
             </ul>
           </div>
         </div>
-        {#if token}
+        {#if userId}
           <div class="col-xl-3 col-lg-5 col-md-5">
             <button on:click={isNormalMode ? openChallengeInfoModal : Giveup}>
               {isNormalMode ? "Zacznij Wyzwanie" : "Poddaj się"}

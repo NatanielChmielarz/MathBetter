@@ -10,7 +10,7 @@ from rest_framework import status
 class MathResultListCreateView(generics.ListCreateAPIView):
     queryset = MathResult.objects.all()
     serializer_class = MathResultSerializer
-
+    
     def get_queryset(self):
         difficult_level = self.request.query_params.get('difficulty')
         if difficult_level:

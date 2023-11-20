@@ -26,10 +26,9 @@ export async function addResult(User, time, difficult_level) {
     "difficult_level": difficult_level,
     "user": User
  }
- console.log(userData)
+
   try {
     await axios.post(`http://127.0.0.1:8000/api/AddResult/`, userData);
-    console.log("dodano użytkownika")
   } catch (error) {
     throw error;
   }

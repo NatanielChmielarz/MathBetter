@@ -13,7 +13,7 @@
   }, {});
 
   // Teraz masz obiekt minTimesByDifficulty, który zawiera najmniejsze czasy dla każdego trybu trudności
-  console.log(minTimesByDifficulty);
+ 
   const gameCountByDifficulty = {};
 
   Data.results.forEach((entry) => {
@@ -26,7 +26,7 @@
     }
   });
 
-  console.log(gameCountByDifficulty);
+  
 </script>
 
 <div class="container">

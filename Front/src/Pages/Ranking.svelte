@@ -24,7 +24,6 @@ const getResults = async () => {
       
       results = await response.json();
       
-      console.log(results)
     } else {
       console.error("Błąd podczas pobierania wyników.");
     }
@@ -73,7 +72,7 @@ background-size: cover;
 width:100%;
 }
 @media(max-width :1200px){
-  main{ height: max-content;}
+  main{ background-image:none}
 }
 
  

@@ -1,9 +1,9 @@
 <script>
   
-    let maxResults = 10
+  
     
     export let data
-    console.log(data)
+   
 </script>
 <div class="leaderboard">
     <h1>

@@ -14,7 +14,6 @@
     try {
     const response = await axios.post(`http://127.0.0.1:8000/api/register/`, JsonData);
     Error="Zarejestrowano pomyślnie , zaloguj się!"
-    console.log(response.data) ;
   } catch (error) {
     Error = "Wystąpił błąd podczas rejestracji"; // Ustaw komunikat błędu
     throw error;

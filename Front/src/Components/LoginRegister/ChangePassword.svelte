@@ -22,7 +22,7 @@
         headers,
     });
     Error="Hasło zostało zmienione"
-    console.log(response.data) ;
+   
   } catch (error) {
     Error = "Wystąpił błąd podczas zmiany hasła"; // Ustaw komunikat błędu
     throw error;
@@ -34,9 +34,9 @@
 <main>
     <h1>Zmień hasło</h1>
     <p>Wpisz swoje obecne hasło</p>
-    <input type="text" bind:value={OldPassword} required>
+    <input type="password" bind:value={OldPassword} required>
     <p>Wpisz nowe hasło hasło</p>
-    <input type="text" bind:value={NewPassword} required>
+    <input type="password" bind:value={NewPassword} required>
     <button on:click={SubmitChangePassword}>Zmień hasło</button>
     <p>{Error}</p>
     
