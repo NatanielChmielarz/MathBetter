@@ -1,4 +1,5 @@
 <script>
+  import { null_to_empty } from "svelte/internal";
   export let Data;
   import Chart from "./Chart.svelte";
   import OwnBestTime from "./OwnBestTime.svelte";
@@ -35,6 +36,9 @@
       <h1>Statystyki</h1>
     </div>
     <div class="col-lg-12">
+      {#if Data.length>0}
+        
+      
       <Chart
         data={[
           {
@@ -57,6 +61,8 @@
           },
         ]}
       />
+      {/if }
+    
     </div>
 
     <div class="row">

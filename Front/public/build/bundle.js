@@ -66537,70 +66537,116 @@ var app = (function () {
     });
     Chain.createProxy(math$1);
 
-    const BasicOperators = ['+', '-', '*', '/'];
-    const ExpandedOperators = ['!', '^2'];
-    const SqrtOrBracket = ['sqrt(', '('];
+    const BasicOperators = ["+", "-", "*", "/"];
+    const ExpandedOperators = ["!", "^2"];
+    const SqrtOrBracket = ["sqrt(", "("];
 
     function hasMoreThanTwoDecimalPlaces(number) {
-        return (
-            Number.isFinite(number) &&
-            number >= -5000 &&
-            number <= 5000 &&
-            Math.abs(number * 100) % 1 === 0
-        );
+      return (
+        Number.isFinite(number) &&
+        number >= -5000 &&
+        number <= 5000 &&
+        Math.abs(number * 100) % 1 === 0
+      );
     }
 
     function randomElement(array) {
-        return array[Math.floor(Math.random() * array.length)];
+      return array[Math.floor(Math.random() * array.length)];
     }
 
     async function evaluateAction(action) {
-        try {
-            const result = evaluate(action);
-            return result;
-        } catch (error) {
-            return NaN;
-        }
+      try {
+        const result = evaluate(action);
+        return result;
+      } catch (error) {
+        return NaN;
+      }
     }
 
     async function generateExpression(Number_1, Number_2, Number_3, Range) {
-        const AllActions = [
-            `${Number_1}${randomElement(BasicOperators)}${Number_2}${randomElement(BasicOperators)}${Number_3}`,
-            `(${Number_1}${randomElement(BasicOperators)}${Number_2})${randomElement(BasicOperators)}${Number_3}`,
-            `${Number_1}${randomElement(BasicOperators)}(${Number_2}${randomElement(BasicOperators)}${Number_3})`,
-            `${Number_1}${randomElement(ExpandedOperators)}${randomElement(BasicOperators)}${Number_2}${randomElement(BasicOperators)}${Number_3}`,
-            `${Number_1}${randomElement(BasicOperators)}${Number_2}${randomElement(ExpandedOperators)}${randomElement(BasicOperators)}${Number_3}`,
-            `${Number_1}${randomElement(BasicOperators)}${Number_2}${randomElement(BasicOperators)}${Number_3}${randomElement(ExpandedOperators)}`,
-            `${randomElement(SqrtOrBracket)}${Number_1}${randomElement(BasicOperators)}${Number_2}${randomElement(BasicOperators)}${Number_3})${randomElement(ExpandedOperators)}`,
-            `${randomElement(SqrtOrBracket)}${Number_1}${randomElement(ExpandedOperators)}${randomElement(BasicOperators)}${Number_2})${randomElement(BasicOperators)}${Number_3}`,
-            `${randomElement(SqrtOrBracket)}${Number_1}${randomElement(BasicOperators)}${Number_2}${randomElement(ExpandedOperators)})${randomElement(BasicOperators)}${Number_3}`,
-            `${randomElement(SqrtOrBracket)}${Number_1}${randomElement(BasicOperators)}${Number_2})${randomElement(ExpandedOperators)}${randomElement(BasicOperators)}${Number_3}`,
-            `${randomElement(SqrtOrBracket)}${Number_1}${randomElement(BasicOperators)}${Number_2})${randomElement(BasicOperators)}${Number_3}${randomElement(ExpandedOperators)}`,
-            `${Number_1}${randomElement(ExpandedOperators)}${randomElement(BasicOperators)}${randomElement(SqrtOrBracket)}${Number_2}${randomElement(BasicOperators)}${Number_3})`,
-            `${Number_1}${randomElement(BasicOperators)}${randomElement(SqrtOrBracket)}${Number_2}${randomElement(ExpandedOperators)}${randomElement(BasicOperators)}${Number_3})`,
-            `${Number_1}${randomElement(BasicOperators)}${randomElement(SqrtOrBracket)}${Number_2}${randomElement(BasicOperators)}${Number_3}${randomElement(ExpandedOperators)}`,
-            `${Number_1}${randomElement(BasicOperators)}${randomElement(SqrtOrBracket)}${Number_2}${randomElement(BasicOperators)}${Number_3})${randomElement(ExpandedOperators)}`,
-        ];
+      const AllActions = [
+        `${Number_1}${randomElement(BasicOperators)}${Number_2}${randomElement(
+      BasicOperators
+    )}${Number_3}`,
+        `(${Number_1}${randomElement(BasicOperators)}${Number_2})${randomElement(
+      BasicOperators
+    )}${Number_3}`,
+        `${Number_1}${randomElement(BasicOperators)}(${Number_2}${randomElement(
+      BasicOperators
+    )}${Number_3})`,
+        `${Number_1}${randomElement(ExpandedOperators)}${randomElement(
+      BasicOperators
+    )}${Number_2}${randomElement(BasicOperators)}${Number_3}`,
+        `${Number_1}${randomElement(BasicOperators)}${Number_2}${randomElement(
+      ExpandedOperators
+    )}${randomElement(BasicOperators)}${Number_3}`,
+        `${Number_1}${randomElement(BasicOperators)}${Number_2}${randomElement(
+      BasicOperators
+    )}${Number_3}${randomElement(ExpandedOperators)}`,
+        `${randomElement(SqrtOrBracket)}${Number_1}${randomElement(
+      BasicOperators
+    )}${Number_2}${randomElement(BasicOperators)}${Number_3})${randomElement(
+      ExpandedOperators
+    )}`,
+        `${randomElement(SqrtOrBracket)}${Number_1}${randomElement(
+      ExpandedOperators
+    )}${randomElement(BasicOperators)}${Number_2})${randomElement(
+      BasicOperators
+    )}${Number_3}`,
+        `${randomElement(SqrtOrBracket)}${Number_1}${randomElement(
+      BasicOperators
+    )}${Number_2}${randomElement(ExpandedOperators)})${randomElement(
+      BasicOperators
+    )}${Number_3}`,
+        `${randomElement(SqrtOrBracket)}${Number_1}${randomElement(
+      BasicOperators
+    )}${Number_2})${randomElement(ExpandedOperators)}${randomElement(
+      BasicOperators
+    )}${Number_3}`,
+        `${randomElement(SqrtOrBracket)}${Number_1}${randomElement(
+      BasicOperators
+    )}${Number_2})${randomElement(BasicOperators)}${Number_3}${randomElement(
+      ExpandedOperators
+    )}`,
+        `${Number_1}${randomElement(ExpandedOperators)}${randomElement(
+      BasicOperators
+    )}${randomElement(SqrtOrBracket)}${Number_2}${randomElement(
+      BasicOperators
+    )}${Number_3})`,
+        `${Number_1}${randomElement(BasicOperators)}${randomElement(
+      SqrtOrBracket
+    )}${Number_2}${randomElement(ExpandedOperators)}${randomElement(
+      BasicOperators
+    )}${Number_3})`,
+        `${Number_1}${randomElement(BasicOperators)}${randomElement(
+      SqrtOrBracket
+    )}${Number_2}${randomElement(BasicOperators)}${Number_3}${randomElement(
+      ExpandedOperators
+    )}`,
+        `${Number_1}${randomElement(BasicOperators)}${randomElement(
+      SqrtOrBracket
+    )}${Number_2}${randomElement(BasicOperators)}${Number_3})${randomElement(
+      ExpandedOperators
+    )}`,
+      ];
 
-        let Value = NaN;
-        let MaxIterations = 0;
-        let TMP;
+      let Value = NaN;
+      let MaxIterations = 0;
+      let TMP;
 
-        do {
-            let RandomAction = Math.floor(Math.random() * Range);
-            let action = AllActions[RandomAction];
-            Value = await evaluateAction(action);
-            TMP = action;
+      do {
+        let RandomAction = Math.floor(Math.random() * Range);
+        let action = AllActions[RandomAction];
+        Value = await evaluateAction(action);
+        TMP = action;
 
-            MaxIterations++;
-        } while (!hasMoreThanTwoDecimalPlaces(Value) && MaxIterations < 100);
-
-        console.log("==============");
-        console.log("Liczby z których trzeba ułozyć równanie:" + Number_1 + " , " + Number_2 + " , " + Number_3);
-        console.log("Przykładowe wyrażanie na podstawie którego została ustalona wartość do ułożenia: " + TMP);
-        console.log("Wartość do ułożenia: " + Value);
-
-        return Value;
+        MaxIterations++;
+      } while (!hasMoreThanTwoDecimalPlaces(Value) && MaxIterations < 100);
+      console.log("==============");
+      console.log("Liczby z których trzeba ułozyć równanie:" + Number_1 + " , " + Number_2 + " , " + Number_3);
+      console.log("Przykładowe wyrażanie na podstawie którego została ustalona wartość do ułożenia: " + TMP);
+      console.log("Wartość do ułożenia: " + Value);
+      return Value;
     }
 
     function bind(fn, thisArg) {
@@ -69840,6 +69886,7 @@ var app = (function () {
 
     async function Generator(Liczba1, Liczba2, Liczba3,difficult) {
       let Range=0;
+      [Liczba1, Liczba2, Liczba3] = shuffle([Liczba1, Liczba2, Liczba3]);
       if(difficult==="Łatwy")
       {
         Range=3;
@@ -69848,7 +69895,22 @@ var app = (function () {
 
       return await generateExpression(Liczba1, Liczba2, Liczba3,Range);
     }
+    function shuffle(array) {
+      let currentIndex = array.length,
+        randomIndex;
 
+      // While there remain elements to shuffle...
+      while (currentIndex !== 0) {
+        // Pick a remaining element...
+        randomIndex = Math.floor(Math.random() * currentIndex);
+        currentIndex--;
+
+        // And swap it with the current element.
+        [array[currentIndex], array[randomIndex]] = [array[randomIndex], array[currentIndex]];
+      }
+
+      return array;
+    }
 
     async function addResult(User, time, difficult_level) {
       if(difficult_level==="Łatwy")
@@ -70331,7 +70393,7 @@ var app = (function () {
     }
 
     // (422:2) {#if isChallengeCompleteModalOpen}
-    function create_if_block$4(ctx) {
+    function create_if_block$5(ctx) {
     	let modal;
     	let current;
 
@@ -70374,7 +70436,7 @@ var app = (function () {
 
     	dispatch_dev("SvelteRegisterBlock", {
     		block,
-    		id: create_if_block$4.name,
+    		id: create_if_block$5.name,
     		type: "if",
     		source: "(422:2) {#if isChallengeCompleteModalOpen}",
     		ctx
@@ -70481,7 +70543,7 @@ var app = (function () {
     	let if_block0 = /*userId*/ ctx[0] && create_if_block_3(ctx);
     	let if_block1 = (/*LevelDifficult*/ ctx[12] === "Średni" || /*LevelDifficult*/ ctx[12] === "Trudny") && create_if_block_2(ctx);
     	let if_block2 = /*isChallengeInfoModalOpen*/ ctx[14] && create_if_block_1$1(ctx);
-    	let if_block3 = /*isChallengeCompleteModalOpen*/ ctx[15] && create_if_block$4(ctx);
+    	let if_block3 = /*isChallengeCompleteModalOpen*/ ctx[15] && create_if_block$5(ctx);
 
     	const block = {
     		c: function create() {
@@ -70901,7 +70963,7 @@ var app = (function () {
     						transition_in(if_block3, 1);
     					}
     				} else {
-    					if_block3 = create_if_block$4(ctx);
+    					if_block3 = create_if_block$5(ctx);
     					if_block3.c();
     					transition_in(if_block3, 1);
     					if_block3.m(main, null);
@@ -71724,7 +71786,7 @@ var app = (function () {
     }
 
     // (260:0) {#if componentParams}
-    function create_if_block$3(ctx) {
+    function create_if_block$4(ctx) {
     	let switch_instance;
     	let switch_instance_anchor;
     	let current;
@@ -71809,7 +71871,7 @@ var app = (function () {
 
     	dispatch_dev("SvelteRegisterBlock", {
     		block,
-    		id: create_if_block$3.name,
+    		id: create_if_block$4.name,
     		type: "if",
     		source: "(260:0) {#if componentParams}",
     		ctx
@@ -71823,7 +71885,7 @@ var app = (function () {
     	let if_block;
     	let if_block_anchor;
     	let current;
-    	const if_block_creators = [create_if_block$3, create_else_block$2];
+    	const if_block_creators = [create_if_block$4, create_else_block$2];
     	const if_blocks = [];
 
     	function select_block_type(ctx, dirty) {
@@ -74020,7 +74082,7 @@ var app = (function () {
     const file$i = "src\\Components\\HowToPlayComponents\\Accordion.svelte";
 
     // (31:0) {#if show === i}
-    function create_if_block$2(ctx) {
+    function create_if_block$3(ctx) {
     	let div;
     	let current;
     	const default_slot_template = /*#slots*/ ctx[5].default;
@@ -74075,7 +74137,7 @@ var app = (function () {
 
     	dispatch_dev("SvelteRegisterBlock", {
     		block,
-    		id: create_if_block$2.name,
+    		id: create_if_block$3.name,
     		type: "if",
     		source: "(31:0) {#if show === i}",
     		ctx
@@ -74092,7 +74154,7 @@ var app = (function () {
     	let current;
     	let mounted;
     	let dispose;
-    	let if_block = /*show*/ ctx[1] === /*i*/ ctx[0] && create_if_block$2(ctx);
+    	let if_block = /*show*/ ctx[1] === /*i*/ ctx[0] && create_if_block$3(ctx);
 
     	const block = {
     		c: function create() {
@@ -74145,7 +74207,7 @@ var app = (function () {
     						transition_in(if_block, 1);
     					}
     				} else {
-    					if_block = create_if_block$2(ctx);
+    					if_block = create_if_block$3(ctx);
     					if_block.c();
     					transition_in(if_block, 1);
     					if_block.m(div1, null);
@@ -76105,7 +76167,7 @@ var app = (function () {
     }
 
     // (21:2) {#if isPageLoaded}
-    function create_if_block$1(ctx) {
+    function create_if_block$2(ctx) {
     	let navbar;
     	let t0;
     	let div;
@@ -76236,7 +76298,7 @@ var app = (function () {
 
     	dispatch_dev("SvelteRegisterBlock", {
     		block,
-    		id: create_if_block$1.name,
+    		id: create_if_block$2.name,
     		type: "if",
     		source: "(21:2) {#if isPageLoaded}",
     		ctx
@@ -76250,7 +76312,7 @@ var app = (function () {
     	let current_block_type_index;
     	let if_block;
     	let current;
-    	const if_block_creators = [create_if_block$1, create_else_block$1];
+    	const if_block_creators = [create_if_block$2, create_else_block$1];
     	const if_blocks = [];
 
     	function select_block_type(ctx, dirty) {
@@ -78122,27 +78184,9 @@ var app = (function () {
     /* src\Components\LoginRegister\Statictics.svelte generated by Svelte v3.59.2 */
     const file$3 = "src\\Components\\LoginRegister\\Statictics.svelte";
 
-    function create_fragment$3(ctx) {
-    	let div5;
-    	let div4;
-    	let div0;
-    	let h1;
-    	let t1;
-    	let div1;
+    // (39:6) {#if Data.length>0}
+    function create_if_block$1(ctx) {
     	let chart;
-    	let t2;
-    	let div3;
-    	let div2;
-    	let h2;
-    	let t3;
-    	let t4_value = /*Data*/ ctx[0].results.length + "";
-    	let t4;
-    	let t5;
-    	let ownbesttime0;
-    	let t6;
-    	let ownbesttime1;
-    	let t7;
-    	let ownbesttime2;
     	let current;
 
     	chart = new Chart({
@@ -78170,6 +78214,88 @@ var app = (function () {
     			},
     			$$inline: true
     		});
+
+    	const block = {
+    		c: function create() {
+    			create_component(chart.$$.fragment);
+    		},
+    		m: function mount(target, anchor) {
+    			mount_component(chart, target, anchor);
+    			current = true;
+    		},
+    		p: function update(ctx, dirty) {
+    			const chart_changes = {};
+
+    			if (dirty & /*gameCountByDifficulty*/ 2) chart_changes.data = [
+    				{
+    					ages: "Łatwy",
+    					count: String(/*gameCountByDifficulty*/ ctx[1].Easy
+    					? /*gameCountByDifficulty*/ ctx[1].Easy
+    					: 0)
+    				},
+    				{
+    					ages: "Średni",
+    					count: String(/*gameCountByDifficulty*/ ctx[1].Medium
+    					? /*gameCountByDifficulty*/ ctx[1].Medium
+    					: 0)
+    				},
+    				{
+    					ages: "Trudny",
+    					count: String(/*gameCountByDifficulty*/ ctx[1].Hard
+    					? /*gameCountByDifficulty*/ ctx[1].Hard
+    					: 0)
+    				}
+    			];
+
+    			chart.$set(chart_changes);
+    		},
+    		i: function intro(local) {
+    			if (current) return;
+    			transition_in(chart.$$.fragment, local);
+    			current = true;
+    		},
+    		o: function outro(local) {
+    			transition_out(chart.$$.fragment, local);
+    			current = false;
+    		},
+    		d: function destroy(detaching) {
+    			destroy_component(chart, detaching);
+    		}
+    	};
+
+    	dispatch_dev("SvelteRegisterBlock", {
+    		block,
+    		id: create_if_block$1.name,
+    		type: "if",
+    		source: "(39:6) {#if Data.length>0}",
+    		ctx
+    	});
+
+    	return block;
+    }
+
+    function create_fragment$3(ctx) {
+    	let div5;
+    	let div4;
+    	let div0;
+    	let h1;
+    	let t1;
+    	let div1;
+    	let t2;
+    	let div3;
+    	let div2;
+    	let h2;
+    	let t3;
+    	let t4_value = /*Data*/ ctx[0].results.length + "";
+    	let t4;
+    	let t5;
+    	let ownbesttime0;
+    	let t6;
+    	let ownbesttime1;
+    	let t7;
+    	let ownbesttime2;
+    	let current;
+    	let if_block = /*Data*/ ctx[0].length > 0 && create_if_block$1(ctx);
 
     	ownbesttime0 = new OwnBestTime({
     			props: {
@@ -78219,7 +78345,7 @@ var app = (function () {
     			h1.textContent = "Statystyki";
     			t1 = space();
     			div1 = element("div");
-    			create_component(chart.$$.fragment);
+    			if (if_block) if_block.c();
     			t2 = space();
     			div3 = element("div");
     			div2 = element("div");
@@ -78233,21 +78359,21 @@ var app = (function () {
     			t7 = space();
     			create_component(ownbesttime2.$$.fragment);
     			attr_dev(h1, "class", "svelte-u2grqy");
-    			add_location(h1, file$3, 34, 6, 946);
+    			add_location(h1, file$3, 35, 6, 998);
     			attr_dev(div0, "class", "col-12 d-flex justify-content-start svelte-u2grqy");
-    			add_location(div0, file$3, 33, 4, 889);
+    			add_location(div0, file$3, 34, 4, 941);
     			attr_dev(div1, "class", "col-lg-12");
-    			add_location(div1, file$3, 36, 4, 983);
+    			add_location(div1, file$3, 37, 4, 1035);
     			attr_dev(h2, "class", "svelte-u2grqy");
-    			add_location(h2, file$3, 63, 8, 1673);
+    			add_location(h2, file$3, 69, 8, 1790);
     			attr_dev(div2, "class", "col-lg-12 mx-auto");
-    			add_location(div2, file$3, 62, 6, 1632);
+    			add_location(div2, file$3, 68, 6, 1749);
     			attr_dev(div3, "class", "row");
-    			add_location(div3, file$3, 61, 4, 1607);
+    			add_location(div3, file$3, 67, 4, 1724);
     			attr_dev(div4, "class", "row");
-    			add_location(div4, file$3, 32, 2, 866);
+    			add_location(div4, file$3, 33, 2, 918);
     			attr_dev(div5, "class", "container svelte-u2grqy");
-    			add_location(div5, file$3, 31, 0, 839);
+    			add_location(div5, file$3, 32, 0, 891);
     		},
     		l: function claim(nodes) {
     			throw new Error("options.hydrate only works if the component was compiled with the `hydratable: true` option");
@@ -78259,7 +78385,7 @@ var app = (function () {
     			append_dev(div0, h1);
     			append_dev(div4, t1);
     			append_dev(div4, div1);
-    			mount_component(chart, div1, null);
+    			if (if_block) if_block.m(div1, null);
     			append_dev(div4, t2);
     			append_dev(div4, div3);
     			append_dev(div3, div2);
@@ -78275,30 +78401,29 @@ var app = (function () {
     			current = true;
     		},
     		p: function update(ctx, [dirty]) {
-    			const chart_changes = {};
+    			if (/*Data*/ ctx[0].length > 0) {
+    				if (if_block) {
+    					if_block.p(ctx, dirty);
 
-    			if (dirty & /*gameCountByDifficulty*/ 2) chart_changes.data = [
-    				{
-    					ages: "Łatwy",
-    					count: String(/*gameCountByDifficulty*/ ctx[1].Easy
-    					? /*gameCountByDifficulty*/ ctx[1].Easy
-    					: 0)
-    				},
-    				{
-    					ages: "Średni",
-    					count: String(/*gameCountByDifficulty*/ ctx[1].Medium
-    					? /*gameCountByDifficulty*/ ctx[1].Medium
-    					: 0)
-    				},
-    				{
-    					ages: "Trudny",
-    					count: String(/*gameCountByDifficulty*/ ctx[1].Hard
-    					? /*gameCountByDifficulty*/ ctx[1].Hard
-    					: 0)
+    					if (dirty & /*Data*/ 1) {
+    						transition_in(if_block, 1);
+    					}
+    				} else {
+    					if_block = create_if_block$1(ctx);
+    					if_block.c();
+    					transition_in(if_block, 1);
+    					if_block.m(div1, null);
     				}
-    			];
+    			} else if (if_block) {
+    				group_outros();
 
-    			chart.$set(chart_changes);
+    				transition_out(if_block, 1, 1, () => {
+    					if_block = null;
+    				});
+
+    				check_outros();
+    			}
+
     			if ((!current || dirty & /*Data*/ 1) && t4_value !== (t4_value = /*Data*/ ctx[0].results.length + "")) set_data_dev(t4, t4_value);
     			const ownbesttime0_changes = {};
 
@@ -78324,14 +78449,14 @@ var app = (function () {
     		},
     		i: function intro(local) {
     			if (current) return;
-    			transition_in(chart.$$.fragment, local);
+    			transition_in(if_block);
     			transition_in(ownbesttime0.$$.fragment, local);
     			transition_in(ownbesttime1.$$.fragment, local);
     			transition_in(ownbesttime2.$$.fragment, local);
     			current = true;
     		},
     		o: function outro(local) {
-    			transition_out(chart.$$.fragment, local);
+    			transition_out(if_block);
     			transition_out(ownbesttime0.$$.fragment, local);
     			transition_out(ownbesttime1.$$.fragment, local);
     			transition_out(ownbesttime2.$$.fragment, local);
@@ -78339,7 +78464,7 @@ var app = (function () {
     		},
     		d: function destroy(detaching) {
     			if (detaching) detach_dev(div5);
-    			destroy_component(chart);
+    			if (if_block) if_block.d();
     			destroy_component(ownbesttime0);
     			destroy_component(ownbesttime1);
     			destroy_component(ownbesttime2);
@@ -78405,6 +78530,7 @@ var app = (function () {
     	};
 
     	$$self.$capture_state = () => ({
+    		null_to_empty,
     		Data,
     		Chart,
     		OwnBestTime,
