@@ -50,7 +50,7 @@
       Authorization: `Bearer ${token}`,
     };
     try {
-      const response = await axios.get(`http://127.0.0.1:8000/api/user/`, {
+      const response = await axios.get(`https://math-better-backend.vercel.app/api/user/`, {
         headers,
       });
       return response.data.user.id;
