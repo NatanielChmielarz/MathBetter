@@ -105,9 +105,6 @@ export async function generateExpression(Number_1, Number_2, Number_3, Range) {
 
     MaxIterations++;
   } while (!hasMoreThanTwoDecimalPlaces(Value) && MaxIterations < 100);
-  console.log("==============");
-  console.log("Liczby z których trzeba ułozyć równanie:" + Number_1 + " , " + Number_2 + " , " + Number_3);
-  console.log("Przykładowe wyrażanie na podstawie którego została ustalona wartość do ułożenia: " + TMP);
-  console.log("Wartość do ułożenia: " + Value);
+ 
   return Value;
 }
