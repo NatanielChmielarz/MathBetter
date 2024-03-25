@@ -11,7 +11,7 @@ https://docs.djangoproject.com/en/4.2/ref/settings/
 """
 
 from pathlib import Path
-
+import os
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 
@@ -25,7 +25,7 @@ SECRET_KEY = 'django-insecure-%s99elu0uhqroi&#re0edp&wmeq%(^i_(3@=4ouge0ky4)29%m
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['.vercel.app']
 
 
 # Application definition
@@ -79,20 +79,26 @@ WSGI_APPLICATION = 'Backend.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/4.2/ref/settings/#databases
 
+# DATABASES = {
+#    'default': {
+#        'ENGINE': 'django.db.backends.postgresql',
+#        'NAME': 'MathBetter',
+#        'USER': 'postgres',
+#        'PASSWORD': 'Superadm',
+#        'HOST': 'localhost',
+#        'PORT': '5432',
+#    }
+# }
 DATABASES = {
-			'default': {
-		        'ENGINE': 'mssql',
-		        'HOST': 'LAPTOP-79LFMVD7\SQLBAZY',
-		        'PORT': '',
-		        'NAME': 'MathBetter',
-		        'USER': 'sa',
-		        'PASSWORD': 'TestAppDB',
-		        'OPTIONS': {
-		            'driver': 'ODBC Driver 17 for SQL Server',
-		        },
-		    },
-		}
-
+    'default': {
+        'ENGINE': 'django.db.backends.postgresql_psycopg2',
+        'NAME': os.environ.get("DB_NAME"),
+        'USER': os.environ.get("DB_USER"),
+        'PASSWORD': os.environ.get("DB_PASSWORD"),
+        'HOST': os.environ.get("DB_HOST"),
+        'PORT': os.environ.get("DB_PORT"),
+    }
+}
 
 # Password validation
 # https://docs.djangoproject.com/en/4.2/ref/settings/#auth-password-validators
