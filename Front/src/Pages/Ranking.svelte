@@ -12,7 +12,7 @@
 const getResults = async () => {
   try {
     const response = await fetch(
-      `http://127.0.0.1:8000/api/BestResults/`,
+      `https://math-better-backend.vercel.app/api/BestResults/`,
       {
         method: "GET",
         mode: "cors",

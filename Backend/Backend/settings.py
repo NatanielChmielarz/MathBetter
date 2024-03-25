@@ -101,7 +101,6 @@ DATABASES = {
         'PORT': os.getenv('POSTGRES_DB_PORT'),
         'OPTIONS': {
             'sslmode': 'require',
-            # 'options': 'endpoint=ep-purple-haze-a4w5w6ut',
         },
     }
 }
