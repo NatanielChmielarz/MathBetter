@@ -27,7 +27,7 @@ You can create an account to save your progress or just play the game without re
  
 ### Steps
 
-1. Clone the repository: git clone https://github.com/yourusername/MathBetter.git
+1. Clone the repository: git clone https://github.com/NatanielChmielarz/MathBetter.git
 2. Navigate to the backend project directory: cd Backend
 3. Install Python dependencies: pip install -r requirements.txt
 4. Install Node.js dependencies for the frontend:
