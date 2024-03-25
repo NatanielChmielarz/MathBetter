@@ -17,7 +17,7 @@
   };
 
   try {
-    response = await axios.get(`http://127.0.0.1:8000/api/user/`, {
+    response = await axios.get(`https://math-better-backend.vercel.app/api/user/`, {
       headers,
     });
     userId = response.data.user.id;
