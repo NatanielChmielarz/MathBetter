@@ -1,5 +1,4 @@
 <script>
-  import { null_to_empty } from "svelte/internal";
   export let Data;
   import Chart from "./Chart.svelte";
   import OwnBestTime from "./OwnBestTime.svelte";
@@ -16,7 +15,7 @@
   // Teraz masz obiekt minTimesByDifficulty, który zawiera najmniejsze czasy dla każdego trybu trudności
  
   const gameCountByDifficulty = {};
-
+ 
   Data.results.forEach((entry) => {
     const { difficult_level } = entry;
 
@@ -36,7 +35,7 @@
       <h1>Statystyki</h1>
     </div>
     <div class="col-lg-12">
-      {#if Data.length>0}
+      {#if Data}
         
       
       <Chart

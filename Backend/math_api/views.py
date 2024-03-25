@@ -55,12 +55,9 @@ class LoginView(APIView):
 class UserView(APIView):
     def get(self, request):
         token = request.META.get('HTTP_AUTHORIZATION')
-
         if not token:
             raise AuthenticationFailed('Unauthenticated')
-
         try:
-            # Usuń prefiks "Bearer " z tokenu
             token = token.split(' ')[1]
             payload = jwt.decode(token, 'secret', algorithms=['HS256'])
         except jwt.ExpiredSignatureError:
@@ -70,8 +67,6 @@ class UserView(APIView):
         serializer = UserSerializer(user)
         results = MathResult.objects.filter(user=user)
         serializer2 = MathResultSerializer(results, many=True)
-        
-        # Tworzymy odpowiedź z danymi użytkownika i wynikami
         response_data = {
             "user": serializer.data,
             "results": serializer2.data

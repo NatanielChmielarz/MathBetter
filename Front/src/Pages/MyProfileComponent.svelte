@@ -21,7 +21,8 @@
         });
         return response.data;
       } catch (error) {
-        // Handle the error
+        localStorage.removeItem("token")
+        push("/Login");
         throw error;
       }
     }

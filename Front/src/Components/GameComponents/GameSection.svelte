@@ -378,7 +378,7 @@
           ><i class="fas fa-minus" /></button
         >
         <button on:click={() => addToExpression("*")}
-          ><i class="fas fa-close" /></button
+          ><i class="fas fa-times" /></button
         >
         <button on:click={() => addToExpression("/")}
           ><i class="fas fa-divide" /></button
