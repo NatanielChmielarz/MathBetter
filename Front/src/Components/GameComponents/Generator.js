@@ -38,7 +38,7 @@ export async function addResult(User, time, difficult_level) {
  }
 
   try {
-    await axios.post(`http://127.0.0.1:8000/api/AddResult/`, userData);
+    await axios.post(`https://math-better-backend.vercel.app/api/AddResult/`, userData);
   } catch (error) {
     throw error;
   }

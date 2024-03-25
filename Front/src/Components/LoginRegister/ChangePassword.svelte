@@ -18,7 +18,7 @@
         const headers = {
           Authorization: `Bearer ${token}`,
         };
-    const response = await axios.put(`http://127.0.0.1:8000/api/ChangePassword/`, JsonData,{
+    const response = await axios.put(`https://math-better-backend.vercel.app/api/ChangePassword/`, JsonData,{
         headers,
     });
     Error="Hasło zostało zmienione"

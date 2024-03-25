@@ -12,7 +12,7 @@
       password: Password,
     };
     try {
-    const response = await axios.post(`http://127.0.0.1:8000/api/register/`, JsonData);
+    const response = await axios.post(`https://math-better-backend.vercel.app/api/register/`, JsonData);
     Error="Zarejestrowano pomyślnie , zaloguj się!"
   } catch (error) {
     Error = "Wystąpił błąd podczas rejestracji"; // Ustaw komunikat błędu
