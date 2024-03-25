@@ -2,6 +2,10 @@
 
 MathBetter is a web application designed to enhance mathematical skills through interactive gameplay. It utilizes Django for the backend, Svelte for the frontend, and SQL Server for the database.
 
+Live demo : https://mathbetter.vercel.app/
+
+You can create an account to save your progress or just play the game without registering.
+
 ## Features
 
 - **Mathematical Challenges**: Engage in various mathematical challenges ranging from arithmetic to advanced calculus.
@@ -20,7 +24,7 @@ MathBetter is a web application designed to enhance mathematical skills through 
 - Python (3.7 or higher)
 - Node.js
 - SQL Server
-
+ 
 ### Steps
 
 1. Clone the repository: git clone https://github.com/yourusername/MathBetter.git
